@@ -178,6 +178,10 @@ This might imply that we have ((n-1) choose 3)/(6 choose 3) codewords of distanc
 
 Now if there existed two indeces i,j such that. u + ei is a secret code and u + ej is a secret code. Therefore all ((n-1) choose 3)/(6 choose 3) are the same on those two indeces. I want to imply that there exists a pair of codewords out of these that are equal on three indeces, therefore their distance is at most 6, which is a contradiction. There is n-2 options for the third index. We want all codewords that are different on four positions out of the n-2 options. Therefore ((n-1) choose 3)/(6 choose 3) * 4 has to be less than or equal to n-2. 
 
+(Pocet kodovych slov krat pocet indexu (ten zlomek), na kterych musi byt odlisne (4)) chci mit vetsi nez pocet indexů, na kterych mohou byt odlisne (n-2 atd). Potom vime, ze nejaka dve kodova slova se shoduji na vice pozicich, nez mohou, a tim dojdu ke sporu s minimální moznou vzdalenosti mezi kodovymi slovy. 
+
+V rovnicích chybí LS * 4.
+
 \[
 \frac{\binom{n-1}{3}}{\binom{6}{3}} = \frac{\frac{(n-1)*(n-2)*(n-3)}{6}}{\frac{6*5*4}{6}} = \frac{(n-1)*(n-2)*(n-3)}{6*5*4}
 \]
@@ -186,9 +190,7 @@ So we need
 \frac{(n-1)*(n-2)*(n-3)}{6*5*4} > n-2
 \]
 
-\[
-(n-1)*(n-3) > 6*5*4
-\]
+\[(n-1)*(n-3) > 6*5*4\]
 
 \[
 n^2-4n+3 > 120
@@ -201,9 +203,47 @@ which holds for n < -9, n > 13.
 
 We want n > 13. 
 
-Construct similar proof for distance 2 and 3 from the closest codeword.
+Construct similar proof for distance 2 and 3 from the closest codeword:
 
-\section{proposition for r-perfect codes}
+Let d(u,v) = 2:
+
+There exist $\binom{n-2}{2}$ words of distance two from v. There exist $\frac{\binom{n-2}{2}}{\binom{5}{2}}$
+We want 
+\[
+\frac{\binom{n-2}{2}}{\binom{5}{2}} > n-3
+\]
+\[\frac{(n-2)*(n-3)}{20} > n-3\]
+\[n-2 > 20\]
+\[n > 22\]
+
+Let d(u,v) = 3:
+\[\frac{\binom{n-3}{1}}{\binom{4}{1}} > n-4\]
+\[\frac{n-3}{4} > n-4\]
+\[n-3 > 4*n-16\]
+\[13 > 3n\]
+\[n < 13/3 \approx 4.3\]
+\[n \leq 4\]
+
+I would like to use somehow the white pegs. Do they tell us just the number of 1/0 in the secret code? Or do they say something else? I have the weight of the secret code w(v) from the distance from zero. 
+
+If the distance from u to v is 3, then the options for the weight of v are either w(u)-3, w(u)-1, w(u)+1, w(u)+3. 
+
+Let u be wrong in the first three coordinates. 
+
+\begin{itemize}
+    \item u \approx 000, then v \approx 111. Then w(v) = w(u) + 3. The number of white pegs is zero. 
+    \item u \approx 001, Then v \approx 110. Then w(v) = w(u) + 1. The number of white pegs is two.
+    \item u \approx 011, then v \approx 100. Then w(v) = w(u) - 1. The number of white pegs is two. 
+    \item u \approx 111, then v \approx 000. Then w(v) = w(u) - 3. The number of white pegs is zero. 
+\end{itemize}
+
+Let k be the number of white pegs corresponding to u. Then k is either zero or two. 
+
+If k is zero, we have w(u) choose 3 or (n - w(u)) choose three possibilities. Which option we choose, that is according to the distance from zero (can be determined). If we have $\binom{w(u)}{3}$ options. We change 1->0. Then let there exist $\binom{n-3}{1}$ eligible words (Z) of distance one from v. These have the weight of w(u)-4 or w(u)-2. They are of distance 3 from certain codeword. The number of elements of Z with the same codeword in the neighborhood is 4. I have n-4 options 
+
+Chci pocet indexu, na kterych se kodova slova lisi od u krat pocet 
+
+\section{proposition for r-perfect binary codes}
 Proposition: for r in the set of natural numbers there exist n0 such that every r-perfect binary code of length n>=n0 is a base of the hamming space $H_{2,n}$.
 
-Not proven yet but should work in my opinion.
+Not proven yet but could work maybe.
