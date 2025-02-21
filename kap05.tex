@@ -1,0 +1,209 @@
+\chapter{Poznámky}
+
+\section{Obecné/tipy}
+Nějaké tvrzení o n-koulích, např jedno, co je níže
+
+\section{Berghman, Lotte (2008) \cite{BERGHMAN20091880}}
+Článek nejprve popisuje existující algoritmy. Jsou řazeny do tří kategorií, Full enumeration, prozkoumání všech kódů a vybrání následujícího pokusu podle zvolené strategie. Tyto algoritmy excelují v průměrném počtu pokusů na hru. Nevýhodou ale je extrémní časová náročnost při procházení všech možných pokračování. 
+
+Druhým typem algoritmů zmíněných je Rules of thumb s cílem dosáhnutí dobrých výsledků za krátký čas. 
+
+Třetím zmíněným typem algoritmu je Meta-heuristics. Tyto algoritmy používají při výběru následujícího pokusu složitější heuristiky, která by měla dosahovat požadovaných výsledků s přihlédnutím na časovou náročnost. 
+
+Autoři popisují svůj program. Jde o genetický algoritmus. Populace je sada možných následujících pokusů. Populace vznikne z předešlé pomocí crossoveru (1-point or 2-point) s pravděpodobností 0.5, mutací, permutací, inverzí. Případně nahrazením vzniklého kódu za náhodný. Eligible codes are added to the list Ei. Výběr z Ei - popsány dva způsoby. První - porovnání s ostatními kódy v Ei - Kolik černých a bílých ohodnocení bychom dostaly při výběru kódu c za předpokladu, že cstar z Ei je tajný kód. Suma přes všěechny cstar z Ei. Výběr buď náhodně, největší číslo nebo nejmenší číslo. Druhý - Vybrat náhodný subset S, Pro každý kód c a každý možný kód cstar je vypočítán počet možných následujících eligible kódů (musíme spočítat body Xc a Yc abychom mohli vybírat eligible kódy). Kód c minimalizující tento součet bude vybrán. Je ukázáno že druhý způsob výběru je efektivnější. 
+
+Nakonec je zmíněný algoritmus porovnán s ostatními algoritmy. Výsledky jsou kvalitní pro rostoucí P a N s výrazně lepším časem. 
+
+Algoritmus vždy začíná tahem 1123, pro který autoři dostávali nejlepší průměrné výsledky. Říkají, že zvolením 1123 jako počáteční tah se ušetří v průměru 0.02 pokusů na prolomení tajného kódu.
+
+
+
+\section{Donald E. Knuth (1977) \cite{donald_e__knuth_1977}}
+
+Článek The Computer as Master Mind od Donalda E. Knutha je poměrně krátký, popisuje jeho metodu řešení Logiku na maximálně šest tahů nehledě na tajný kód. Jeho algoritmus se snaží minimalizovat maximální počet zbývajících kandidátů na tajný kód. 
+
+Začíná vždy tahem 1122, pro toto rozložení to funguje. Porovnává to s 1123, který ale nezaručuje vyřešení na pět tahů. V určitých případech může selhat. 
+
+\section{Barteld Kooi - YET ANOTHER MASTERMIND STRATEGY }
+
+Článek popisuje již známé algoritmy/postupy řešení hry mastermind,
+popisuje metodu za použití entropie - maximalizuje entropii $-\sum_{i=1}^n p_i log(p_i)$, kde při rozdělení V1 až Vn množiny A je $p_i$ pravděpodobnost, že element z A náleží do Vi. 
+
+Entropie v tomto případě ... maximum entropie odpovídá minimálnímu součtu očekávaného počtu pokusů v rozdělení V1, ... Vn s váhou na velikost těchto rozdělení. 
+
+Je to tam popsáno pěkně - lze se k tomu vrátit.
+
+Dále článek navrhuje nový přístup řešení masterminda. Mluví o tzv strategii rozdělení na nejvíc částí. Jako úvod je nastíněn příklad tipování karty z balíku, kde na pravděpodobnosti uhádnutí nezáleží na velikostech jednotlivých rozdělení ale na jejich počtu. Čím vyšší počet rozdělení balíku, tím větší pravděpodobnost uhádnutí karty v dalším tahu. Toto je zobecněno na pravděpodobnost uhádnutí prvku z A po r+1 otázkách, které postupně rozdělují množinu A na podmnožiny. Díky indukčnímu předpokladu víme, že pravděpodobnost uhádnutí po r+1 otázkách je počet podmnožin na které lze množinu A rozdělit po r+1 otázkách vyděleno velikostí množiny A. 
+
+
+\section{The Mastermind game and the rigidity of the Hamming space, 2000 \cite{866673}}
+Používám definice ze zníměného článku.
+
+
+\begin{definice}[Hammingův prostor]\label{def01:1}
+  Nechť $n \in N$, $q \in N$. Potom množinu všech řetězců (slov) délky $n$ obsahující čísla z množiny $\{1, 2, 3, \dots, q\}$ nazýváme n-dimenzionální q-ární Hammingův prostor a značíme ho $H_{n,q}$.
+\end{definice}
+
+\begin{definice}[Hammingova vzdálenost]\label{def01:1}
+  Nechť $H_{n,q}$ je Hammingův prostor. Nechť $u,v \in H_{n,q}$. Počet pozic, na kterých se slova $u$ a $v$ liší nazýváme Hammingovou vzdáleností $u$ a $v$, značíme $d(u,v)$.
+\end{definice}
+
+\begin{definice}[Báze Hammingova prostoru]\label{def01:1}
+  Nechť $H_{n,q}$ je Hammingův prostor. Nechť $B \subset H_{n,q}$. Řekneme, že $B$ je báze Hammingova prostoru, pokud každý prvek z $H_{n,q}$ lze jednoznačně vyjádřit pomocí Hammingových vzdáleností od prvků z $B$.
+  \end{definice}
+
+\begin{definice}[Rigidita Hammingova prostoru]\label{def01:1}
+  Nechť $H_{n,q}$ je Hammingův prostor. Rigidita Hammingova prostoru, značíme $r_{n,q}$ je minimální možný počet prvků v bázi.
+\end{definice}
+
+\begin{veta}\label{veta01:1}
+  Nechť $H_{n,q}$ je Hammingův prostor. Potom \[r_{n,q} \geq \frac{n}{log_q(n+1)}\].
+\end{veta}
+
+\begin{dukaz}
+  Protože počet možných vzdáleností je menší nebo rovno $n+1$ platí, 
+  \[(n+1)^{r_{n,q}} \geq q^n\]
+  zlogaritmovat
+  \[r_{n,q}*log_q(n+1) \geq n\]
+  vydelit
+  \[r_{n,q} \geq \frac{n}{log_q(n+1)}\].
+\end{dukaz}
+
+
+Z jinych zdroju plati:
+$r_{n,q} \geq 2* \frac{n}{log_qn} * (1+o(1))$ 
+
+\[r_{n,2} = 2* \frac{n}{log_2 n} * (1+o(1))\] 
+
+
+
+\section{On the metrical rigidity of binary codes () \cite{AVGUSTINOVICH2001444}}
+Článek studuje pojem metrical rigidity binárních kódů. Řekneme, že kód je metrically rigid, pokud všechny isomorfismy v metrickém prostoru $C \to E_n$, dále jako isometriky, jdou rozšířit na isometriku celého prostoru $E_n$. 
+
+Kódy jsou ekvivalentní, pokud existuje isometrie, která jeden kód zobrazí na druhý. 
+
+
+Komentář pro mne:
+
+Když tedy mám neznámý kód se známými vzdálenostmi od nějaké množiny vektorů, potom v každém bude existovat právě jeden????? vektor
+
+Nechť mám kód, který opravuje jednu chybu, má distanci 3. Pokud víme, že kód je metrically rigid, potom pro přijatý vektor s maximálně jednou chybou víme, že jeho distance od nějakého vektoru z kódu je jedna. Navíc věechny jeho distance k ostatním vektorům kódu jsou jasně dané.
+
+Nechť máme bázi metrického prostoru s hammingovou metrikou. potom pro kazdy vektor z prostoru existuje prave jedna kombinace vektorů v bázi, která dá náš vektor. 
+
+Nechť máme dva různé vektory se stejnou hodno
+
+pokud mám r-perfektní redukovaný (obsahuje O) lineární kód, tak pro každý vektor z prostoru je min vzdáleností od kódových slov menší nebo rovna r. Tedy pro 1-perfektní kód je vzdálenost neznámého vektoru y od nějakého kódového slova u rovna buď 0 nebo 1. Pokud je rovna 0, máme vyhráno. Pokud je rovna 1, máme n možností na kód, kde n je dimenze prostoru. Navíc z přítomnosti nuly v kódu známe počet jedniček a nul. Tedy máme buď w(u) nebo n-w(u) možností, kterou pozici změnit podle toho, jestli je vzdálenost y od nuly menší než w(u) nebo větší než w(u). 
+
+\subsection{testovani}
+Báze Hammingova [15,11] kódu není báze Hammingova 15, 2 prostoru.
+Báze Hammingova [7,4] kódu není báze Hammingova 7, 2 prostoru.
+
+
+\section{possible idea}
+Italo Dejter, Dimacs and University of Puerto Rico
+
+Title: Ternary perfect domination of binary codes
+
+Given a graph G, we say that a vertex subset S of G is a perfect dominating set (or PDS) of G if every vertex v of G not in S is neighbor of exactly one vertex of S.
+
+P. Weichsel showed that each connected component of the subgraph induced by a PDS in the n-cube is a subcube and conjectured that S is uniform, i.e. all such components are isomorphic.
+
+P. Ostergard and D. Weakley showed that the conjecture is false, by exposing a PDS S in the 13-cube whose induced subgraph has as connected components 26 4-cubes and 288 isolated vertices (which correspond to the nonzero words of the ternary Hamming code) and whose automorphism group is the general linear group GL(3,3).
+
+We establish that the perfect dominating set of the 13-cube found by Ostergard and Weakley (as a counterexample to Weichsel's uniformity conjecture) exists very naturally in the ternary Hamming code of length 13, and has a very special geometric-combinatorial structure. This approach provides very short proofs of its characteristic properties
+
+This is joint work with Kevin T. Phelps.
+
+\section{Ternary Hamming and Binary Perfect Covering Codes}
+S is a perfect dominating set (or PDS) if for all v in G without S is a neighbour of exactly one vertex of S
+
+Each component of S is an i-cube, where 0 <= i <= n.
+
+Xi is the number of i-cubes in S.
+A sphere of radius 1 about any vertex in such i-cube will cover/dominate exactly n-i vertices not in this i-cube. 
+
+Proposition: For a set S to be a PDS the distance between any two components is at least 3 and the number of i-cube components satisfies the bound lower with equality.
+\[
+\sum_{i = 0}^n 2^i(n-i+1)X_i \leq 2^n
+\]
+
+The i/cube components of a PDS can be represented bz codewords over a ternary alphabet. The vertices of an i-cube component all agree on n-i coordinates.
+
+I could use it probably but the construction is problematical for me right now. I would get n-i options in case of an element of the base that is part of an i-cube. I would have to choose between those n-i options which could maybe work.
+
+\section{Testing MDS codes as a base}
+\subsection{5-ary [4,2] RS code with alpha = 2}
+G = [[1,2,4,3],[1,4,1,4]]
+Tenhle kod (25 kodovych slov) z celkem 625 celkovych slov uspel v testu, jestli vsechny tajne kody mohu vyjadrit po techto pokusech. 
+Použil jsem hodnocení na black and white pegs
+
+\section{Testing Hamming codes as a base}
+\subsection{[7,4] Hamming code}
+Hammingův 7,4 kód uspel v testu, jestli vsechny tajne kody mohu vyjadrit po techto pokusech. 
+Použil jsem hodnocení na black and white pegs.
+Hamming 7,4 má 16 slov, prostor má celkem 128 slov
+
+
+\section{On the extendability of code isometries}
+On the extendability of code isometries is a useful article about proving metrical rigidity of various codes. 
+
+\section{binary 1-perfect code as a base}
+If i changed the codeword in a position where the codeword u is same as codeword of distance two from the secret code, the codewords would suddenly be of distance four. Thus, i can only change the codeword u in the positions that are different with the codewords of distance two of the secret code. I have z = (n-1)/2 codewords of distance two from the secret code. If n >= 7, then z >= 3. These codewords have distance three from codeword u. 
+
+If all three codewords are different (wrt u) on the same three positions, then its a contradiction, because they would be the same codewords. If there are two positions where the codewords would all be different from u, then the distance between the codewords would be 2 at most. Therefore there exists maximum of 1 position, where the codewords are all different from u. If there was none, then if we changed anything in u, there would be a codeword with the distance 4 from the resulting word. Thus there exists always one index, where all codewords with distance two from the secret code are different than the codeword u. If we change this index, we get the secret code. 
+
+This concludes the proof, that 1-perfect code suits as a base to static binary mastermind. 
+
+The algorithm stands on finding the index, where all codewords of distance two from the secret code are different than the codeword u. 
+
+So i sum the codewords with codeword u modulus two - i get positions, where the codewords are different. To find the intersection, I pointwise multiply all results.
+
+\section{binary 3-perfect code as a base}
+Let C be a 3-perfect binary code. Therefore, d(C) = 7. 7 <= n-k+1. n>=7+k+1. It holds that 3-neighbourhoods of all codewords are disjoint. Also every word is in exactly one 3-neighborhood of some codeword. It means that 3-neighborhood of all words contains exactly one codeword. 
+
+Let v be a secret code. Then there exists a codeword u such that d(u,v) <= 3.
+
+1) If d(u,v) = 0: u = v
+
+2) If d(u,v) = 1: 
+There exist n options for index change in u in order to get v. There exist k codewords with distance 6 from v. I have n-1 options for indexes to change in order to get them. 
+If there are two options for index change - that means if all k codewords are different than u in these two indexes. Then the distance between the codewords would be 8 at most. I would like to prove that then there would exist a pair of codewords whose distance would be less than 7 which would contradict the definition of 3-perfect binary code.
+
+Maybe the amount of codewords with distance y from secret code is equal to smth*(the amount of codewords with distance y-1 of length n-1 or smth) - find and prove. 
+
+For every word of distance 3 from our secret code v there exists exactly one codeword of distance 3 from our secret code. The number of (feasible) words of distance 3 from our secret code is (n-1) choose 3. Then for every word of these (n-1) choose 3 there exists exactly one codeword of distance three. Some of them are the same codewords though. Let w is a word, z is a codeword of distance three from w. Then there exists 6 choose 3?? words of distance 3 from v such that their distance from z is 3. (I need to prove that)
+
+This might imply that we have ((n-1) choose 3)/(6 choose 3) codewords of distance 6 from the secret code v. 
+
+Now if there existed two indeces i,j such that. u + ei is a secret code and u + ej is a secret code. Therefore all ((n-1) choose 3)/(6 choose 3) are the same on those two indeces. I want to imply that there exists a pair of codewords out of these that are equal on three indeces, therefore their distance is at most 6, which is a contradiction. There is n-2 options for the third index. We want all codewords that are different on four positions out of the n-2 options. Therefore ((n-1) choose 3)/(6 choose 3) * 4 has to be less than or equal to n-2. 
+
+\[
+\frac{\binom{n-1}{3}}{\binom{6}{3}} = \frac{\frac{(n-1)*(n-2)*(n-3)}{6}}{\frac{6*5*4}{6}} = \frac{(n-1)*(n-2)*(n-3)}{6*5*4}
+\]
+So we need 
+\[
+\frac{(n-1)*(n-2)*(n-3)}{6*5*4} > n-2
+\]
+
+\[
+(n-1)*(n-3) > 6*5*4
+\]
+
+\[
+n^2-4n+3 > 120
+\]
+
+\[
+n^2-4n-117 > 0
+\]
+which holds for n < -9, n > 13. 
+
+We want n > 13. 
+
+Construct similar proof for distance 2 and 3 from the closest codeword.
+
+\section{proposition for r-perfect codes}
+Proposition: for r in the set of natural numbers there exist n0 such that every r-perfect binary code of length n>=n0 is a base of the hamming space $H_{2,n}$.
+
+Not proven yet but should work in my opinion.
