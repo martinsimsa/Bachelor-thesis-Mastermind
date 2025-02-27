@@ -1,1 +1,126 @@
 \chapter{Základní hra}
+Logik, anglicky mastermind, je hra pro dva hráče. První hráč vytvoří na čtyřech pozicích tajný kód nějakou kombinací šesti barev (opakování jsou povolena). Druhý hráč se tento kód snaží uhodnout na co nejmenší počet pokusů. Každý pokus spočívá v sestavení čtyřmístného kódu a jeho ohodnocením černými a bílými kolíčky. Počet černých kolíčků značí počet pozic, na kterých se barva v pokusu shoduje s barvou v tajném kódu. Bílé kolíčky se ohodnocují postupně. Pro každou zbývající pozici i v pokusu postupně zjistím, jestli existuje pozice j v tajném kódu se stejnou barvou. Po každém přidání bílého kolíčku aktualizuji zbývající pole. Tedy pro ohodnocení bílým kolíčkem nemohu dvakrát použít stejnou pozici v tajném kódu.
+
+Hra lze zobecnit podle počtu polí a barev, ze kterých můžeme vybírat. Variantu o n polích a k barvách budeme značit [n,k]-Mastermind. Základní hru tedy budeme značit [4,6]-Mastermind. Řekneme, že [n,k]-Mastermind je bez opakování, pokud $n \leq k$ a v tajném kódu (i v pokusech??) se nesmí opakovat barvy. Řekneme, že [n,k]-Mastermind je permutační, pokud je bez opakování a $n = k$.
+
+\begin{definice}[ohodnocení]\label{def01:2}
+  Uvažujme [n,k]-Mastermind. Nechť $u,v \in H_{n,k}$ jsou kódy. 
+  Počet černých kolíčků je $|\{i \in \{1,\dots, n\}|  u_i = v_i \} |$.
+  Počet bílých kolíčků definujeme jako výsledek následujícího algoritmu:
+
+  
+  
+  Ohodnocením myslíme uspořádanou dvojici $(b,w)$, kde b je počet černých kolíčků a w je počet bílých kolíčků.
+  
+  Nechť ohodnocením kódů u a v je b černých kolíčků a w bílých, potom toto ohodnocení budeme značit \[s(v, u) = (b,w) \]
+\end{definice}
+
+\begin{algorithm}
+\begin{algorithmic}[1]  % [1] způsobí, že číslujeme kroky algoritmu
+\Function{EvaluateGuess}{$u, v, n$}
+    \State $b \gets 0$
+    \State $w \gets 0$
+    
+    \State ufree $ \gets [1]*n$ \Comment{volné indexy pro porovnání v u a v}
+    \State vfree $ \gets [1]*n$
+    
+    \For{$i = 1$ to $n$}
+        \If{$u_i = v_i$}
+          \State $b \gets b+1$ \Comment{přidáme černý kolíček}
+          \State ufree$[i]  \gets 0$
+          \State vfree$[i] \gets 0$
+        \EndIf
+    \EndFor
+
+    \For{$i = 1$ to $n$}
+    
+        \If{ufree$[i] = 1$}
+          \For{$j = 1$ to $n$}
+            \If{vfree$[j] = 1$ \And $u_i = v_j$}
+              \State $w \gets w+1$ \Comment{přidáme bílý kolíček}
+              \State ufree$[i]  \gets 0$
+              \State vfree$[j] \gets 0$
+            \EndIf
+            \EndFor
+    \EndIf
+    \EndFor
+	
+\EndFunction
+\end{algorithmic}
+\caption{Algoritmus, který vrátí počet černých a bílých kolíčků pro vstupní kódy u a v a dimenzi n.}
+\label{isprime}
+\end{algorithm}
+
+
+Nechť $v \in H_{n,k}$ je tajný kód a $u \in H_{n,k}$ je kód. Nechť ohodnocením kódů u a v je b černých kolíčků a w bílých, potom toto ohodnocení budeme značit \[s(v, u) = (b,w) \]
+Triviálním pozorováním je fakt, že pro [n,k]-Mastermind neexistuje ohodnocení (n-1,1) a součet černých a bílých kolíčků je maximálně n. 
+
+Pro analýzu algoritmů řešení mastermindu zavedeme pojem kandidát. Jde o kód, který má stejné ohodnocení pro danou posloupnost pokusů jako neznámý tajný kód. 
+\begin{definice}[kandidát]\label{def01:2}
+  Uvažujme [n,k]-Mastermind. Nechť $\{u_1, u_2, \dots, u_j\}, \hspace{20px} u_i \in H_{n,k}$ jsou pokusy s ohodnoceními $\{r_1, r_2, \dots, r_j\}$. Řekneme, že kód $u \in H_{n,k}$ je kandidát, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots n\}$. 
+\end{definice}
+
+Mnoho algoritmů je založeno na zkoumání rozložení kandidátů podle možného ohodnocení dalšího pokusu. Definujeme tabulku rozdělení, která obsahuje množiny kandidátů očíslované podle případných hodnocení dalšího pokusu. 
+\begin{definice}[tabulka rozdělení]\label{def01:2}
+  Uvažujme [n,k]-Mastermind. \hfill \break Nechť $\{u_1, u_2, \dots, u_j\}, u_i \in H_{n,k}$ jsou pokusy s ohodnoceními $\{r_1, r_2, \dots, r_j\}$. Nechť K je množina kandidátů. Nechť $u \in H_{n,k}$ je kód. Uvažujeme nějaké seřazení všech možností ohodnocení $s_i, (s_1, s_2, \dots, s_m)$. Tabulkou rozdělení rozumíme uspořádanou m-tici množin $K_i$, kde $K_i$ je množina kandidátů pro $\{u_1, u_2, \dots, u_j, u\}$ a $\{r_1, r_2, \dots, r_j, s_i\}$.
+
+  Množstevní tabulku rozdělení nazveme $(|K_1|, |K_1|, \dots, |K_m|)$.
+\end{definice}
+
+
+
+\section{Algoritmy na řešení základní hry}
+\subsection{minimální maximální počet pokusů}
+V roce 1977 dokázal Donald E. Knuth, že [4,6]-Mastermind lze vyhrát na pět pokusů.\cite{donald_e__knuth_1977} Jeho strategie spočívá v minimalizaci maximálního počtu kandidátů v tabulce rozdělení přes všechny kódy. Tedy hledá 
+\[ \arg\min_{u \in H_{4,6}} \max_{|K_i|} \{ K_i \in \textrm{tabulka rozdělení}\} \]
+
+V případě nejednoznačného řešení min max problému preferuje výběr kandidátů a dále abecední pořadí. 
+
+Důkaz, že nelze vyhrát za 4??? Entropie???
+
+\subsection{minimální očekávaný počet pokusů}
+Pokud zkoumáme průměrný počet pokusů na dohrání hry, Knuthův algoritmus není optimální. Dosahuje průměrného počtu pokusů ..., citovat. Ukazuje se, že existují algoritmy, které dosahují menšího průměrného počtu pokusů.
+
+
+1111 - [625, 0, 0, 0, 0, 500, 0, 0, 0, 150, 0, 0, 20, 1]
+1112 - [256, 308, 61, 0, 0, 317, 156, 27, 0, 123, 24, 3, 20, 1]
+1122 - [256, 256, 96, 16, 1, 256, 208, 36, 0, 114, 32, 4, 20, 1]
+1123 - [81, 276, 222, 44, 2, 182, 230, 84, 4, 105, 40, 5, 20, 1]
+1234 - [16, 152, 312, 136, 9, 108, 252, 132, 8, 96, 48, 6, 20, 1]
+
+
+Pro ilustraci přikládám množstevní tabulku rozdělení pro různé první pokusy ($j = 0$). Uvažuji abecední seřazení ohodnocení 
+\[ \big( (0,0), (0,1), \dots, (4,0) \big) \]
+
+\begin{table}[b!]
+    \centering
+    
+    \begin{tabular}{l l l l l l}
+    \toprule
+    
+        res & 1111 & 1112 & 1122 & 1123 & 1234 \\ 
+    \midrule
+        
+        (0,0)& 625 & 256 & 256 & 81 & 16 \\ 
+        (0,1)& 0 & 308 & 256 & 276 & 152 \\ 
+        (0,2)& 0 & 61 & 96 & 222 & 312 \\ 
+        (0,3)& 0 & 0 & 16 & 44 & 136 \\ 
+        (0,4)& 0 & 0 & 1 & 2 & 9 \\ 
+        (1,0)& 500 & 317 & 256 & 182 & 108 \\ 
+        (1,1)& 0 & 156 & 208 & 230 & 252 \\ 
+        (1,2)& 0 & 27 & 36 & 84 & 132 \\ 
+        (1,3)& 0 & 0 & 0 & 4 & 8 \\ 
+        (2,0)& 150 & 123 & 114 & 105 & 96 \\ 
+        (2,1)& 0 & 24 & 32 & 40 & 48 \\ 
+        (2,2)& 0 & 3 & 4 & 5 & 6 \\ 
+        (3,0)& 20 & 20 & 20 & 20 & 20 \\ 
+        (4,0)& 1 & 1 & 1 & 1 & 1 \\ 
+    \bottomrule
+    \end{tabular}
+\end{table}
+
+Přidat kód???
+
+
+
+
