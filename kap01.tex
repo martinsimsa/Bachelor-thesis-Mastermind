@@ -1,125 +1,172 @@
-\chapter{Základní hra}
-Logik, anglicky mastermind, je hra pro dva hráče. První hráč vytvoří na čtyřech pozicích tajný kód nějakou kombinací šesti barev (opakování jsou povolena). Druhý hráč se tento kód snaží uhodnout na co nejmenší počet pokusů. Každý pokus spočívá v sestavení čtyřmístného kódu a jeho ohodnocením černými a bílými kolíčky. Počet černých kolíčků značí počet pozic, na kterých se barva v pokusu shoduje s barvou v tajném kódu. Bílé kolíčky se ohodnocují postupně. Pro každou zbývající pozici i v pokusu postupně zjistím, jestli existuje pozice j v tajném kódu se stejnou barvou. Po každém přidání bílého kolíčku aktualizuji zbývající pole. Tedy pro ohodnocení bílým kolíčkem nemohu dvakrát použít stejnou pozici v tajném kódu.
+\chapter{Pravidla hry Mastermind}
 
-Hra lze zobecnit podle počtu polí a barev, ze kterých můžeme vybírat. Variantu o n polích a k barvách budeme značit [n,k]-Mastermind. Základní hru tedy budeme značit [4,6]-Mastermind. Řekneme, že [n,k]-Mastermind je bez opakování, pokud $n \leq k$ a v tajném kódu (i v pokusech??) se nesmí opakovat barvy. Řekneme, že [n,k]-Mastermind je permutační, pokud je bez opakování a $n = k$.
+\subsubsection{Značení:}
+V práci budeme používat následující značení:
+\begin{itemize}
+    \item Nechť $S$ je konečná množina. Potom $|S|$ značíme její mohutnost, tedy počet prvků.
+    \item Formulí $\arg$ myslíme funkci, která vrátí prvek nabývající extrémní hodnoty popsané v navazujícím vzorci. Např $1 = \arg\max \{-x \mid x \in \mathbb{N}\}$.
+    \item Nechť $K$ je množina. Symbolem $\mathcal{P}(K)$ značíme množinu všech podmnožin $K$.
+\end{itemize}
 
-\begin{definice}[ohodnocení]\label{def01:2}
-  Uvažujme [n,k]-Mastermind. Nechť $u,v \in H_{n,k}$ jsou kódy. 
-  Počet černých kolíčků je $|\{i \in \{1,\dots, n\}|  u_i = v_i \} |$.
-  Počet bílých kolíčků definujeme jako výsledek následujícího algoritmu:
+Zavedeme definice potřebné pro vysvětlení průběhu hry Mastermind. Nejprve vymezíme prostor, se kterým pak dále budeme pracovat. 
 
-  
-  
-  Ohodnocením myslíme uspořádanou dvojici $(b,w)$, kde b je počet černých kolíčků a w je počet bílých kolíčků.
-  
-  Nechť ohodnocením kódů u a v je b černých kolíčků a w bílých, potom toto ohodnocení budeme značit \[s(v, u) = (b,w) \]
+%množinu \[ \{ u = u_1u_2 \dots u_n \hspace{2px} \mid \hspace{2px} u_i \in \{1, 2, 3, \dots, k\}, \hspace{2px} i \in \{1, 2, 3, \dots, n\} \}\]
+\begin{definice}[Prostor kódů]\label{def01:1}
+  Nechť $n \in \N $, $k \in \N $. Potom prostor kódů o $n$ pozicích a $k$ barvách definujeme jako množinu $H_{n,k} = \{1, 2, 3, \dots, k\}^n$. Prvek $u = u_1u_2\dots u_n \in H_{n,k}$ nazýváme kód.
 \end{definice}
-
-\begin{algorithm}
-\begin{algorithmic}[1]  % [1] způsobí, že číslujeme kroky algoritmu
-\Function{EvaluateGuess}{$u, v, n$}
-    \State $b \gets 0$
-    \State $w \gets 0$
-    
-    \State ufree $ \gets [1]*n$ \Comment{volné indexy pro porovnání v u a v}
-    \State vfree $ \gets [1]*n$
-    
-    \For{$i = 1$ to $n$}
-        \If{$u_i = v_i$}
-          \State $b \gets b+1$ \Comment{přidáme černý kolíček}
-          \State ufree$[i]  \gets 0$
-          \State vfree$[i] \gets 0$
-        \EndIf
-    \EndFor
-
-    \For{$i = 1$ to $n$}
-    
-        \If{ufree$[i] = 1$}
-          \For{$j = 1$ to $n$}
-            \If{vfree$[j] = 1$ \And $u_i = v_j$}
-              \State $w \gets w+1$ \Comment{přidáme bílý kolíček}
-              \State ufree$[i]  \gets 0$
-              \State vfree$[j] \gets 0$
-            \EndIf
-            \EndFor
-    \EndIf
-    \EndFor
-	
-\EndFunction
-\end{algorithmic}
-\caption{Algoritmus, který vrátí počet černých a bílých kolíčků pro vstupní kódy u a v a dimenzi n.}
-\label{isprime}
-\end{algorithm}
+%Číslo $n \in \N $ budeme nazývat počet pozic a $k \in \N $ počet barev. Číslu $u_i \in \{1, 2, 3, \dots, k\}$ budeme říkat barva. 
 
 
-Nechť $v \in H_{n,k}$ je tajný kód a $u \in H_{n,k}$ je kód. Nechť ohodnocením kódů u a v je b černých kolíčků a w bílých, potom toto ohodnocení budeme značit \[s(v, u) = (b,w) \]
-Triviálním pozorováním je fakt, že pro [n,k]-Mastermind neexistuje ohodnocení (n-1,1) a součet černých a bílých kolíčků je maximálně n. 
+Pro nějaké dva kódy z $H_{n,k}$ zavedeme definici ohodnocení bílými a černými kolíčky inspirovanou D. Knuthem \cite{donald_e__knuth_1977} a D. Greenwellem \cite{greenwell}. Ohodnocení dává určitou informaci o tom, jak se dva kódy podobají.
 
-Pro analýzu algoritmů řešení mastermindu zavedeme pojem kandidát. Jde o kód, který má stejné ohodnocení pro danou posloupnost pokusů jako neznámý tajný kód. 
-\begin{definice}[kandidát]\label{def01:2}
-  Uvažujme [n,k]-Mastermind. Nechť $\{u_1, u_2, \dots, u_j\}, \hspace{20px} u_i \in H_{n,k}$ jsou pokusy s ohodnoceními $\{r_1, r_2, \dots, r_j\}$. Řekneme, že kód $u \in H_{n,k}$ je kandidát, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots n\}$. 
+
+% Označíme-li dále $N = \sum_{j = 1}^k  \min(n_j, m_j)$.
+% Množinu všech ohodnocení v $H_{n,k}$ značíme $S$.
+\begin{definice}[Ohodnocení]\label{ohodnoceni}
+  Nechť $u,v \in H_{n,k}$ jsou kódy, potom ohodnocením kódů $u$ a $v$ myslíme uspořádanou dvojici $(b,w) \in \N_0 \times \N_0$, kde $b$ a $w$ jsou počty černých a bílých kolíčků definované následovně. Počet černých kolíčků je počet prvků množiny $\{i \in \{1,\dots, n\}\mid  u_i = v_i \}$. Označme $n_j$ počet výskytů barvy $j$ v kódu $u$, $m_j$ počet výskytů barvy $j$ v kódu $v$. Počet bílých kolíčků je hodnota $w = \sum_{j = 1}^k \min(n_j, m_j)-b$.
+
+  Dále definujeme funkci $s \colon H_{n,k} \times H_{n,k} \to \mathbb{N}_0\times \mathbb{N}_0$, která dvojici kódů přiřadí jejich ohodnocení.
 \end{definice}
+Počet černých kolíčků pro nějaké dva kódy značí počet pozic, na kterých mají tyto kódy shodnou barvu. Bílé kolíčky značí počet zbývajících pozic v prvním kódu, které se shodují s nějakou jinou pozicí v druhém kódu v barvě. Nejprve se vyhodnotí počet černých kolíčků a potom až počet bílých tak, aby každá pozice v obou kódech přispívala maximálně k jednomu kolíčku. K popisu hry Mastermind se nám bude hodit definice, která kódu $u$ přiřadí ohodnocení vzhledem k neznámému kódu $v$. 
 
-Mnoho algoritmů je založeno na zkoumání rozložení kandidátů podle možného ohodnocení dalšího pokusu. Definujeme tabulku rozdělení, která obsahuje množiny kandidátů očíslované podle případných hodnocení dalšího pokusu. 
-\begin{definice}[tabulka rozdělení]\label{def01:2}
-  Uvažujme [n,k]-Mastermind. \hfill \break Nechť $\{u_1, u_2, \dots, u_j\}, u_i \in H_{n,k}$ jsou pokusy s ohodnoceními $\{r_1, r_2, \dots, r_j\}$. Nechť K je množina kandidátů. Nechť $u \in H_{n,k}$ je kód. Uvažujeme nějaké seřazení všech možností ohodnocení $s_i, (s_1, s_2, \dots, s_m)$. Tabulkou rozdělení rozumíme uspořádanou m-tici množin $K_i$, kde $K_i$ je množina kandidátů pro $\{u_1, u_2, \dots, u_j, u\}$ a $\{r_1, r_2, \dots, r_j, s_i\}$.
-
-  Množstevní tabulku rozdělení nazveme $(|K_1|, |K_1|, \dots, |K_m|)$.
+\begin{definice}[Ohodnocení vzhledem ke kódu]
+  Nechť $v \in H_{n,k}$ je kód. Definujeme funkci
+  \begin{align*}
+        s_v \colon H_{n,k} &\to \mathbb{N}_0\times \mathbb{N}_0 \\
+        u &\mapsto s(u,v)
+  \end{align*}
+  Pro $u\in H_{n,k}$ definujeme ohodnocení $u$ vzhledem k $v$ jako $s_v(u)$.
 \end{definice}
 
 
+Triviálním pozorováním je fakt, že pro libovolné dva kódy je součet černých a bílých kolíčků v jejich ohodnocení maximálně $n$. To plyne z toho, že hodnota $\sum_{j = 1}^k  \min(n_j, m_j)$ je menší nebo rovna $n$. Zároveň v prostoru $H_{n,k}$ neexistuje ohodnocení $(n-1,1)$. Pokud se totiž kódy schodují právě na $n-1$ pozicích, musí se na poslední pozici lišit. 
+\begin{tvrz}\label{tvrzohodnoceni}
+    Nechť $n \in \N$, $k \in \N, k>2$. Potom pro všechna $(b,w)\in \mathbb{N}_0 \times \mathbb{N}_0,\hspace{5px} b + w \leq n$ existuje dvojice kódů $u,v \in H_{n,k}$ taková, že jejich ohodnocení je $(b,w)$.
+\end{tvrz}
+\begin{dukaz}
 
-\section{Algoritmy na řešení základní hry}
-\subsection{minimální maximální počet pokusů}
-V roce 1977 dokázal Donald E. Knuth, že [4,6]-Mastermind lze vyhrát na pět pokusů.\cite{donald_e__knuth_1977} Jeho strategie spočívá v minimalizaci maximálního počtu kandidátů v tabulce rozdělení přes všechny kódy. Tedy hledá 
-\[ \arg\min_{u \in H_{4,6}} \max_{|K_i|} \{ K_i \in \textrm{tabulka rozdělení}\} \]
-
-V případě nejednoznačného řešení min max problému preferuje výběr kandidátů a dále abecední pořadí. 
-
-Důkaz, že nelze vyhrát za 4??? Entropie???
-
-\subsection{minimální očekávaný počet pokusů}
-Pokud zkoumáme průměrný počet pokusů na dohrání hry, Knuthův algoritmus není optimální. Dosahuje průměrného počtu pokusů ..., citovat. Ukazuje se, že existují algoritmy, které dosahují menšího průměrného počtu pokusů.
-
-
-1111 - [625, 0, 0, 0, 0, 500, 0, 0, 0, 150, 0, 0, 20, 1]
-1112 - [256, 308, 61, 0, 0, 317, 156, 27, 0, 123, 24, 3, 20, 1]
-1122 - [256, 256, 96, 16, 1, 256, 208, 36, 0, 114, 32, 4, 20, 1]
-1123 - [81, 276, 222, 44, 2, 182, 230, 84, 4, 105, 40, 5, 20, 1]
-1234 - [16, 152, 312, 136, 9, 108, 252, 132, 8, 96, 48, 6, 20, 1]
-
-
-Pro ilustraci přikládám množstevní tabulku rozdělení pro různé první pokusy ($j = 0$). Uvažuji abecední seřazení ohodnocení 
-\[ \big( (0,0), (0,1), \dots, (4,0) \big) \]
-
-\begin{table}[b!]
-    \centering
+    %Ukážeme, že pro každé $b$ a $w$, $b+w \leq n$ existují dva kódy $u,v \in H_{n,k}$, takové, že $s(u,v) = (b,w)$.
     
-    \begin{tabular}{l l l l l l}
-    \toprule
     
-        res & 1111 & 1112 & 1122 & 1123 & 1234 \\ 
-    \midrule
-        
-        (0,0)& 625 & 256 & 256 & 81 & 16 \\ 
-        (0,1)& 0 & 308 & 256 & 276 & 152 \\ 
-        (0,2)& 0 & 61 & 96 & 222 & 312 \\ 
-        (0,3)& 0 & 0 & 16 & 44 & 136 \\ 
-        (0,4)& 0 & 0 & 1 & 2 & 9 \\ 
-        (1,0)& 500 & 317 & 256 & 182 & 108 \\ 
-        (1,1)& 0 & 156 & 208 & 230 & 252 \\ 
-        (1,2)& 0 & 27 & 36 & 84 & 132 \\ 
-        (1,3)& 0 & 0 & 0 & 4 & 8 \\ 
-        (2,0)& 150 & 123 & 114 & 105 & 96 \\ 
-        (2,1)& 0 & 24 & 32 & 40 & 48 \\ 
-        (2,2)& 0 & 3 & 4 & 5 & 6 \\ 
-        (3,0)& 20 & 20 & 20 & 20 & 20 \\ 
-        (4,0)& 1 & 1 & 1 & 1 & 1 \\ 
-    \bottomrule
-    \end{tabular}
-\end{table}
+    Situaci rozdělíme na dva případy podle parity $w$. Nechť napřed $w$ je sudé. Kódy $u$ a $v$ zvolíme následovně:
+\[
+  u = 
+    \underbrace{11\dots1}_{b}
+    \underbrace{11\dots1}_{\frac{w}{2}}
+    \underbrace{22\dots2}_{\frac{w}{2}}
+    \underbrace{11\dots1}_{n-b-w}
+ \]
+ \[
+  v = 
+    \underbrace{11\dots1}_{b}
+    \underbrace{22\dots2}_{\frac{w}{2}}
+    \underbrace{11\dots1}_{\frac{w}{2}}
+    \underbrace{22\dots2}_{n-b-w}
+ \]
+Vidíme, že počet černých kolíčků kódů $u$ a $v$ je $b$. Počet bílých kolíčků $w'$ je potom
+\begin{align*} 
+w' &= \min\left(n - \frac{w}{2}, b + \frac{w}{2}\right) + \min\left(\frac{w}{2}, n - b - \frac{w}{2}\right) - b \\ 
+&= \min\left(n - b - \frac{w}{2}, \frac{w}{2}\right) + \min\left(\frac{w}{2}, n - b - \frac{w}{2}\right) \\
+&= 2\cdot\min\left(\frac{w}{2}, n - b - \frac{w}{2}\right) = w
+\end{align*}
 
-Přidat kód???
+V poslední rovnosti jsme využili předpokladu, že $b+w \leq n$, a tedy $\frac{w}{2} \leq n - b - \frac{w}{2}$
+
+Pro $w$ liché kódy zvolíme následovně:
+\[
+  u = 
+    \underbrace{11\dots1}_{b}
+    \underbrace{11\dots1}_{\frac{w-1}{2}}
+    \underbrace{22\dots2}_{\frac{w-1}{2}-1}
+    2
+    3
+    \underbrace{11\dots1}_{n-b-w}
+ \]
+ \[
+  v = 
+    \underbrace{11\dots1}_{b}
+    \underbrace{22\dots2}_{\frac{w-1}{2}}
+    \underbrace{11\dots1}_{\frac{w-1}{2}-1}
+    3
+    1
+    \underbrace{22\dots2}_{n-b-w}
+ \]
+Počet černých kolíčků je $b$. Počet bílých kolíčků $w'$ kódů $u$ a $v$ je potom
+\begin{align*} 
+w' = \min\left(n-w+\frac{w-1}{2}, b + \frac{w-1}{2}\right) + \min\left(\frac{w-1}{2}, \frac{w-1}{2} + n-b-w\right) + \\ +\min(1,1) - b 
+ = b + \frac{w-1}{2} + \frac{w-1}{2} + 1 - b = w
+\end{align*}
+\end{dukaz}
+
+Silnější tvrzení platí pro případ se dvěma barvami. 
+
+\begin{tvrz}\label{tvrzohodnoceni2}
+    Nechť $n \in \N, k=2$. Nechť dále $u, v \in H_{n,k}$ jsou kódy s ohodnocením $(b,w)$. Potom $b + w \leq n, \hspace{5px} (b,w) \neq (n-1,1)$ a $w$ je sudé.
+\end{tvrz}
+\begin{dukaz}
+$b + w \leq n, \hspace{5px} (b,w) \neq (n-1,1)$ platí obdobně jako v důkazu tvrzení \ref{pozmozneohodnoceni}. Kódy $u$ a $v$ lze permutací pozic dostat do následujícího tvaru
+    \[
+  u = 
+    \underbrace{11\dots1}_{c}
+    \underbrace{22\dots2}_{d}
+    \underbrace{11\dots1}_{x}
+    \underbrace{22\dots2}_{y}
+ \]
+ \[
+  v = 
+    \underbrace{11\dots1}_{c}
+    \underbrace{22\dots2}_{d}
+    \underbrace{22\dots2}_{x}
+    \underbrace{11\dots1}_{y}
+ \]
+ kde $b = c + d$. 
+
+ Potom
+ \begin{align*}
+     w &= \min(c + x, c + y) + \min(d + y, d + x) - b =\\
+     &= \min(x, y) + \min(y, x) = 2\cdot \min(x, y)
+ \end{align*}
+
+\end{dukaz}
+
+    
+    %Nyní dokážeme, existenci ohodnocení pro nějaké $(b,w)$. Nechť napřed $w = 0$. Zvolme prvních $b$ pozic v obou kódech na barvu $1$. Protože $k>2$, můžeme pro zbylé pozice v prvním kódu zvolit barvu $1$ a pro zbylé pozice ve druhém kódu zvolit barvu $2$. Snadným ověřením z definice zjistíme, že tyto dva kódy mají ohodnocení $(b,0)$.   Nechť nyní $w > 0$ a $b+w < n$. První kód vytvoříme takto. Položme prvních $b$ pozic na barvu $1$. Položme dále dalších $w$ pozic v prvním kódu střídavě $1212\dots$ a zbylé pozice v prvním kódu vyplníme třetí barvou. Druhý kód vyplníme následovně. Položme prvních $b$ pozic na barvu $1$. Dalších $w + 1$ pozic zvolíme jako $212121\dots$ a kód doplníme barvou dva.     Pokud $b+w = n$ a $w$ je sudé. Náš postup bude fungovat s jedinou obměnou a to, že posledních posledních $w$ pozic druhého kódu $2121\dots$. Pokud $w$ je liché, zvolíme poseldních $w$ pozic prvního kódu $1212\dots3$ a posledních $w$ pozic druhého kódu $3121\dots$.
+
+
+
+
+
+%V příkladu níže je ukázka konstrukce kódů s daným ohodnocením.
+%\begin{prikl}
+ %   Pro ohodnocení $(b,w), w > 0, b+w < n$ kódy mohou vypadat například takto:
+  %  \[111111,1212121,33333\]
+   % \[111111,21212121,2222\]
+
+%    Pro případ $b+w = n$ a $w$ liché lze kódy sestavit takto:
+ %   \[111111,1212123\]
+  %  \[111111,3121212\]
+%\end{prikl}
+
+Nyní jsme připraveni definovat hru Mastermind. 
+
+\section{Průběh hry Mastermind}
+Nechť $n \in \N $, $k \in \N$. [n,k]-Mastermind je hra pro dva hráče, zadavatele a luštitele, 
+% Šlo by oba hráče pojmenovat
+% Cílem hry je nalézt tajný kód na co nejmenší počet pokusů. 
+probíhající podle následujícího schématu. 
+\begin{enumerate}
+    \item Zadavatel vytvoří tajný kód $v \in H_{n,k}$.
+    \item Hra dále probíhá po kolech $i = 1,2,3,\dots$
+        \begin{enumerate}
+            \item Luštitel určí kód (tah, pokus) $u_i \in H_{n,k}$.
+            \item Zadavatel ohodnotí pokus $u_i$ vzhledem k tajnému kódu $v$. 
+        \end{enumerate}
+    \item Hra končí v případě, že pokus je ohodnocen $n$ černými kolíčky (zadaný kód se shoduje s tajným kódem). 
+\end{enumerate}
+Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů. V případě, že luštitel neopakuje kódy v pokusech, hra jistě skončí.
+% vyčerpáním všech možností pro tajný kód.  
+
+% přidat různé varianty hry mastermind??? např statická verze, hra pouze s kandidáty atd. 
 
 
 

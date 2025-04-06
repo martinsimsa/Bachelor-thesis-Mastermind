@@ -1,0 +1,125 @@
+\chapter{Základní hra}
+
+\section{Pravidla}
+Logik, anglicky mastermind, je hra pro dva hráče. První hráč vytvoří na čtyřech pozicích tajný kód nějakou kombinací šesti barev (opakování jsou povolena). Druhý hráč se tento kód snaží prolomit na co nejmenší počet pokusů. Každý pokus spočívá v sestavení čtyřmístného kódu a jeho ohodnocením černými a bílými kolíčky. 
+
+Počet černých kolíčků značí počet pozic, na kterých se barva v pokusu shoduje s barvou v tajném kódu. Bílé kolíčky značí počet pozic v pokusu, které se shodují s nějakou jinou pozicí v tajném kódu v barvě. Nejprve se vyhodnotí počet černých kolíčků a potom až počet bílých tak, aby každá pozice v obou kódech přispívala maximálně k jednomu kolíčku.
+
+%takových, že existuje pozice v tajném kódu se stejnou barvou. se shodují barvy, ale jsou na jiných pozicích. se ohodnocují postupně na zbývajících pozicích v pokusu a tajném kódu. Pro každou zbývající pozici $i$ v pokusu se postupně zjistí, jestli zbývá pozice $j$ v tajném kódu se stejnou barvou tak, aby platilo, že každá pozice v obou kódech přispívá k maximálně jednomu kolíčku. Po každém přidání bílého kolíčku se aktualizují zbývající pole. Tedy pro ohodnocení bílým kolíčkem nelze dvakrát použít stejnou pozici v tajném kódu.
+
+Abychom se vyvarovali možným nejasnostem, zavedeme definici ohodnocení bílými a černými kolíčky inspirovanou D. Knuthem \cite{donald_e__knuth_1977} a D. Greenwellem \cite{greenwell}. 
+
+%Alex Bogomolny and Don Greenwell. Invitation to mastermind. MAA Online, 1996-2013. URL http://www.cut-the-knot.org/ctk/Mastermind.shtml.
+
+
+\begin{definice}[ohodnocení]\label{def01:2}
+  Uvažujme \textrm{[n,k]-Mastermind}. Nechť $u,v \in H_{n,k}$ jsou kódy. 
+  Počet černých kolíčků definujeme jako $b = |\{i \in \{1,\dots, n\}|  u_i = v_i \} |$.
+  Označíme $n_k$ počet výskytů barvy $k$ v kódu $u$, $m_k$ počet výskytů barvy $k$ v kódu $v$. 
+  Potom počet bílých kolíčků dejinujeme jako 
+  \[w = \sum_{k = 1}^n  \textrm{min}(n_k, m_k) - b\]
+  
+  Ohodnocením myslíme uspořádanou dvojici $(b,w)$.
+\end{definice}
+
+Triviálním pozorováním je fakt, že pro [n,k]-Mastermind neexistuje ohodnocení (n-1,1) a součet černých a bílých kolíčků je maximálně n. 
+
+\subsubsection{Zobecnění hry}
+
+Hra lze zobecnit podle počtu polí a barev, ze kterých můžeme tajný kód vybírat. Variantu o n polích a k barvách budeme značit [n,k]-Mastermind. Základní hru tedy zapisujeme jako [4,6]-Mastermind. 
+
+Řekneme, že [n,k]-Mastermind je bez opakování, pokud $n \leq k$ a v tajném kódu (i v pokusech??) se nesmí opakovat barvy. Řekneme, že [n,k]-Mastermind je permutační, pokud je bez opakování a $n = k$.
+
+Rozšířenou variantou hry se také stal takzvaný statický mastermind. Jde o variantu hry, kdy se pokusy neohodnocují po každém tahu, ale až všechny najednou. Cílem hry je najít nejmenší počet pokusů, aby po ohodnocení šlo vždy jednoznačně určit tajný kód. Touto variantou hry budeme zkoumat ve třetí kapitole. 
+
+
+\section{Algoritmy na řešení základní hry}
+Algoritmy lze rozlišovat podle toho, zda je povoleno v každém pokusu zahrát jakýkoliv kód a nebo je umožněn výběr pouze z kandidátů. Níže budeme srovnávat pouze algoritmy bez tohoto omezení.
+
+% Přeformulovat, že nepoužívám definice, které nebyly zmíněny.
+
+\subsection{naivní metoda}
+Volba prvního kandidáta, kterého nalezneme.
+
+
+\subsection{Jednokrokové metody}
+%Uvést metody, které vybírají další tah podle rozdělení kandidátů podle možných ohodnocení. 
+
+Pro analýzu algoritmů řešení mastermindu zavedeme pojem kandidát. Jde o kód, který má stejné ohodnocení pro danou posloupnost pokusů jako neznámý tajný kód. 
+\begin{definice}[kandidát]\label{def01:2}
+  Uvažujme [n,k]-Mastermind. Nechť $\{u_1, u_2, \dots, u_j\}, \hspace{20px} u_i \in H_{n,k}$ jsou pokusy s ohodnoceními $\{r_1, r_2, \dots, r_j\}$. Řekneme, že kód $u \in H_{n,k}$ je kandidát, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots n\}$. 
+\end{definice}
+
+Mnoho algoritmů je založeno na zkoumání rozložení kandidátů podle možného ohodnocení dalšího pokusu. Definujeme tabulku rozdělení, která obsahuje množiny kandidátů očíslované podle případných hodnocení dalšího pokusu. 
+\begin{definice}[rozdělení]\label{def01:2}
+  Uvažujme [n,k]-Mastermind. \hfill \break Nechť $\{u_1, u_2, \dots, u_j\}, u_i \in H_{n,k}$ jsou pokusy s ohodnoceními $\{r_1, r_2, \dots, r_j\}$. Nechť K je množina kandidátů. Nechť $u \in H_{n,k}$ je kód. Uvažujeme nějaké seřazení všech možností ohodnocení $s_i, (s_1, s_2, \dots, s_m)$. Rozdělením rozumíme uspořádanou m-tici množin $K_i$, kde $K_i$ je množina kandidátů pro $\{u_1, u_2, \dots, u_j, u\}$ a $\{r_1, r_2, \dots, r_j, s_i\}$.
+
+  Množstevní rozdělení nazveme $(|K_1|, |K_1|, \dots, |K_m|)$.
+\end{definice}
+
+\subsubsection{min max}
+
+V roce 1977 dokázal Donald E. Knuth, že [4,6]-Mastermind lze vyhrát na pět pokusů.\cite{donald_e__knuth_1977} Jeho strategie spočívá v minimalizaci maximálního počtu kandidátů v tabulce rozdělení přes všechny kódy. Tedy hledá 
+\[ \arg\min_{u \in H_{4,6}} \max_{|K_i|} \{ K_i \in \textrm{tabulka rozdělení}\} \]
+
+V případě nejednoznačného řešení min max problému preferuje výběr kandidátů a dále abecední pořadí. 
+
+%Důkaz, že nelze vyhrát za 4??? Entropie???
+
+Pokud zkoumáme průměrný počet pokusů na dohrání hry, Knuthův algoritmus není optimální. Dosahuje průměrného počtu pokusů ..., citovat. Ukazuje se, že existují algoritmy, které dosahují menšího průměrného počtu pokusů.
+
+
+%1111 - [625, 0, 0, 0, 0, 500, 0, 0, 0, 150, 0, 0, 20, 1]
+%1112 - [256, 308, 61, 0, 0, 317, 156, 27, 0, 123, 24, 3, 20, 1]
+%1122 - [256, 256, 96, 16, 1, 256, 208, 36, 0, 114, 32, 4, 20, 1]
+%1123 - [81, 276, 222, 44, 2, 182, 230, 84, 4, 105, 40, 5, 20, 1]
+%1234 - [16, 152, 312, 136, 9, 108, 252, 132, 8, 96, 48, 6, 20, 1]
+
+
+%Pro ilustraci přikládám množstevní tabulku rozdělení pro různé první pokusy ($j = 0$). Uvažuji abecední seřazení ohodnocení 
+%\[ \big( (0,0), (0,1), \dots, (4,0) \big) \]
+
+\subsubsection{entropie}
+Irwing ??? nebo Neuwirth (1982)????? navrhl algoritmus hrající tahy, které maximalizují entropii odpovídajícího množstevního rozdělení. Tato strategie lze přeformulovat jako minimalizace (přes všechny kódy) očekávaného počtu otázek ano/ne, které jsou nutné pro určení tajného kódu po zahrání dalšího tahu.
+
+Nechť máme množinu $K$, definujeme počet otázek ano/ne potřebných k určení jakéhokoli prvku $s \in K$ jako $\log_2(|S|)$. %V našem případě ale kvůli pravidlům hry nelze jednoduše definovat očekávaný počet ano/ne otázek na určení nějakého kódu, protože se nemůžeme cíleně ptát: "je na i-té pozici k-tá barva?". Navíc nedostáváme odpovědi ano/ne.
+Tato definice odpovídá binárnímu vyhledávání čísel v intervalu. Nechť $K_i$ jsou po dvou disjunktní a 
+\[K = \bigcup_{i =1}^n K_i \]
+potom očekávaný počet otázek ano/ne potřebných k určení jakéhokoli prvku je 
+\[G = \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i|. \]
+
+Problém minimalizace $G$ je ekvivalentní problému maximalizaci $-G$.
+
+Označme $p_i = \frac{|K_i|}{|K|}$ pravděpodobnost, že tajný kód je z $K_i$. Potom 
+\[-G = -\sum_{i =1}^n p_i\log_2(p_i * |K|) =  \left( -  \sum_{i =1}^n p_i\log_2(p_i) \right) - \log_2 |K|\]
+
+Protože $\log_2 |K|$ je konstantní, tak problém minimalizace očekávaného počtu otázek je ekvivalentní maximalizaci entropie z množstevního rozdělení. 
+
+
+% Lze to tedy formulovat i tak, že tah maximalizuje střední hodnotu informačního obsahu po ohodnocení tahu. Informační obsah představuje $-log(\frac{|K_i|}{|K|})$, kde |K| je počet kandidátů před zahráním tahu. Tedy je to nějaká hodnota informace vztažená na počet kandidátů. Algoritmus tedy hledá 
+
+
+\subsubsection{počet částí}
+Další strategie, kterou navrhl Barteld Kooi \cite{kooi} je volba kódu, který maximalizuje počet ohodnocení, které jako další pokus může dostat. Tato strategie je motivována následujícím pozorováním, které Kooi popisuje ve svém článku. 
+
+Nechť máme nějakou množinu čísel velikosti n (například $1,2,\dots, n$). Naším úkolem je uhodnout tajné číslo. Předtím se ale můžeme zeptat na jednu uzavřenou otázku ano/ne. Naším cílem je ukázat, že pravděpodobnost uhádnutí tajného čísla nezáleží na velikosti dvou množin, na které nám n čísel rozdělí položená ano/ne otázka. Příkladem jsou následující dvě otázky: "Je tajné číslo 1?" a "Je tajné číslo menší nebo rovno m?". 
+
+Pravděpodobnost, že tajné číslo uhodneme po otázce na konkrétní kartu je $\frac{1}{52}*1 + \frac{51}{52}*\frac{1}{51} = \frac{2}{52}$. 
+Pravděpodobnost, že tajné číslo uhodneme po otázce se srovnáním s číslem m je $\frac{m}{52}*\frac{1}{m} + \frac{n-m}{52}*\frac{1}{n-m} = \frac{2}{52}$. 
+Na položené otázce tedy nezáleželo.
+
+Obecně pravděpodobnost, že tajné číslo uhodneme po otázce, na kterou můžeme dostat k různých odpovědí s pravděpodobnostmi $p_i = \frac{|Z_i|}{n}, i \in \{1, 2, \dots, k\}$, $Z_i$ je množina čísel menších nebo rovno n vyhovující odpovědi i, (Předpokládáme, že $Z_i$ jsou disjunktní) je 
+\[\sum_{i = 1}^k \frac{|Z_i|}{n}*\frac{1}{|Z_i|} = \frac{k}{n}\]
+
+V případě hry mastermind porovnáváme pravděpodobnosti uhodnutí tajného kódu po daném pokusu. Hledáme tedy kód, který maximalizuje počet možných ohodnocení. Tabulka~\ref{tab02} ukazuje počty možných ohodnocení prvních tahů. Tato strategie by vybrala kód 1123, nebo 1234. 
+
+Kooi ukázal, že za použití této strategie lze dosáhnout očekávaného počtu pokusů $4.373$.
+
+%V závěru Kooi diskutuje nad možnými zlepšeními/atd - šlo by zmínit
+
+
+
+
+
+
+

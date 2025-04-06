@@ -1,2 +1,128 @@
-\chapter{Static binary mastermind}
+\chapter{Výsledky algoritmů}
+V následující kapitole porovnáme tři popisované algoritmy. 
+
+\section{Vlastnosti algoritmů}
+Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat \textbf{maximální počet pokusů}, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$.
+
+% jiná formulace - Co když nám ale nezáleží na maximálním počtu pokusů? 
+Druhý ukazatel, který u algoritmů budeme srovnávat je \textbf{průměrný počet pokusů} na hru. Ukážeme, že nejmenší maximální počet pokusů není zárukou pro minimální průměrný počet pokusů na hru. 
+
+Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. 
+
+\begin{definice}[Konzistentní algoritmus]\label{defkonzistentnialg}
+    Uvažujme algoritmus řešící [n,k]-Mastermind. Nechť $u \in H_{n,k}$ je kód, který algoritmus zvolí jako první pokus. Řekneme, že algoritmus řešící [n,k]-Mastermind je konzistentní, pokud pro všechny kódy $u' \in H_{n,k}$ platí, že algoritmus, který místo $u$ volí jako první pokus kód $u'$ nedosahuje lepšího průměrného počtu pokusů.
+\end{definice}
+Konzistentnost budeme zkoumat pouze pro pět zmíněných počátečních kódů $(1111, 1112, 1122, 1123, 1234)$.
+%Potom porovnáme všechny ostatní kódy se stejnou vlastnostní - např všechny kódy, které mají dvě a dvě pozice se stejnou barvou. 
+
+\section{min-max}
+
+Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Byla sestrojena za pomoci programu v pythonu, který byl vytvořen pro tuto práci. \cite{Simsa_Strategies_for_Mastermind_2025} 
+
+Maximální počet pokusů, který min-max algoritmus (začínající kódem 1122) potřebuje na prolomení tajného kódu je $5$. Průměrně pak potřebuje $4.476$ pokusů. K porovnání jsou uvedeny maximální a průměrné počty pokusů pro jiné počáteční kódy. Mohli bychom totiž očekávat, že by průměrný nebo maximální počet pokusů byl menší pro jiný počáteční kód, jak bylo znázorněno v příkladu \ref{malyprikladminmax}. Nejlepších výsledků ale algoritmus dosahuje v při volbě prvního tahu $1122$, který odpovídá přirozenému výběru prvního tahu podle definice Knuthova algoritmu. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l l l}
+\toprule
+první pokus & 1111 & 1112 & \textbf{1122} & 1123 & 1234 \\
+\midrule
+
+maximální počet pokusů 
+& 6 & 6 & \textbf{5} & 6 & 6 \\
+
+průměrný počet pokusů 
+& 5.065 & 4.556 & \textbf{4.476} & 4.4776 & 4.4776\\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+\end{tabular}
+\caption{Výsledky min-max algoritmu}\label{tabminmaxvysl}
+\end{table}
+
+\subsection{entropie}
+
+Algoritmus s entropií vybírá jako první pokus kód $1234$. Dosahuje průměrného počtu pokusů $4.415$, jak ukazuje tabulka \ref{tabentropievysl}. Pokud by ale tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus s entropií tedy není konzistentní. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l l l}
+\toprule
+první pokus & 1111 & 1112 & 1122 & 1123 & \textbf{1234} \\
+\midrule
+
+maximální počet pokusů 
+& 6 & 6 & 6 & 6 & 6 \\
+
+průměrný počet pokusů 
+& 4.911 & 4.496 & 4.428 & \textbf{4.383} & 4.415 \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+\end{tabular}
+\caption{Výsledky algoritmu s entropií}\label{tabentropievysl}
+\end{table}
+
+
+
+\subsection{počet částí}
+Metoda popsána Barteldem Kooi je konzistentní. Volí jako první tah kód $1123$ a dosahuje průměrného počtu pokusů $4.373$. Výsledky pro další počáteční tahy znázorňuje tabulka \ref{tabcastivysl}.
+
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l l l}
+\toprule
+první pokus & 1111 & 1112 & 1122 & \textbf{1123} & 1234 \\
+\midrule
+
+maximální počet pokusů 
+& 7 & 6 & 6 & 6 & 6 \\
+
+průměrný počet pokusů 
+& 4.911 & 4.503 & 4.420 & \textbf{4.373} & 4.444\\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+\end{tabular}
+\caption{Výsledky algoritmu s počtem částí}\label{tabcastivysl}
+\end{table}
+
+
+\subsection{Očekávaný počet}
+Případná čtvrtá strategie...
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l l l}
+\toprule
+první pokus & 1111 & 1112 & 1122 & 1123 & 1234 \\
+\midrule
+
+maximální počet pokusů 
+& 6 & 6 & 5 & 6 & 6 \\
+
+průměrný počet pokusů 
+& 4.911 & 4.529 & 4.453 & 4.394 & 4.434 \\
+\bottomrule
+\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+\end{tabular}
+\caption{Výsledky algoritmu s očekávaným počtem kandidátů}\label{tabminmaxvysl}
+\end{table}
+
+
+\section{Diskuze}
+Poznámky:
+\begin{itemize}
+    \item Nejlepší maximální počet pokusů v případě min-max algoritmu dává smysl, protože algoritmus minimalizuje maximální počet kandidátů v tabulce rozdělení. 
+    \item Zároveň fakt, že zbylé algoritmy dosahují lepšího průměrného počtu pokusů také odpovídá tomu, že sledují nějakou očekávanou hodnotu v tabulce rozdělení. - očekávaná hodnota počtu otázek v případě entropie, pravděpodobnost, že v následujícím tahu uhodneme tajný kód v případě počtu částí. 
+    \item Algoritmy, které by zkoumaly tabulky rozdělení dva kroky dopředu by jistě byly lepší, výpočetně by to ale bylo mnohem náročnější.
+    \item šlo by najít nějakou variantu zmíněných algoritmů, která by řešila mastermind na 5 tahů s výrazně lepším průměrem? - Knuth něco na tenhle způsob ukazoval, ale možná jen v případě jeho algoritmu.
+    \item Volba prvního tahu, který by obsahoval vyšší barvy by mohla být lepší, protože algoritmus volí lexikograficky menší kódy. Podobně by bylo možné náhodně promíchat seřazení všech kódů. 
+    \item Čím je strategie optimálnější, tím hůře jde popsat.
+    \item Strategii optimalizující průměrný počet pokusů nalezl v roce 1993 K. Koyama \cite{koyama}. Ukázal, že lze dosáhnout strategie s průměrným počtem pokusů $4.340$.
+\end{itemize}
+
+
+
 

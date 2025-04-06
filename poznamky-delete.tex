@@ -3,6 +3,8 @@
 \section{Obecné/tipy}
 Nějaké tvrzení o n-koulích, např jedno, co je níže
 
+Logaritmus o jiném základu při posunutí pravděpodobnosti od 0-2 - upřednostňování menších/větších částí rozdělení.
+
 \section{Berghman, Lotte (2008) \cite{BERGHMAN20091880}}
 Článek nejprve popisuje existující algoritmy. Jsou řazeny do tří kategorií, Full enumeration, prozkoumání všech kódů a vybrání následujícího pokusu podle zvolené strategie. Tyto algoritmy excelují v průměrném počtu pokusů na hru. Nevýhodou ale je extrémní časová náročnost při procházení všech možných pokračování. 
 
@@ -24,7 +26,7 @@ Algoritmus vždy začíná tahem 1123, pro který autoři dostávali nejlepší 
 
 Začíná vždy tahem 1122, pro toto rozložení to funguje. Porovnává to s 1123, který ale nezaručuje vyřešení na pět tahů. V určitých případech může selhat. 
 
-\section{Barteld Kooi - YET ANOTHER MASTERMIND STRATEGY }
+\section{Barteld Kooi - YET ANOTHER MASTERMIND STRATEGY \cite{kooi}}
 
 Článek popisuje již známé algoritmy/postupy řešení hry mastermind,
 popisuje metodu za použití entropie - maximalizuje entropii $-\sum_{i=1}^n p_i log(p_i)$, kde při rozdělení V1 až Vn množiny A je $p_i$ pravděpodobnost, že element z A náleží do Vi. 
@@ -183,7 +185,9 @@ Now if there existed two indeces i,j such that. u + ei is a secret code and u + 
 V rovnicích chybí LS * 4.
 
 \subsection{23.02. - snad spravna varianta}
-To co bylo výše je podle mě špatně. Předpokládám, že existují dva indexy, na kterých jsou všechna kódová slova vzdálenosti 6 od v stejná. (tedy nelze jednoznačně určit v pomocí u). Potom chci dokázat, že existují dvě kódová slova, která se shodují na 4 pozicích, na kterých jsou odlišná od u. Potom by tato dvě kódová slova byla vzdálená maximálně 6, což je spor se vzdáleností kódu. 
+Chci dokázat, že r-perfektní binární kód je báze binárního Hammingova prostoru pro všechna n větší nebo rovna nějakému K. Potom tedy můžu tento kód použít pro řešení statického binárního mastermindu. Zároveň bych chtěl najít nějakou dolní mez na množství kódových slov, abych ukázal, jestli je tento postup použitelný. To se mi ale zatím nepodařilo.
+
+Uvažuji příklad s 3-perfektním kódem. To co bylo výše je podle mě špatně. Předpokládám, že existují dva indexy, na kterých jsou všechna kódová slova vzdálenosti 6 od v stejná. (tedy nelze jednoznačně určit v pomocí u). Potom chci dokázat, že existují dvě kódová slova, která se shodují na 4 pozicích, na kterých jsou odlišná od u. Potom by tato dvě kódová slova byla vzdálená maximálně 6, což je spor se vzdáleností kódu. 
 
 Tedy chci najít dvojici indexů (na n-2 pozicích), která bude stejná pro nějaké dvě kódová slova. Tedy chci, aby počet dvojic (5 choose 2) * (pocet kodovych slov) byl vetsi, nez pocet dvojic, ktere mohu vytvorit z n-2 pozic. 
 
@@ -207,21 +211,27 @@ Potom se všechna kódová slova shodují na těchto třech pozicích. Nechť se
 \[n > 7\]
 
 \subsection{New proposition for r-perfect codes}
-We need n such that 
+R-perfect code is a base if n satisfies the following:
 
-\[ \frac{\binom{n-d}{r+1-d}}{\binom{2*(r+1) - d}{r + 1 - d}} * \binom{(2*(r+1) - (d+1)}{r-d} > \binom{(n - d - 1)}{r-d} \]
-v is the secret code, u is the codeword with the smallest distance. 
+\[ \frac{\binom{n-d}{r+1-d}}{\binom{2*(r+1) -1 - d}{r + 1 - d}} * \binom{(2*(r+1) -1 - (d+1)}{r-d} > \binom{(n - d - 1)}{r-d} \]
+v is the secret code, u is the codeword with the smallest distance from v. 
 d = d(u,v), r+1-d is the distance from v to the nearest neighborhood of a different codeword. 
 
-((2*(r+1) - 1) - d choose r+1-d) is the number of codes in the nearest neighborhood of some codeword which are reachable from v. (r + 1 - d indeces from those that are different compared to v). 
+(2r+1 - d choose r+1-d) is the number of codes in the nearest neighborhood of some codeword which are reachable from v. (r + 1 - d indeces from those that are different compared to v). 
 
-((2*(r+1) - 1 - (d+1)) choose (r-d)) je počet (r-d)-tic, na kterých chci aby nějaká dvě kódová slova byla stejná a tím jsme dostali spor s vzdáleností kódu. 
+(2r+1 - (d+1)) choose (r-d)) je počet (r-d)-tic, na kterých chci aby nějaká dvě kódová slova byla stejná a tím jsme dostali spor s vzdáleností kódu. 
 
 (n - d - 1) choose (r-d) je počet (r-d)-tic, které jsou na výběr pro kódová slova. tedy ty (r-d)-tice, na kterých se kódová slova liší od u. 
 
-\[ \frac{\binom{n-d}{r+1-d}}{\binom{2*(r+1) - d}{r + 1 - d}} * \binom{(2*(r+1) - (d+1)}{r-d} > \binom{(n - d - 1)}{r-d} \]
+\[ \frac{\binom{n-d}{r+1-d}}{\binom{2r+1 - d}{r + 1 - d}} * \binom{2r+1 - (d+1)}{r-d} > \binom{n - d - 1}{r-d} \]
 
-\[n > 2r +1 = d(C)\]
+\[ \frac{(n-d)!}{(r+1-d)!(n-r-1)!}*\frac{(r+1-d)!r!}{(2r+1 - d)!} * \frac{(2r - d)!}{(r-d)!r!} > \frac{(n - d - 1)!}{(r-d)!(n-r-1)!} \]
+
+\[n > 2r + 1 = d(C)\]
+
+$d(C)$ je rovna n pouze pro opakovací kód. Pro všechny další r-perfektní kódy nerovnost platí. 
+
+Chtěl bych nalézt nějakou dolní mez na dimenzi/velikost kódu, abych zjistil, jestli je postup použitelný.
 
 \subsection{starsi varianta}
 \[
@@ -293,3 +303,56 @@ n,2 - O(n/log2(n+1)) až O(n), O(n) je jednoduché jedničky s jednou nulou.
 n,n - O(n*logn) bez deterministického algoritmu, pouze pravděpodobnostně. Možná by šlo využít důkazu pro dynamický mastermind v O(n) - rozšířit na O(nlogn) pro statický. 
 
 n,n permutation - O(nlogn) - dokázáno pravděpodobnostně, algoritmus by šel sestrojit pomocí článku/důkazu. Možná ale potřebujeme pro dané n najít danou posloupnost, která to řeší. Potom lze sestrojit algoritmus O(nlogn)
+
+
+\chapter{Notable articles}
+
+\section{mastermind-with-a-linear-number-of-queries}
+ - strategy for O(n) queries for determining the secret code in the adaptive form. They dont prove it for deterministic (static) variation - could be me.
+
+Variations of Mastermind have furthermore been proposed to model problems in security,
+such as revealing someone’s identity by making queries to a genomic database [7], and API-based
+attacks to determine bank PINs [6].
+
+\section{Solving_Static_Permutation_Mastermind_2022}
+Theoretical proof for static permutation mastermind using O(nlogn) queries. It could be reconstructed.
+
+There probably isnt a solution to static mastermind c <= p in O(nlogn).
+
+\section{algoritmus ohodnoceni}
+
+\begin{algorithm}
+\begin{algorithmic}[1]  % [1] způsobí, že číslujeme kroky algoritmu
+\Function{EvaluateGuess}{$u, v, n$}
+    \State $b \gets 0$
+    \State $w \gets 0$
+    
+    \State ufree $ \gets [1]*n$ \Comment{volné indexy pro porovnání v u a v}
+    \State vfree $ \gets [1]*n$
+    
+    \For{$i = 1$ to $n$}
+        \If{$u_i = v_i$}
+          \State $b \gets b+1$ \Comment{přidáme černý kolíček}
+          \State ufree$[i]  \gets 0$
+          \State vfree$[i] \gets 0$
+        \EndIf
+    \EndFor
+
+    \For{$i = 1$ to $n$}
+    
+        \If{ufree$[i] = 1$}
+          \For{$j = 1$ to $n$}
+            \If{vfree$[j] = 1$ \And $u_i = v_j$}
+              \State $w \gets w+1$ \Comment{přidáme bílý kolíček}
+              \State ufree$[i]  \gets 0$
+              \State vfree$[j] \gets 0$
+            \EndIf
+            \EndFor
+    \EndIf
+    \EndFor
+	
+\EndFunction
+\end{algorithmic}
+\caption{Algoritmus, který vrátí počet černých a bílých kolíčků pro vstupní kódy u a v a dimenzi n.}
+\label{isprime}
+\end{algorithm}
