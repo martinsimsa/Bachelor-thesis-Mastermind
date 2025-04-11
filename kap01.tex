@@ -39,7 +39,7 @@ Počet černých kolíčků pro nějaké dva kódy značí počet pozic, na kter
 \end{definice}
 
 
-Triviálním pozorováním je fakt, že pro libovolné dva kódy je součet černých a bílých kolíčků v jejich ohodnocení maximálně $n$. To plyne z toho, že hodnota $\sum_{j = 1}^k  \min(n_j, m_j)$ je menší nebo rovna $n$. Zároveň v prostoru $H_{n,k}$ neexistuje ohodnocení $(n-1,1)$. Pokud se totiž kódy schodují právě na $n-1$ pozicích, musí se na poslední pozici lišit. 
+Triviálním pozorováním je fakt, že pro libovolné dva kódy je součet černých a bílých kolíčků v jejich ohodnocení maximálně $n$. To plyne z toho, že hodnota $\sum_{j = 1}^k  \min(n_j, m_j)$ je menší nebo rovna $n$. Zároveň v prostoru $H_{n,k}$ neexistuje ohodnocení $(n-1,1)$. Pokud se totiž kódy schodují právě na $n-1$ pozicích, musí se na zbývající pozici lišit. 
 \begin{tvrz}\label{tvrzohodnoceni}
     Nechť $n \in \N$, $k \in \N, k>2$. Potom pro všechna $(b,w)\in \mathbb{N}_0 \times \mathbb{N}_0,\hspace{5px} b + w \leq n$ existuje dvojice kódů $u,v \in H_{n,k}$ taková, že jejich ohodnocení je $(b,w)$.
 \end{tvrz}
@@ -72,7 +72,7 @@ w' &= \min\left(n - \frac{w}{2}, b + \frac{w}{2}\right) + \min\left(\frac{w}{2},
 
 V poslední rovnosti jsme využili předpokladu, že $b+w \leq n$, a tedy $\frac{w}{2} \leq n - b - \frac{w}{2}$
 
-Pro $w$ liché kódy zvolíme následovně:
+Pro $w$ liché zvolíme kódy následovně:
 \[
   u = 
     \underbrace{11\dots1}_{b}
@@ -150,7 +150,7 @@ $b + w \leq n, \hspace{5px} (b,w) \neq (n-1,1)$ platí obdobně jako v důkazu t
 Nyní jsme připraveni definovat hru Mastermind. 
 
 \section{Průběh hry Mastermind}
-Nechť $n \in \N $, $k \in \N$. [n,k]-Mastermind je hra pro dva hráče, zadavatele a luštitele, 
+Nechť $n \in \N $, $k \in \N$. [n,k]-Mastermind je hra pro dvě osoby, zadavatele a hráče, 
 % Šlo by oba hráče pojmenovat
 % Cílem hry je nalézt tajný kód na co nejmenší počet pokusů. 
 probíhající podle následujícího schématu. 
@@ -158,12 +158,12 @@ probíhající podle následujícího schématu.
     \item Zadavatel vytvoří tajný kód $v \in H_{n,k}$.
     \item Hra dále probíhá po kolech $i = 1,2,3,\dots$
         \begin{enumerate}
-            \item Luštitel určí kód (tah, pokus) $u_i \in H_{n,k}$.
+            \item Hráč určí kód (tah, pokus) $u_i \in H_{n,k}$.
             \item Zadavatel ohodnotí pokus $u_i$ vzhledem k tajnému kódu $v$. 
         \end{enumerate}
     \item Hra končí v případě, že pokus je ohodnocen $n$ černými kolíčky (zadaný kód se shoduje s tajným kódem). 
 \end{enumerate}
-Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů. V případě, že luštitel neopakuje kódy v pokusech, hra jistě skončí.
+Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů. V případě, že hráč neopakuje kódy v pokusech, hra jistě skončí.
 % vyčerpáním všech možností pro tajný kód.  
 
 % přidat různé varianty hry mastermind??? např statická verze, hra pouze s kandidáty atd. 
