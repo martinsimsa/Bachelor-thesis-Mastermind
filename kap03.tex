@@ -103,20 +103,7 @@ Knuthův algoritmus volí jako první pokus kód $11$.
 
 Na obrázku \ref{fig22dvatahy} jsou doplněny potomci všech vrcholů až do dosažení ohodnocení $(2,0)$, kdy hra končí. Platí, že $m_K(u) \geq 1$ pro $K \neq \emptyset$. Proto, když lexikograficky nejnižší kandidát $u$ dosahuje hodnoty $m_K(u) = 1$, algoritmus min-max ho vždy vybere. Ukazuje se, že to je případ pro všechny zbývající vrcholy, $\{22\}, \{12, 21\}, \{21\}$. Algoritmus min-max tedy vyhraje $[2,2]-Mastermind$ vždy na maximálně tři tahy.
     
-\begin{figure}[h!]
-    \centering
-    \begin{tikzpicture}
-    \node[draw, circle, fill=blue!30, minimum size=8mm] (1) at (0,0) {11};
-    \node[draw, circle, fill=green!30, minimum size=8mm] (2) at (0,2) {22};
-    \draw (1) -- (2) node[pos=0.5, left] {(0,0)};
-    \node[draw, circle, fill=green!30, minimum size=8mm] (3) at (2,0) {12};
-    \draw (1) -- (3) node[pos=0.5, above] {(1,0)};
-    \node[draw, circle, fill=yellow!30, minimum size=8mm] (4) at (4,0) {21};
-    \draw (3) -- (4) node[pos=0.5, above] {(0,2)};
-    \end{tikzpicture}
-    \caption{Zahrané tahy podle ohodnocení}
-    \label{fig23start12}
-\end{figure}
+
 
 
 
@@ -129,17 +116,19 @@ Na obrázku \ref{fig22dvatahy} jsou doplněny potomci všech vrcholů až do dos
 % maximal - 5
 % použít svůj kód a ocitovat
 
-\subsection{entropie}
+\section{Maximální entropie}
+Neuwirth \cite{neuwirth} navrhl algoritmus hrající tahy, které maximalizují entropii rozdělení. Nejprve definujeme valuaci a strategii použité v tomto algoritmu. Následně vysvětlíme myšlenku této strategie.
+
 \begin{definice}[Entropie rozdělení]\label{defentropierozdeleni}
-    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subset H_{n,k}$ definujeme funkci entropie rozdělení jako funkci
+    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subset H_{n,k}$ definujeme valuaci entropie rozdělení jako funkci
     \begin{align*}
         h_K \colon H_{n,k} &\to \mathbb{R} \\
-        u &\mapsto \sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right).
+        u &\mapsto \sum_{r\in S, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right).
     \end{align*}
-    Prostor všech funkcí $h_K$ označíme $\mathcal{H}$. 
+    Prostor všech valuací $h_K$ označíme $\mathcal{H}$. 
 \end{definice}
 
-\begin{definice}[Funkcionál maximum]
+\begin{definice}[Strategie maximum]\label{defstrategiemaximum}
     Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor funkcí. Potom na $\mathcal{F}$ definujeme funkcionál maximum $M$ následujícím předpisem.
     \begin{align*}
         M \colon \mathcal{F} &\to \mathbb{R} \\
@@ -147,9 +136,7 @@ Na obrázku \ref{fig22dvatahy} jsou doplněny potomci všech vrcholů až do dos
     \end{align*}
 \end{definice}
 
-Neuwirth \cite{neuwirth} 
-% Asi Neuwirth, chtělo by ale najít článek Irwinga.
-navrhl algoritmus hrající tahy, které maximalizují entropii rozdělení. 
+
 
 \begin{definice}[Algoritmus s entropií]
     Nechť $n\in \N, k\in \N$. Algoritmus s entropií je pro vstupný tajný kód $v\in H_{n,k}$ definovaný jako $\text{\textsc{SolveMastermind}} (n,k,s_v, \mathcal{H}, M)$. Zde $s_v$ značí zobrazení z definice \ref{defohodnocenivzhledem} a $M$ je funkcionál maximum.
@@ -158,8 +145,8 @@ navrhl algoritmus hrající tahy, které maximalizují entropii rozdělení.
 Níže popíšeme, co si pod pojmem entropie můžeme představit a jaký má význam v [n,k]-Mastermindu.
 
 \begin{definice}[Entropie]\label{defentropie}
-  Nechť $A$ je konečná množina, $P \colon A \to [0,1]$ je zobrazení takové, že $\sum_{a \in A} P(a) = 1$. Nechť $s(P) = \{ a \in A \mid P(a) > 0\}$. Potom entropii zobrazení $P$ definujeme jako 
-  \[H(P) = \sum_{a \in s(P)}P(a)\log_2\left(\frac{1}{P(a)}\right)\]
+  Nechť $A$ je konečná množina, $P \colon A \to [0,1]$ je zobrazení takové, že $\sum_{a \in A} P(a) = 1$. Nechť $supp(P) = \{ a \in A \mid P(a) > 0\}$. Potom entropii zobrazení $P$ definujeme jako 
+  \[H(P) = \sum_{a \in supp(P)}P(a)\log_2\left(\frac{1}{P(a)}\right)\]
   Zobrazení $P$ budeme říkat rozdělení, dané hodnotě $P(a)$ pravděpodobnost a množině $[0,1]$ pravděpodobnostní prostor. 
 \end{definice}
 
@@ -169,10 +156,8 @@ Níže popíšeme, co si pod pojmem entropie můžeme představit a jaký má v�
 
 Co nám ale tato definice říká? Intuici za definicí entropie nastíníme v příkladu \ref{prbinarysearch}, který dává určitý smysl pro výraz $\log_2\left(\frac{1}{P(a)}\right)$ a příkladu \ref{prentropierozdeleni}, který ukazuje příklad entropie na konkrétním rozdělení.
 
-Představme si, že chceme uhodnout tajné číslo z množiny $\{1,2,\dots,8\}$ pokládáním nějakých ano/ne otázek. Předpokládejme, že každé číslo může být tajným číslem se stejnou pravděpodobností $\frac{1}{8}$. Známým postupem, jak tajné číslo najít je takzvaným půlením intervalu (binární vyhledávání). Vždy se zeptáme, zda je číslo větší nebo menší než číslo v polovině. Tento postup je znázorněn v příkladu \ref{prbinarysearch}.
-
 \begin{prikl}[Binární vyhledávání]\label{prbinarysearch}
-Nechť tajné číslo je $4$. Binární vyhledávání by mělo následující průběh:
+Představme si, že chceme uhodnout tajné číslo z množiny $\{1,2,\dots,8\}$ pokládáním nějakých ano/ne otázek. Předpokládejme, že každé číslo může být tajným číslem se stejnou pravděpodobností $\frac{1}{8}$. Známým postupem, jak tajné číslo najít je takzvaným půlením intervalu (binární vyhledávání). Vždy se zeptáme, zda je číslo větší nebo menší než číslo v polovině. Nechť tajné číslo je $4$. Binární vyhledávání by mělo následující průběh:
 
 Otázka: "Je číslo větší než $4$?". 
 Odpověď: ne
@@ -183,21 +168,27 @@ Odpověď: ano
 Otázka: "Je číslo větší než $3$?". 
 Odpověď: ano
 
-Výsledné číslo je $4$. Počet otázek nutných k určení tajného čísla je $3$.
+Výsledné číslo je $4$. Počet otázek nutných k určení tajného čísla je $3 = \log_2 8$.
 \end{prikl}
 
 \begin{pozn}\label{poznotazkynamnozinu}
-Obdobně jako v příkladu \ref{prbinarysearch} lze pro jakoukoliv osmiprvkovou množinu $A$ s rovnoměrnou pravděpodobností vytvořit sadu otázek ano/ne a o každém prvku této množiny určit, zda odpovídá odpovědi ano nebo odpovědi ne. Následně bychom mohli pro určení jakéhokoliv prvku této množiny aplikovat obdobný postup jako v příkladu \ref{prbinarysearch}. Pro vhodnou sadu otázek existuje postup, který každou otázkou rozdělí prostor zbývajících možností na polovinu. Tím pádem pro určení jakéhokoliv prvku množiny $A$ potřebujeme $\log_2(|A|)$ otázek. 
+Obdobně jako v příkladu \ref{prbinarysearch} lze pro jakoukoliv osmiprvkovou množinu $A$ s rovnoměrnou pravděpodobností vytvořit sadu otázek ano/ne a o každém prvku této množiny určit, zda odpovídá odpovědi ano nebo odpovědi ne. Následně bychom mohli pro určení jakéhokoliv prvku této množiny aplikovat obdobný postup jako v příkladu \ref{prbinarysearch}. Pro vhodnou sadu otázek existuje postup, který každou otázkou sníží prostor zbývajících možností na polovinu. Tím pádem pro určení jakéhokoliv prvku množiny $A$ potřebujeme $\log_2(|A|)$ otázek. V případě, kdy velikost množiny není mocnina $2$ můžeme prostor bychom mluvili o $\lceil \log_2 |A| \rceil$, kde $\lceil \cdot \rceil$ značí horní celou část. 
 \end{pozn}
+
+\begin{prikl}[m odpovědí]\label{prmodpovedi}
+    Ve chvíli, kdybychom nebyli omezeni na ano/ne otázky, ale mohli bychom pokládat otázky na které bychom dostali $m$ odpovědí, mohli bychom aplikovat obdobný postup jako v příkladu \ref{prbinarysearch} s binárním vyhledáváním. Tentokrát bychom ale mohli po každé otázce snížil prostor zbývajících možností $m$-krát. Dobrali bychom se k výsledku, že očekávaný počet otázek k určení prvku z množiny $A$ by byl $\log_m |A|$.
+\end{prikl}
 
 \begin{prikl}\label{prentropierozdeleni}
 Nechť $A = \{ \text{a, b, c, d}\}$ a $P$ je zadaná následovně: 
 \[P(a) = \frac{1}{8}, P(b) = \frac{1}{8}, P(c) = \frac{1}{4}, P(d) = \frac{1}{2}\]
 Nyní si představme pravděpodobnostní prostor jako čtverec na obrázku \ref{prprostor}, kde pravděpodobnost prvku je velikost plochy. Výraz $\frac{1}{P(a)}$ říká, kolik prvků $A$ s touto pravděpodobností by se "vešlo" do pravděpodobnostního prostoru jako na obrázku. Například dílek c by se "vešel" do pravděpodobnostního prostoru čtyřikrát.
-Hodnota $\log_2\left(\frac{1}{P(c)}\right)$ lze interpretovat jako počet otázek ano/ne, který potřebujeme k jednoznačnému určení prvku c v případě, kdyby byl pravděpodobnostní prostor rozdělen rovnoměrně. Tento postup byl popsán v příkladu \ref{prbinarysearch} a v diskuzi pod ním.
+Hodnota $\log_2\left(\frac{1}{P(c)}\right)$ lze interpretovat jako počet otázek ano/ne, který potřebujeme k jednoznačnému určení prvku c v případě, kdyby byl pravděpodobnostní prostor rozdělen rovnoměrně. Tento postup byl popsán 
+%v příkladu \ref{prbinarysearch} a 
+v poznámce \ref{poznotazkynamnozinu}.
 Entropie tohoto rozdělení by v tomto případě byla 
 \[H(P) = \frac{1}{8}\log_2 (8) + \frac{1}{8}\log_2 (8) + \frac{1}{4}\log_2 (4) + \frac{1}{2}\log_2 (2) = \frac{3}{8} + \frac{3}{8} + \frac{2}{4} + \frac{1}{2} = \frac{7}{4}\]
-a můžeme ji interpretovat jako vážený průměr počtu otázek, který potřebujeme k jednoznačnému určení prvku z množiny $A$. 
+a můžeme ji interpretovat jako očekávaný počet otázek, který potřebujeme k jednoznačnému určení prvku z množiny $A$. 
 
 
 \begin{figure}
@@ -223,11 +214,49 @@ a můžeme ji interpretovat jako vážený průměr počtu otázek, který potř
 
 Nyní jsme připraveni na to, abychom vysvětlili, jakým způsobem aplikujeme výpočet entropie na strategii pro řešení [4,6]-Mastermindu.
 
-Nechť $K$ je aktuální množina kandidátů, $u \in H_{4,6}$ je kód a $(|K_1|, |K_2|,\dots, |K_m|)$ je tabulka rozdělení pro kód $u$. Pro každé $K_i, i \in \{1, 2, \dots, m\}$ můžeme ve smyslu poznámky \ref{poznotazkynamnozinu} definovat nějakou abstraktní hodnotu počtu otázek ano/ne potřebných k určení jakéhokoliv prvku  $x \in K_i$ jako $\log_2(|K_i|)$. Potom obdobně jako v příkladu \ref{prentropierozdeleni} můžeme určit očekávaný počet otázek jako
-\[G = \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i| \]
+Nechť $K$ je aktuální množina kandidátů. Pro $K$ můžeme ve smyslu příkladu \ref{prmodpovedi} definovat nějakou abstraktní hodnotu počtu pokusů potřebných k určení jakéhokoliv prvku  $v \in K$ jako $\log_{|S|}(|K|)$.
+
+Nechť $u \in H_{4,6}$ je kód a $S$ je množina všech možných ohodnocení kódů v $H_{n,k}$. Potom $\{K_{u,r} \mid r\in S\}$ jsou potomci $K$ vzhledem ke kódu $u$ a $\log_{|S|}(|K_{u,r}|)$ je očekávaný počet pokusů k určení jakéhokoliv prvku $v \in K_{u,r}$. 
+
+Pomocí těchto hodnot lze vytvořit odhad na počet pokusů potřebných k určení jakéhokoliv kódu $v \in K$ po zahrání kódu $u$ jako 
+\[G = \sum_{i =1}^n \frac{|K_{u,r}|}{|K|}\log_2|K_{u,r}|.\]
+
+
+
+%Pro každé $K_i, i \in \{1, 2, \dots, m\}$ můžeme ve smyslu poznámky \ref{poznotazkynamnozinu} definovat nějakou abstraktní hodnotu počtu otázek ano/ne potřebných k určení jakéhokoliv prvku  $x \in K_i$ jako $\log_2(|K_i|)$. Potom obdobně jako v příkladu \ref{prentropierozdeleni} můžeme určit očekávaný počet otázek jako
+%\[G = \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i| \]
 Tato hodnota bude naším stavebním kamenem pro strategii za užití entropie. Protože cílem [4,6]-Mastermindu je najít tajný kód v co nejmenším počtu pokusů, chceme hodnotu $G$ minimalizovat. 
 
-\[ u = \arg\min_{w \in H_{4,6}} \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i|\]
+%\[ u = \arg\min_{w \in H_{4,6}} \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i|\]
+
+\begin{veta}[Ekvivalence maximalizace entropie] \label{ekvivalencemaxentropynew}
+    Uvažujme [4,6]-Mastermind s tajným kódem $v\in H_{4,6}$. Označme $K$ množinu kandidátů. Potom 
+    \[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{|S|}|K_{u,r}| = \min_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{|S|}|K_{w,r}|\]
+    právě tehdy, když 
+    \[h_K(u) = \max_{w \in H_{n,k}} \{ h_K(w) \}\]
+    
+\end{veta}
+\begin{dukaz} Využíváme toho, že pro $x \in \mathbb{R}$ a konečnou množinu reálných čísel $A$ platí vztahy.
+\[z \cdot \min\{A\} = \min\{z\cdot a \mid a \in A\} \textrm{ pro } z \geq 0\]
+a 
+\[z \cdot \min\{A\} = \max\{z\cdot a \mid a \in A\}\textrm{ pro } z < 0\]
+
+Z tvrzení \ref{smth} plyne po přenásobení rovnosti konstantou $\frac{\log|S|}{\log2}$ 
+\[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}|K_{u,r}| = \min_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}|K_{u,r}|\]
+
+
+a následně konstantou $(-1)$ a převrácení hodnoty v logaritmu, že
+\[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{1}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{1}{|K_{u,r}|}\]
+
+Následně k oběma stranám přičteme hodnotu $\log_2|K|$.
+
+\[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{|K|}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{|K|}{|K_{u,r}|}\]
+Využili jsme toho, že $\sum_{i=1}^n \frac{|K^u_i|}{|K|} = 1$, součtového vzorce pro logaritmus.  Z definice $h_K$ plyne 
+\[h_K(u) = \max_{w \in H_{n,k}} \{ h_K(w) \}.\]
+Všechny úpravy byly ekvivalentní, a tedy jsme hotovi.
+\end{dukaz}
+
+
 
 \begin{lemma}[Aritmetika min a max]
     Nechť $K$ je konečná množina a $f \colon K \to \mathbb{R}$ je funkce. Nechť $a \in \mathbb{R}, a > 0$. Potom 
