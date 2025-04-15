@@ -820,3 +820,136 @@ Entropie je zaokrouhlena na dvě desetinná místa, vážený průměr na jedno}
     \caption{Zahrané tahy podle ohodnocení}
     \label{fig23start12}
 \end{figure}
+
+
+
+\begin{lemma}[Aritmetika min a max]
+    Nechť $K$ je konečná množina a $f \colon K \to \mathbb{R}$ je funkce. Nechť $a \in \mathbb{R}, a > 0$. Potom 
+    \[f(x) = \min_{z \in K} f(z)\]
+    právě tehdy když
+    \[a\cdot f(x) = \min_{z \in K} a\cdot f(z)\]
+    Obdobné tvrzení platí pro $\max$.
+\end{lemma}
+\begin{dukaz}
+    $f(x) = \min_{z \in K} f(z)$ právě tehdy, když $\forall z \in K\colon \hspace{5px} f(x) \leq f(z)$. To platí právě tehdy, když $\forall z \in K\colon \hspace{5px} a \cdot f(x) \leq a\cdot f(z)$, což je ekvivalentní tvrzení \[a\cdot f(x) = \min_{z \in K} a\cdot f(z)\]
+\end{dukaz}
+
+
+\begin{tvrz}[Aritmetika min a max]
+    Nechť $K$ je konečná množina a $f \colon K \to \mathbb{R}$ je funkce. Nechť $a \in \mathbb{R}, a < 0$. Potom 
+    \[f(x) = \min_{z \in K} f(z)\]
+    právě tehdy když
+    \[a\cdot f(x) = \max_{z \in K} a\cdot f(z)\]
+    Tvrzení platí i při záměnně $\min$ a $\max$.
+\end{tvrz}
+\begin{dukaz}
+    $f(x) = \min_{z \in K} f(z)$ právě tehdy, když $\forall z \in K\colon \hspace{5px} f(x) \leq f(z)$. To platí právě tehdy, když $\forall z \in K\colon \hspace{5px} a \cdot f(x) \geq a\cdot f(z)$, protože $a<0$. To je ekvivalentní tvrzení \[a\cdot f(x) = \max_{z \in K} a\cdot f(z)\]
+\end{dukaz}
+
+
+\begin{veta}[Logaritmus a střední hodnota]
+    \[\sum_{i=1}^{n} \frac{|K^u_i|}{|K|} \log_2|K^u_i| = \min_{w \in H_{4,6}} \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2|K^w_i|\] 
+    právě tehdy když
+    \[\sum_{i=1}^{n} \frac{|K^u_i|}{|K|} \log_m|K^u_i| = \min_{w \in H_{4,6}} \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_m|K^w_i|\] 
+\end{veta}
+\begin{dukaz}
+    Platí, že 
+    \[\log_y x = \frac{\log x}{\log y}\]
+    \[\log_z x = \frac{\log x}{\log z}\]
+    tedy
+    \[\log_y x = \log_z x \cdot \frac{\log z}{\log y}\]
+    Navíc 
+    \[\frac{\log z}{\log y}\]
+    je konstantní v závislosti na $x$.
+    Obdobně
+    \[\frac{\log2}{\log m} \cdot\sum_{i=1}^{n} \frac{|K^u_i|}{|K|} \log_2|K^u_i| 
+    = \frac{\log2}{\log m} \cdot \min_{w \in H_{4,6}} \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2|K^w_i|
+    = \min_{w \in H_{4,6}} \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_m|K^w_i| \]
+    Protože $m > 1$, tak platí, že $\frac{\log2}{\log m} > 0$ a tedy lze využít vlastnosti minima a vnořit konstantu dovnitř výrazu. 
+    % zde by možná chtělo citovat nějaká skripta s aritmetikou ohledně min a max tvarů.
+\end{dukaz}
+
+% Přidat definici entropie tabulky rozdělení.
+\begin{veta}[Ekvivalence maximalizace entropie] \label{ekvivalencemaxentropy}
+    Uvažujme [4,6]-Mastermind s tajným kódem $v\in H_{4,6}$ a máme posloupnost pokusů $\left(u_1, u_2, \dots, u_j\right), u_i \in H_{4,6}$ s ohodnoceními $\lbrack (b_1,w_1) , (b_2,w_2), \dots, (b_j,w_j)\rbrack)$. Označme $K$ množinu kandidátů pro tuto posloupnost pokusů. Pro $w \in H_{4,6}$ označme $K^w$ příslušnou tabulku rozdělení. Potom 
+    \[u = \arg\min_{w \in H_{4,6}} \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2|K^w_i|\]
+    právě tehdy, když 
+    \[H(K^u) = \max_{w \in H_{4,6}} \{ H(K^w) \}\]
+    
+\end{veta}
+\begin{dukaz}
+     Výraz 
+  \[
+      u = \arg\min_{w \in H_{4,6}} \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2|K^w_i| 
+      \]
+      rozepíšeme jako
+\[
+      \sum_{i=1}^{n} \frac{|K^u_i|}{|K|} \log_2|K^u_i| 
+      = \min_{w \in H_{4,6}} \left\{ \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2|K^w_i| \right\}  
+      \]
+      Obě strany vynásobíme $(-1)$ a využijeme toho, že pro omezenou množinu reálných čísel $S$ platí vztah $-\min\{S\} = \max\{-s \mid s \in S\}$.
+\[
+      -\sum_{i=1}^n \frac{|K^u_i|}{|K|}\log_2|K^u_i| 
+      = \max_{w \in H_{4,6}} \left\{ -\sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2|K^w_i| \right\}  
+\]
+Upravíme tvar logaritmu.
+\[
+      \sum_{i=1}^n \frac{|K^u_i|}{|K|}\log_2\left( \frac{1}{|K^u_i|} \right) 
+      = \max_{w \in H_{4,6}} \left\{ \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2\left( \frac{1}{|K^w_i|} \right) \right\} 
+\]
+Nyní stačí k oběma stranám přičíst konstantu $\log_2|K|$ a dostaneme požadovaný tvar. 
+\[
+      \sum_{i=1}^n \frac{|K^u_i|}{|K|}\log_2\left( \frac{|K|}{|K^u_i|} \right) 
+      = \max_{w \in H_{4,6}} \left\{ \sum_{i=1}^n \frac{|K^w_i|}{|K|}\log_2\left( \frac{|K|}{|K^w_i|} \right) \right\} 
+\]
+V posledním kroku jsme využili toho, že $\sum_{i=1}^n \frac{|K^u_i|}{|K|} = 1$, součtového vzorce pro logaritmus a definici entropie tabulky rozdělení. Zároveň všechny úpravy byly ekvivalentní, a tedy jsme hotovi.
+\end{dukaz}
+
+\begin{prikl}\label{prdvecasti}
+    Uvažujme množinu celých čísel $1,2,\dots, n$ pro $n \in \N $ s nějakým tajným číslem $k \in \N, k\leq n$ Naším úkolem je uhodnout tajné číslo. Předtím se ale můžeme zeptat na jednu uzavřenou otázku ano/ne. Naším cílem je ukázat, že pravděpodobnost uhádnutí tajného čísla nezáleží na velikosti dvou množin, na které nám n čísel rozdělí položená ano/ne otázka. Příkladem jsou následující dvě otázky: "Je tajné číslo 1?" a "Je tajné číslo menší nebo rovno $m$ pro nějaké $m \leq n$?".
+    Pravděpodobnost, že tajné číslo uhodneme po otázce na konkrétní kartu je 
+    \[\frac{1}{52} \cdot 1 + \frac{51}{52} \cdot \frac{1}{51} = \frac{2}{52}.\] 
+    Pravděpodobnost, že tajné číslo uhodneme po otázce se srovnáním s číslem m je 
+    \[\frac{m}{52} \cdot \frac{1}{m} + \frac{n-m}{52} \cdot \frac{1}{n-m} = \frac{2}{52}.\] 
+    Na položené otázce tedy nezáleželo.
+\end{prikl}
+
+Obecně pravděpodobnost, že tajné číslo uhodneme po otázce, na kterou můžeme dostat k různých odpovědí s pravděpodobnostmi $p_i = \frac{|Z_i|}{n}, i \in \{1, 2, \dots, k\}$, $Z_i$ je množina čísel menších nebo rovno n vyhovující odpovědi i, (Předpokládáme, že $Z_i$ jsou disjunktní) je 
+\[\sum_{i = 1}^k \frac{|Z_i|}{n} \cdot \frac{1}{|Z_i|} = \frac{k}{n}\]
+
+Nechť $n\in \N, k\in \N$. Algoritmus s entropií je pro vstupný tajný kód $v\in H_{n,k}$ definovaný jako $\text{\textsc{Solve}}[n, k, \mathcal{H}, M](v)$. $\mathcal{H}$ je prostor valuací entropie potomků a $M$ je strategie maximum. 
+
+
+a \ref{fig22prvnitah12} jsou zobrazeny potomci $H_{2,2}$ vzhledem ke kódu, $11$ a $12$. Případy s kódy $22$ a $21$ jsou obdobné zmíněným kódům díky rovnoměrnému rozdělení kódů. Protože kódy $22$ a $21$ jsou lexikograficky vyšší, nemusíme je rozebírat. 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+    \node (1) at (0,0) {\{11,12,21,22\}};
+    
+    \node (2) at (-4,-2) {\{22\}};
+    \draw[->] (1) -- (2) node[pos=0.5, left] {$11,(0,0)$};
+    \node (3) at (0,-2) {\{12, 21\}};
+    \draw[->] (1) -- (3) node[pos=0.5, right] {$11,(1,0)$};
+    \node (5) at (4,-2) {\{11\}};
+    \draw[->] (1) -- (5) node[pos=0.5, right] {$11,(2,0)$};
+
+    \end{tikzpicture}
+    \caption{První tah $11$, obdobný s grafem pro $22$}
+    \label{fig22prvnitah11}
+    \end{figure}
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+    \node (1) at (0,0) {\{11,12,21,22\}};
+    
+    \node (4) at (-4,-2) {\{21\}};
+    \draw[->] (1) -- (4) node[pos=0.5, right] {$12,(0,2)$};
+    \node (5) at (0,-2) {\{11, 22\}};
+    \draw[->] (1) -- (5) node[pos=0.5, right] {$12,(1,0)$};
+    \node (6) at (4,-2) {\{12\}};
+    \draw[->] (1) -- (6) node[pos=0.5, right] {$12,(2,0)$};
+
+    \end{tikzpicture}
+    \caption{První tah $12$, obdobný s grafem pro $21$}
+    \label{fig22prvnitah12}
+\end{figure}

@@ -2,7 +2,7 @@
 
 \section{Kategorie algoritmů}
 % přidat definici algoritmu, který řeší mastermind - vytvoří posloupnost kódů, která končí tajným kódem s nejlepším ohodnocením. 
-Algoritmy řešící hru Mastermind lze rozdělit do dvou kategorií, \textbf{deterministické} a \textbf{nedeterministické}. Deterministický algoritmus pro dva shodné stavy volí další krok vždy jednoznačně. Nemůže se tedy stát, že by deterministický algoritmus pro dva stejné vstupy vrátil odlišné výsledky. Nedeterministické algoritmy naproti tomu může mít v každém stavu na výběr z více následujících kroků. Volit může například podle nějakého pravděpodobnostního rozdělení. Není tedy zaručeno, že pro stejný vstup vrátí vždy stejný výsledek.
+Algoritmy řešící hru Mastermind lze rozdělit do dvou kategorií, \textbf{deterministické} a \textbf{nedeterministické}. Deterministický algoritmus pro dva shodné stavy volí další krok vždy jednoznačně. Nemůže se tedy stát, že by deterministický algoritmus pro dva stejné vstupy vrátil odlišné výsledky. Nedeterministické algoritmy naproti tomu mohou mít v každém stavu na výběr z více následujících kroků. Volit mohou například podle nějakého pravděpodobnostního rozdělení. Není tedy zaručeno, že pro stejný vstup vrátí vždy identický výsledek.
 
 Hlavní předností deterministických algoritmů je záruka výsledku. Na druhou stranu ale tyto typy algoritmů mohou mít velikou časovou složitost, protože jsou často založeny na procházení všech možností pokračování. To se snaží řešit nedeterministické algoritmy, které hledají rovnováhu mezi časovou složitostí a dobrými výsledky. 
 
@@ -18,7 +18,9 @@ V této práci budeme zkoumat pouze deterministické algoritmy.
 \subsubsection{stav hry}
 
 %Tajný kód je tedy kandidát v každém kole hry. 
-Stav hry budeme znázorňovat množinou kódů $K \subset H_{n,k}$. Prvky této množiny jsou kódy, které by mohly být tajným kódem podle informací dostupných z tahů a ohodnocení. Průběžné stavy hry budeme zobrazovat v grafu. Nejprve ale musíme popsat vztah mezi vrcholy, který nám bude sloužit k definování hran.
+Stav hry budeme znázorňovat množinou kódů $K \subset H_{n,k}$. Prvky této množiny jsou kódy, které by mohly být tajným kódem podle informací dostupných z tahů a ohodnocení. Nejprve popíšeme vztah mezi stavy, který bude určitým způsobem odpovídat změně stavu v průběhu hry. 
+
+%který nám bude sloužit k definování hran. Vazbu a přechod mezi stavy hry budeme zakreslovat do grafu. Nejprve popíšeme vztah mezi vrcholy (stavy), který nám bude sloužit k definování hran.
 % může platit, že $(K,K_{u,r_1}) = (K,K_{v,r_2})$ pro nějaké u,v,r_1,r_2
 % potomek může být i on sám. Chce to ale dobře definovat, abychom se necyklili. 
 \begin{definice}[Potomek]\label{potomek}
@@ -28,13 +30,14 @@ Stav hry budeme znázorňovat množinou kódů $K \subset H_{n,k}$. Prvky této 
 \end{definice}
 
 \begin{pozn}
-    Nechť $L \subset K$. Řekneme, že $L$ je potomek $K$, vzhledem ke kódu $u$, pokud $L = K_{u,r}$ pro nějaké $r \in S$. Řekneme, že $L$ je potomek $K$, pokud $L = K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S$. 
+    Potomkem $K$, vzhledem ke kódu $u$ nazýváme množinu $K_{u,r}$ pro nějaké $r \in S$. Potomkem $K$ nazýváme množinu $K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S$. 
 \end{pozn}
 
 \begin{pozn}
     Všimněme si, že $K_{u,r} \subset K \hspace{3px}\forall u\in H_{n,k} \hspace{3px}\forall r\in S$. Navíc pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
     \[K = \bigcup_{r\in S} K_{u,r}\]
-    protože pro každý kód $w \in K$ platí, že $s(u,w) \in S$, a tedy $w \in K_{u, s(u,w)}$. 
+    protože pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$ z definice potomka.
+    %, tedy že $w$ náleží do potomka $K$ vzhledem ke kódu $u$ a ohodnocení $s(u,w)$. 
 \end{pozn}
 % Definujeme orientovaný graf hry s podmnožinami $H_{n,k}$ jako vrcholy. 
 
@@ -47,7 +50,7 @@ Průběh hry budeme reprezentovat grafem s podmnožinami $H_{n,k}$ jako vrcholy 
 \begin{pozn}
     Mezi dvěma vrcholy může vést více hran, jak je vidět na obrázku \ref{fig22prvnitah}, který zobrazuje potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Pro přehlednost jsou potomci vzhledem ke stejnému kódu zakresleny u sebe, protože odpovídají možným dalším stavům v případě zvolení tohoto kódu jako dalšího pokusu. 
     
-    Vrchol také může být potomkem sebe samého. 
+    %Vrchol také může být potomkem sebe samého. 
 \end{pozn}
 
 
@@ -90,6 +93,36 @@ Průběh hry budeme reprezentovat grafem s podmnožinami $H_{n,k}$ jako vrcholy 
     \label{fig22prvnitah}
 \end{figure}
 
+\begin{definice}[Strom průběhu \text{[n,k]-Mastermindu}]
+  Strom průběhu hry definujeme jako podgraf grafu [n,k]-Mastermindu s následujícími vlastnostmi. 
+  \begin{enumerate}
+      \item Z každého vrcholu vedou hrany pouze do potomků vzhledem k jednomu danému kódu. 
+  \end{enumerate}
+\end{definice}
+
+\begin{definice}[Stav]\label{stav}
+   Nechť $u_i, i\in \{1,2,\dots m\}$ jsou kódy a $r_i = (b_i,w_i)$ jsou ohodnocení. Stav definujeme jako posloupnost $((u_1, r_1), \dots, (u_m, r_m))$. Počáteční stav definujeme jako prázdnou posloupnost.
+\end{definice}
+
+\begin{definice}[kandidát]\label{kandidat}
+  Nechť $\left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že kód $u \in H_{n,k}$ je kandidát, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots j\}$. Pro počáteční stav je kandidátem každý kód $u \in H_{n,k}$. Řekneme, že stav je prázdný, pokud je množina kandidátů tohoto stavu prázdná. 
+  % Tohle není přesné - Pro prázdný stav řekneme, že každý kód $u \in H_{n,k}$ je kandidát. Množinu všech kandidátů budeme značit $K$.
+\end{definice}
+
+\begin{definice}[Strom \text{[n,k]-Mastermindu}]
+  Orientovaný strom průběhu hry definujeme na množině stavů. Kořen je počáteční stav. Hrany označíme $(u, r)$ pro kód $u$ a nějaké ohodnocení $r$. Ze stavu $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), (w_2,s_2), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a $\forall i \in \{1,2,\dots, j\} \colon (u_i, r_i) = (w_i, s_i)$. Tuto hranu značíme $(w_l, s_l)$. Prázdné stavy a hrany do prázdných stavů ve stromu neuvažujeme.
+\end{definice}
+
+\begin{definice}[Podstrom strategie \text{[n,k]-Mastermindu}]
+  Konečný stav jsou ty neprázdné stavy, které mají poslední člen stavu roven $(u,(n,0))$ pro nějaký kód $u$.
+  Podstrom strategie definujeme takový souvislý podgraf stromu [n,k]-Mastermindu, jehož všechny listy jsou konečné stavy. 
+\end{definice}
+\begin{pozn}
+    Konečné stavy jsou právě takové stavy, které mají pouze jednoho kandidáta a odpovídají nalezení tajného kódu v průběhu hry mastermind. 
+\end{pozn}
+\begin{pozn}
+    Stavy budeme také označovat množinou kandidátů pro tento stav. Množina kandidátů neurčuje jednoznačně stav (například prohozením prvků stavu bychom došli do stejné množiny kandidátů). Naopak stav jednoznačně určuje množinu kandidátů. 
+\end{pozn}
 
 % možná to není potřeba
 %\begin{lemma}[Jednoznačnost hrany]
@@ -101,9 +134,11 @@ Prvky aktuálního stavu hry $K\subset H_{n,k}$ nazýváme kandidáty.
     Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. Nechť 
     \[P = \left((u_1, s_v(u_1)), (u_2,s_v(u_2)), \dots, (u_j,s_v(u_j))\right), u_i \in H_{n,k}, \]
     % r_i \in \N _0 \times \N _0
-    jsou tahy s ohodnocením vzhledem ke kódu $v$. Řekneme, že $u \in H_{n,k}$ je kandidát, pokud $u \in K$, kde $K$ je konec cesty $P$ z vrcholu $H_{n,k}$.
+    jsou tahy s ohodnocením vzhledem ke kódu $v$. Řekneme, že $u \in H_{n,k}$ je kandidát, pokud $u \in K$, kde $K$ je konec cesty $P$ z vrcholu $H_{n,k}$. $K$ nazýváme množinu všech kandidátů tohoto stavu. 
 \end{definice}
-
+\begin{pozn}
+    Nechť $P = \left((u_1, s_v(u_1)), (u_2,s_v(u_2)), \dots, (u_j,s_v(u_j))\right), u_i \in H_{n,k}$ jsou tahy s ohodnocením, $K$ je konec cesty a $u \in K$ je kandidát. Potom $\forall i \in \{1,2,\dots j\}$ platí $s(u,u_i) = s_v(u_i)$. Tajný kód $v$ je tedy kandidát pro každý stav hry. 
+\end{pozn}
 
 
 
@@ -186,7 +221,7 @@ Deterministické algoritmy popisujeme jako algoritmy, které pro následující 
 
 Písmenem $K$ značíme množinu kandidátů na tajný kód pro aktuální stav hry (cestu pokusů s ohodnocením). Začínáme s $K = H_{n,k}$. Aktuální číslo pokusu značí $j$, $u_j$ je kód, který algoritmus zvolí jako $j$-tý pokus a $r_j$ je ohodnocení $u_j$ vzhledem k tajnému kódu $v$. Množina $U$ značí kódy, ve kterých valuace $f_K$ nabývá určitou optimální hodnotu danou strategií $F$. Z této množiny algoritmus vybírá další pokus $u_j$. Ve chvíli, kdy existuje kandidát v množině $U$ ($U\cap K \neq \emptyset$), algoritmus zvolí ten, který je lexikograficky nejmenší. Jinak algoritmus volí lexikograficky nejmenší kód z $U$. 
 
-Aby byl funkcionál $F$ použitelný v algoritmu, musí platit následující podmínka. 
+Aby byla strategie $F$ použitelná v algoritmu, musí platit následující podmínka. 
 \[\forall K \in V \hspace{5px} \exists u \in H_{n,k} \colon F(f_K) = f_K(u)\]
 Pokud by tato podmínka nebyla splněna, mohlo by se stát, že množina $U$ bude prázdná a algoritmus nedokáže zvolit další pokus.
 
@@ -196,20 +231,26 @@ Pokud by tato podmínka nebyla splněna, mohlo by se stát, že množina $U$ bud
 %\end{veta}
 
 \begin{tvrz}[Počet ohodnocení]
-když první pozice je $0, 1, 2, \dots, n-2, n-1, n$, tak máme následující počet možností ohodnocení.
+Nechť $n\in \mathbb{N}, k\in \mathbb{N}, k \geq 3$. Potom počet všech možných ohodnocení kódů v $H_{n,k}$ je $\frac{n^2 + 3n}{2}$.
+\end{tvrz}
+\begin{dukaz}
+Pro $b \leq n,\hspace{3px} b \neq n-1$ černých kolíčků existuje $n-b+1$ možností na počet bílých kolíčků podle tvrzení \ref{tvrzohodnoceni}. Pro $b = n-1$ existuje pouze jedno ohodnocení. Součtem přes počet černých kolíčků dostáváme následující počet možností ohodnocení.
     \[|S| = (n+1) + n + (n-1)  + \dots + 3 + 1 + 1 \]
-Vzorcem pro součet aritmetické řady dostáváme následující výsledek.
+Vzorcem pro součet aritmetické řady se dobereme k výsledku.
     \[|S| = \frac{(n+1)(n+2)}{2} - 1 \]
     \[|S| = \frac{n^2 + 3n}{2}\]
-\end{tvrz}
+\end{dukaz}
 
 \begin{tvrz}[Časová složitost algoritmu \ref{alg-default}]
     Uvažujeme případ, kdy $F$ je minimizér/maximizér.
-    j-tá iterace while cyklu má složitost 
-    \[O( k^n O(f_K))\]
-    \[O( k^n \cdot m_j \cdot O(s) \cdot |S|)\]
-    $k^n$ je počet všech kódů, které musím projít, abych našel ten nejlepší, $m_j$ je maximální počet kandidátů v j-té iteraci, O(s) je složitost ohodnocení, $|S|$ je počet všecho ohodnocení.
-
-    Potřebuji ještě limit na počet iterací a horní odhad na $m_j$.
+    Algoritmus \ref{alg-default} má časovou složitost
+    % \[O( k^n O(f_K))\]
+    \[O \left( \sum_{j = 1}^z k^n \cdot m_j \cdot n^2 \cdot \frac{n^2 + 3n}{2}\right)\]
+    
 \end{tvrz}
+\begin{dukaz}
+    $k^n$ je počet všech kódů, které musím projít, abych našel ten nejlepší, $m_j$ je maximální počet kandidátů v j-té iteraci, $z$ je maximální počet iterací algoritmu. $\frac{n^2 + 3n}{2}$ je počet všech ohodnocení, $n^2$ je časová složitost ohodnocení.
+
+    Potřebuji ještě limit na počet iterací $z$, horní odhad na $m_j$ a zjistit složitost nalezení průniku $U$ a $K$.
+\end{dukaz}
 

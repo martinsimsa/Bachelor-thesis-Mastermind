@@ -7,13 +7,51 @@ Při srovnávání algoritmů budeme používat několik kritérií. Jedním z p
 % jiná formulace - Co když nám ale nezáleží na maximálním počtu pokusů? 
 Druhý ukazatel, který u algoritmů budeme srovnávat je \textbf{průměrný počet pokusů} na hru. Ukážeme, že nejmenší maximální počet pokusů není zárukou pro minimální průměrný počet pokusů na hru. 
 
-Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. 
-
-\begin{definice}[Konzistentní algoritmus]\label{defkonzistentnialg}
-    Uvažujme algoritmus řešící [n,k]-Mastermind. Nechť $u \in H_{n,k}$ je kód, který algoritmus zvolí jako první pokus. Řekneme, že algoritmus řešící [n,k]-Mastermind je konzistentní, pokud pro všechny kódy $u' \in H_{n,k}$ platí, že algoritmus, který místo $u$ volí jako první pokus kód $u'$ nedosahuje lepšího průměrného počtu pokusů.
-\end{definice}
-Konzistentnost budeme zkoumat pouze pro pět zmíněných počátečních kódů $(1111, 1112, 1122, 1123, 1234)$.
+Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost budeme pojmenovávat \textbf{konzistence}.
+%\begin{definice}[Konzistentní algoritmus]\label{defkonzistentnialg}
+ %   Uvažujme algoritmus řešící [n,k]-Mastermind. Nechť $u \in H_{n,k}$ je kód, který algoritmus zvolí jako první pokus. Řekneme, že algoritmus řešící [n,k]-Mastermind je konzistentní, pokud pro všechny kódy $u' \in H_{n,k}$ platí, že algoritmus, který místo $u$ volí jako první pokus kód $u'$ nedosahuje lepšího průměrného počtu pokusů.
+%\end{definice}
+Konzistenci budeme zkoumat pro pět počátečních kódů $(1111, 1112, 1122, 1123, 1234)$.
 %Potom porovnáme všechny ostatní kódy se stejnou vlastnostní - např všechny kódy, které mají dvě a dvě pozice se stejnou barvou. 
+V tabulce \ref{tabvaluaceprvnichtahu} jsou zobrazeny valuace těchto kódů vzhledem k $H_{4,6}$. Nejlepší valuace prvního pokusu podle zvolené strategie v konkrétním algoritmu je zobrazena tučně. 
+
+Musíme poznamenat, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než kódy $1111, 1112, 1122, 1123, 1234$. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic z těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém $H_{4,6}$. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l l l}
+\toprule
+kód & 1111 & 1112 & 1122 & 1123 & 1234 \\
+\midrule
+
+maximum & 625 & 317 & \textbf{256} & 276 & 312 \\
+entropie & 1.50 & 2.69 & 2.89 & 3.04 & \textbf{3.06}\\
+
+% [1.4984350761704437, 2.6934339172716406, 2.885102174947102, 3.0436979819559213, 3.0566709153318907]
+
+%vážený průměr - $\sum_{i = 1}^{14} |S_i|  \cdot \pr (S_i)$ & 512.0 & 235.9 & 204.5 & \textbf{185.3} & 188.2 \\
+
+% [511.9799382716049, 235.94907407407408, 204.53549382716048, 185.26851851851853, 188.18981481481484]
+
+počet částí & 5 & 11 & 13 & \textbf{14} & \textbf{14} \\
+
+\bottomrule
+\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+Entropie je zaokrouhlena na dvě desetinná místa.
+%, vážený průměr na jedno.
+}
+
+\end{tabular}
+\caption{Hodnoty valuace kódů pro první tah}
+\label{tabvaluaceprvnichtahu}
+\end{table}
+
+
+
+\section{Metodika testování - popis kódu}
+Výsledky algoritmů byly nalezeny pomocí programu napsaného v jazyce Python pro účel této práce \cite{Simsa_Strategies_for_Mastermind_2025}. Maximální a průměrné počty pokusů byly nalezeny za pomocí sestavení stromu řešení [4,6]-Mastermind jako na obrázku \ref{fig22minmax}. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, uchová si aktuální počet pokusů potřebný k nalezení daného tajného kódu. Program končí ve chvíli, kdy je každý kód v listu. Nakonec se spočítá očekávaný a maximální počet pokusů ze zachovaných hodnot pro jednotlivé kódy.
+
+Existují dvě situace, pro které se stav dostane do listu. První je v případě, kdy stav je složen z více kódů a tedy nevíme, který z nich je tajný kódem. V případě, že algoritmus vybere jako další pokus kandidáta, může se stát, že tento kandidát byl dokonce tajným kódem. V tu chvíli máme štěstí a nalezli jsme počet pokusů, který potřebuje min-max algoritmus k nalezení tohoto tajného kódu. Druhá situace nastává, kdy stavem je jednoprvková množina s pouze jedním kódem. Zároveň ho min-max algoritmus zatím nezahrál. V tuto chvíli algoritmus ví, který kód je tajným, ale musí ho ještě zahrát, protože hra končí ve chvíli, kdy je zahraný tajný kód. 
 
 \section{min-max}
 
@@ -110,8 +148,48 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 \caption{Výsledky algoritmu s očekávaným počtem kandidátů}\label{tabminmaxvysl}
 \end{table}
 
+\section{Varianty/zlepšení algoritmů}
+\subsubsection{Volba pokusů z kandidátů}
+Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Ve chvíli, kdy se nacházíme ve stavu $K$ (množina kandidátů na tajný kód) a zahrajeme kód, který nenáleží do této množiny, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů by tedy byl způsob, kdybychom další kód vybírali pouze z množiny kandidátů (stavu) $K$. V základním algoritmu \ref{alg-default} by množina $U$ měla tvar
+\[U = \{u \in K \mid f_K(u) = F(f_K)\}.\]
+Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind.
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l}
+\toprule
+první pokus & Min-max & Max entropy & Počet potomků  \\
+\midrule
+
+maximální počet pokusů 
+& 6 & 6 & 7  \\
+
+průměrný počet pokusů 
+& 4.497 & 4.465 & 4.399 \\
+\bottomrule
+\multicolumn{4}{l}{\footnotesize \textit{Pozn:}
+Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+\end{tabular}
+\caption{Výsledky algoritmů volící pouze kandidáty}\label{tabminmaxvysl}
+\end{table}
+
+Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale zmenší časovou složitost algoritmů.
+
+\begin{tvrz}
+    Uvažujme algoritmus \ref{alg-default} s výběrem množiny $U$ na řádku $7$ podle následujícího předpisu.
+    \[U = \{u \in K \mid f_K(u) = F(f_K)\}\]
+    Potom tento algoritmus má časovou složitost 
+     \[O \left( \sum_{j = 1}^z  m_j^2 \cdot n^2 \cdot \frac{n^2 + 3n}{2}\right)\]
+\end{tvrz}
+\begin{dukaz}
+    Tvrzení plyne z tvrzení ...
+\end{dukaz}
+
 
 \section{Diskuze}
+
+
+
 Poznámky:
 \begin{itemize}
     \item Nejlepší maximální počet pokusů v případě min-max algoritmu dává smysl, protože algoritmus minimalizuje maximální počet kandidátů v tabulce rozdělení. 
@@ -121,6 +199,7 @@ Poznámky:
     \item Volba prvního tahu, který by obsahoval vyšší barvy by mohla být lepší, protože algoritmus volí lexikograficky menší kódy. Podobně by bylo možné náhodně promíchat seřazení všech kódů. 
     \item Čím je strategie optimálnější, tím hůře jde popsat.
     \item Strategii optimalizující průměrný počet pokusů nalezl v roce 1993 K. Koyama \cite{koyama}. Ukázal, že lze dosáhnout strategie s průměrným počtem pokusů $4.340$.
+    \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
 \end{itemize}
 
 
