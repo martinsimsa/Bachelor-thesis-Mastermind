@@ -2,20 +2,28 @@
 V následující kapitole porovnáme tři popisované algoritmy. 
 
 \section{Vlastnosti algoritmů}
-Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat \textbf{maximální počet pokusů}, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$.
+Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat \textbf{maximální počet pokusů}, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$. 
+Druhá možnost je sestrojit strom algoritmu a nalézt maximální délku cesty od listu ke kořeni.
 
-% jiná formulace - Co když nám ale nezáleží na maximálním počtu pokusů? 
-Druhý ukazatel, který u algoritmů budeme srovnávat je \textbf{průměrný počet pokusů} na hru. Ukážeme, že nejmenší maximální počet pokusů není zárukou pro minimální průměrný počet pokusů na hru. 
+\begin{definice}[Maximální počet pokusů]\label{defmaxpocetpokusu}
+    Nechť $T$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Maximální počet pokusů tohoto algoritmu definujeme jako nejdelší délku cesty od kořene $T$ k nějakému listu $T$. 
+\end{definice}
+
+Druhý ukazatel, který u algoritmů budeme srovnávat je \textbf{průměrný počet pokusů} na hru. Ten lze opět vyčíst ze stromu algoritmu.
+
+\begin{definice}[Průměrný počet pokusů]\label{defprumpocetpokusu}
+    Nechť $T = (V,E)$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $P$ označíme $d(P)$ délku cesty od kořene k tomuto listu. Průměrný počet pokusů algoritmu definujeme jako 
+    \[\frac{1}{k^n}\sum_{P\in V, P \text{ list}} d(P).\]
+\end{definice}
 
 Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost budeme pojmenovávat \textbf{konzistence}.
-%\begin{definice}[Konzistentní algoritmus]\label{defkonzistentnialg}
- %   Uvažujme algoritmus řešící [n,k]-Mastermind. Nechť $u \in H_{n,k}$ je kód, který algoritmus zvolí jako první pokus. Řekneme, že algoritmus řešící [n,k]-Mastermind je konzistentní, pokud pro všechny kódy $u' \in H_{n,k}$ platí, že algoritmus, který místo $u$ volí jako první pokus kód $u'$ nedosahuje lepšího průměrného počtu pokusů.
-%\end{definice}
-Konzistenci budeme zkoumat pro pět počátečních kódů $(1111, 1112, 1122, 1123, 1234)$.
-%Potom porovnáme všechny ostatní kódy se stejnou vlastnostní - např všechny kódy, které mají dvě a dvě pozice se stejnou barvou. 
+
+Konzistenci budeme zkoumat pro pět počátečních kódů $(1111, 1112, 1122, 1123, 1234)$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém $H_{4,6}$. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
+
+V sekci $4.5$ diskutujeme možný vliv výběru lexikograficky vyššího prvního tahu z důvodu následného výběru lexikograficky minimálních kódů ve všech algoritmech. V této práci se ale dále touto problematikou zabývat nebudeme. 
+
 V tabulce \ref{tabvaluaceprvnichtahu} jsou zobrazeny valuace těchto kódů vzhledem k $H_{4,6}$. Nejlepší valuace prvního pokusu podle zvolené strategie v konkrétním algoritmu je zobrazena tučně. 
 
-Musíme poznamenat, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než kódy $1111, 1112, 1122, 1123, 1234$. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic z těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém $H_{4,6}$. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
 
 \begin{table}[h]
 \centering
@@ -48,8 +56,16 @@ Entropie je zaokrouhlena na dvě desetinná místa.
 
 
 
-\section{Metodika testování - popis kódu}
-Výsledky algoritmů byly nalezeny pomocí programu napsaného v jazyce Python pro účel této práce \cite{Simsa_Strategies_for_Mastermind_2025}. Maximální a průměrné počty pokusů byly nalezeny za pomocí sestavení stromu řešení [4,6]-Mastermind jako na obrázku \ref{fig22minmax}. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, uchová si aktuální počet pokusů potřebný k nalezení daného tajného kódu. Program končí ve chvíli, kdy je každý kód v listu. Nakonec se spočítá očekávaný a maximální počet pokusů ze zachovaných hodnot pro jednotlivé kódy.
+\section{Způsob testování}
+Výsledky algoritmů byly nalezeny vytvořením stromu algoritmu pro každou metodu. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, je uložena aktuální vzdálenost listu od kořene (počet pokusů potřebný k nalezení daného tajného kódu) do seznamu s počty pokusů. 
+%V průběhu vytváření stromu byly zjišťovány vzdálenosti konečných stavů (listů) od kořene odpovídající počtu pokusů potřebných k uhádnutí daného kódu. 
+Následně z těchto hodnot byly vypočteny hodnoty Maximální počet pokusů a Průměrný počet pokusů. Konzistence algoritmů byla nalezena za pomocí pevného určení prvního pokusu při vytváření stromu algoritmů. 
+
+Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojový kód a jeho dokumentace je dostupný na GitHub \cite{Simsa_Strategies_for_Mastermind_2025}. 
+
+
+
+% Výsledky algoritmů byly nalezeny pomocí programu napsaného v jazyce Python pro účel této práce \cite{Simsa_Strategies_for_Mastermind_2025}. Maximální a průměrné počty pokusů byly nalezeny za pomocí sestavení stromu řešení [4,6]-Mastermind jako na obrázku \ref{fig22minmax}. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, uchová si aktuální počet pokusů potřebný k nalezení daného tajného kódu. Program končí ve chvíli, kdy je každý kód v listu. Nakonec se spočítá očekávaný a maximální počet pokusů ze zachovaných hodnot pro jednotlivé kódy.
 
 Existují dvě situace, pro které se stav dostane do listu. První je v případě, kdy stav je složen z více kódů a tedy nevíme, který z nich je tajný kódem. V případě, že algoritmus vybere jako další pokus kandidáta, může se stát, že tento kandidát byl dokonce tajným kódem. V tu chvíli máme štěstí a nalezli jsme počet pokusů, který potřebuje min-max algoritmus k nalezení tohoto tajného kódu. Druhá situace nastává, kdy stavem je jednoprvková množina s pouze jedním kódem. Zároveň ho min-max algoritmus zatím nezahrál. V tuto chvíli algoritmus ví, který kód je tajným, ale musí ho ještě zahrát, protože hra končí ve chvíli, kdy je zahraný tajný kód. 
 
@@ -200,6 +216,7 @@ Poznámky:
     \item Čím je strategie optimálnější, tím hůře jde popsat.
     \item Strategii optimalizující průměrný počet pokusů nalezl v roce 1993 K. Koyama \cite{koyama}. Ukázal, že lze dosáhnout strategie s průměrným počtem pokusů $4.340$.
     \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
+    \item odhad s entropií nefunguje tak dobře. Mohlo by to být silně nerovnoměrně rozdělenými kódy. 
 \end{itemize}
 
 

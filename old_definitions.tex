@@ -953,3 +953,118 @@ a \ref{fig22prvnitah12} jsou zobrazeny potomci $H_{2,2}$ vzhledem ke kódu, $11$
     \caption{První tah $12$, obdobný s grafem pro $21$}
     \label{fig22prvnitah12}
 \end{figure}
+
+
+% ===================== graf, potomci, atd ============================
+
+%Tajný kód je tedy kandidát v každém kole hry. 
+Stav hry budeme znázorňovat množinou kódů $K \subset H_{n,k}$. Prvky této množiny jsou kódy, které by mohly být tajným kódem podle informací dostupných z tahů a ohodnocení. Nejprve popíšeme vztah mezi stavy, který bude určitým způsobem odpovídat změně stavu v průběhu hry. 
+
+%který nám bude sloužit k definování hran. Vazbu a přechod mezi stavy hry budeme zakreslovat do grafu. Nejprve popíšeme vztah mezi vrcholy (stavy), který nám bude sloužit k definování hran.
+% může platit, že $(K,K_{u,r_1}) = (K,K_{v,r_2})$ pro nějaké u,v,r_1,r_2
+% potomek může být i on sám. Chce to ale dobře definovat, abychom se necyklili. 
+\begin{definice}[Potomek]\label{potomek}
+  % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. 
+  Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. Nechť $K$ je podmnožina $H_{n,k}$, $ u \in H_{n,k}$ je kód a $r \in S$ ohodnocení. Potomka $K$, vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako množinu 
+  \[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] 
+\end{definice}
+
+\begin{pozn}
+    Potomkem $K$, vzhledem ke kódu $u$ nazýváme množinu $K_{u,r}$ pro nějaké $r \in S$. Potomkem $K$ nazýváme množinu $K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S$. 
+\end{pozn}
+
+\begin{pozn}
+    Všimněme si, že $K_{u,r} \subset K \hspace{3px}\forall u\in H_{n,k} \hspace{3px}\forall r\in S$. Navíc pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
+    \[K = \bigcup_{r\in S} K_{u,r}\]
+    protože pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$ z definice potomka.
+    %, tedy že $w$ náleží do potomka $K$ vzhledem ke kódu $u$ a ohodnocení $s(u,w)$. 
+\end{pozn}
+% Definujeme orientovaný graf hry s podmnožinami $H_{n,k}$ jako vrcholy. 
+
+
+
+Průběh hry budeme reprezentovat grafem s podmnožinami $H_{n,k}$ jako vrcholy a orientovanými hranami mezi vrcholy a jejich potomky. Výchozí stav hry je vždy celá množina $H_{n,k}$, protože každý kód může být tajným kódem. 
+
+\begin{definice}[Graf \text{[n,k]-Mastermindu}]
+  Uvažujeme množinu vrcholů $\mathcal{V} = \mathcal{P}(H_{n,k})$ a množinu orientovaných hran $\mathcal{E}$ mezi vrcholy a jejich potomky. Cestu definujeme jako posloupnost navazujících hran. Definujeme $V \subset \mathcal{V}$ jako množinu vrcholů, do kterých vede cesta z vrcholu $H_{n,k}$. Graf [n,k]-Mastermindu definujeme jako indukovaný podgraf grafu $(\mathcal{V}, \mathcal{E})$ množinou $V$. Hranu $(K, K_{u,r})$ budeme značit jako hranu $(u,r)$ z vrcholu $K$.
+\end{definice}
+ 
+\begin{pozn}
+    Mezi dvěma vrcholy může vést více hran, jak je vidět na obrázku \ref{fig22prvnitah}, který zobrazuje potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Pro přehlednost jsou potomci vzhledem ke stejnému kódu zakresleny u sebe, protože odpovídají možným dalším stavům v případě zvolení tohoto kódu jako dalšího pokusu. 
+    
+    %Vrchol také může být potomkem sebe samého. 
+\end{pozn}
+
+\begin{definice}[Strom průběhu \text{[n,k]-Mastermindu}]
+  Strom průběhu hry definujeme jako podgraf grafu [n,k]-Mastermindu s následujícími vlastnostmi. 
+  \begin{enumerate}
+      \item Z každého vrcholu vedou hrany pouze do potomků vzhledem k jednomu danému kódu. 
+  \end{enumerate}
+\end{definice}
+
+
+
+Prvky aktuálního stavu hry $K\subset H_{n,k}$ nazýváme kandidáty. 
+\begin{definice}[Kandidát]
+    Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. Nechť 
+    \[P = \left((u_1, s_v(u_1)), (u_2,s_v(u_2)), \dots, (u_j,s_v(u_j))\right), u_i \in H_{n,k}, \]
+    % r_i \in \N _0 \times \N _0
+    jsou tahy s ohodnocením vzhledem ke kódu $v$. Řekneme, že $u \in H_{n,k}$ je kandidát, pokud $u \in K$, kde $K$ je konec cesty $P$ z vrcholu $H_{n,k}$. $K$ nazýváme množinu všech kandidátů tohoto stavu. 
+\end{definice}
+\begin{pozn}
+    Nechť $P = \left((u_1, s_v(u_1)), (u_2,s_v(u_2)), \dots, (u_j,s_v(u_j))\right), u_i \in H_{n,k}$ jsou tahy s ohodnocením, $K$ je konec cesty a $u \in K$ je kandidát. Potom $\forall i \in \{1,2,\dots j\}$ platí $s(u,u_i) = s_v(u_i)$. Tajný kód $v$ je tedy kandidát pro každý stav hry. 
+\end{pozn}
+
+
+
+% ========================== Vlastnosti algoritmů =====================
+
+Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat \textbf{maximální počet pokusů}, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$.
+
+% jiná formulace - Co když nám ale nezáleží na maximálním počtu pokusů? 
+Druhý ukazatel, který u algoritmů budeme srovnávat je \textbf{průměrný počet pokusů} na hru. Ukážeme, že nejmenší maximální počet pokusů není zárukou pro minimální průměrný počet pokusů na hru. 
+
+Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost budeme pojmenovávat \textbf{konzistence}.
+%\begin{definice}[Konzistentní algoritmus]\label{defkonzistentnialg}
+ %   Uvažujme algoritmus řešící [n,k]-Mastermind. Nechť $u \in H_{n,k}$ je kód, který algoritmus zvolí jako první pokus. Řekneme, že algoritmus řešící [n,k]-Mastermind je konzistentní, pokud pro všechny kódy $u' \in H_{n,k}$ platí, že algoritmus, který místo $u$ volí jako první pokus kód $u'$ nedosahuje lepšího průměrného počtu pokusů.
+%\end{definice}
+
+Konzistenci budeme zkoumat pro pět počátečních kódů $(1111, 1112, 1122, 1123, 1234)$.
+%Potom porovnáme všechny ostatní kódy se stejnou vlastnostní - např všechny kódy, které mají dvě a dvě pozice se stejnou barvou. 
+V tabulce \ref{tabvaluaceprvnichtahu} jsou zobrazeny valuace těchto kódů vzhledem k $H_{4,6}$. Nejlepší valuace prvního pokusu podle zvolené strategie v konkrétním algoritmu je zobrazena tučně. 
+
+Musíme poznamenat, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než kódy $1111, 1112, 1122, 1123, 1234$. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic z těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém $H_{4,6}$. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
+
+\begin{table}[h]
+\centering
+\begin{tabular}{l l l l l l}
+\toprule
+kód & 1111 & 1112 & 1122 & 1123 & 1234 \\
+\midrule
+
+maximum & 625 & 317 & \textbf{256} & 276 & 312 \\
+entropie & 1.50 & 2.69 & 2.89 & 3.04 & \textbf{3.06}\\
+
+% [1.4984350761704437, 2.6934339172716406, 2.885102174947102, 3.0436979819559213, 3.0566709153318907]
+
+%vážený průměr - $\sum_{i = 1}^{14} |S_i|  \cdot \pr (S_i)$ & 512.0 & 235.9 & 204.5 & \textbf{185.3} & 188.2 \\
+
+% [511.9799382716049, 235.94907407407408, 204.53549382716048, 185.26851851851853, 188.18981481481484]
+
+počet částí & 5 & 11 & 13 & \textbf{14} & \textbf{14} \\
+
+\bottomrule
+\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+Entropie je zaokrouhlena na dvě desetinná místa.
+%, vážený průměr na jedno.
+}
+
+\end{tabular}
+\caption{Hodnoty valuace kódů pro první tah}
+\label{tabvaluaceprvnichtahu}
+\end{table}
+
+\section{Metodika testování - popis kódu}
+Výsledky algoritmů byly nalezeny pomocí programu napsaného v jazyce Python pro účel této práce \cite{Simsa_Strategies_for_Mastermind_2025}. Maximální a průměrné počty pokusů byly nalezeny za pomocí sestavení stromu řešení [4,6]-Mastermind jako na obrázku \ref{fig22minmax}. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, uchová si aktuální počet pokusů potřebný k nalezení daného tajného kódu. Program končí ve chvíli, kdy je každý kód v listu. Nakonec se spočítá očekávaný a maximální počet pokusů ze zachovaných hodnot pro jednotlivé kódy.
+
+Existují dvě situace, pro které se stav dostane do listu. První je v případě, kdy stav je složen z více kódů a tedy nevíme, který z nich je tajný kódem. V případě, že algoritmus vybere jako další pokus kandidáta, může se stát, že tento kandidát byl dokonce tajným kódem. V tu chvíli máme štěstí a nalezli jsme počet pokusů, který potřebuje min-max algoritmus k nalezení tohoto tajného kódu. Druhá situace nastává, kdy stavem je jednoprvková množina s pouze jedním kódem. Zároveň ho min-max algoritmus zatím nezahrál. V tuto chvíli algoritmus ví, který kód je tajným, ale musí ho ještě zahrát, protože hra končí ve chvíli, kdy je zahraný tajný kód. 
