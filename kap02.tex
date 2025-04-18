@@ -22,62 +22,27 @@ V každém kroku algoritmů vycházíme z určitého stavu hry, pro který daná
    Nechť $u_i, i\in \{1,2,\dots m\}$ jsou kódy a $r_i = (b_i,w_i)$ jsou ohodnocení. Stav definujeme jako posloupnost $((u_1, r_1), \dots, (u_m, r_m))$. Počáteční stav definujeme jako prázdnou posloupnost.
 \end{definice}
 
-%Pro každý stav lze nalézt množinu kódů, které mají s pokusy ve stavu stejné ohodnocení. 
-
 Pro každý stav lze nalézt množinu kódů, které by podle dostupných informací mohly být tajným kódem. Jde o ty kódy, které mají s kódy ve stavu stejné ohodnocení jako příslušná ohodnocení ve stavu. 
 
 \begin{definice}[kandidát]\label{kandidat}
-  Nechť $\left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že kód $u \in H_{n,k}$ je kandidát, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots j\}$. Pro počáteční stav definujeme množinu kandidátů jako celý prostor kódů $H_{n,k}$.
+  Nechť $P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že kód $u \in H_{n,k}$ je kandidát stavu $P$, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots j\}$. Pro počáteční stav definujeme množinu kandidátů jako celý prostor kódů $H_{n,k}$.
+
+  % Dále definujeme funkci $J$, která stavu přiřadí jeho množinu kandidátů.
+  % \begin{align*}
+  %     J \colon (H_{n,k} \times S)^+ &\to \mathbb{R} \\
+  %       \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right) &\mapsto \{u \in H_{n,k} \mid s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots j\} \} 
+  % \end{align*}
 \end{definice}
+Množina kandidátů dává intuici za tím, jak blízko jsme uhádnutí tajného kódu. V případě, že množina kandidátů je jednoprvková, tak nám je znám tajný kód. Pokud je množina kandidátů veliká, nejspíš ještě budeme k rozlišení tajného kódu potřebovat více pokusů.
 
 
-\begin{definice}[Prázdný a konečný stav]\label{kandidat}
-  Nechť $P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že je prázdný, pokud je množina kandidátů tohoto stavu prázdná. 
-
-  Řekneme, že stav $P$ je konečný, pokud je neprázdný a poslední člen je roven $(u,(n,0))$ pro nějaký kód $u$.
-\end{definice}
-
-Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chvíli žádný kód nemůže být tajným kódem. V reálné hře by ho šlo dosáhnout pouze při chybě v ohodnocení pokusu. Konečný stav odpovídá konci hry, kdy se pokus shoduje s tajným kódem. Množina jeho kandidátů v tu chvíli obsahuje právě tajný kód. 
-
-Průběh hry popíšeme jako kořenový strom kde vrcholy odpovídají stavům hry. Hrany znázorňují pokusy s ohodnocením. 
+Možný průběh hry popíšeme jako kořenový strom, kde vrcholy odpovídají stavům hry. Hrany znázorňují pokusy s ohodnocením, které hru posouvají do dalších stavů. 
 
 \begin{definice}[Strom \text{[n,k]-Mastermindu}]
   Strom \text{[n,k]-Mastermindu} definujeme jako orientovaný graf na množině stavů. Kořenem je počáteční stav. Ze stavu $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), (w_2,s_2), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a $\forall i \in \{1,2,\dots, j\} \colon (u_i, r_i) = (w_i, s_i)$. Tuto hranu značíme $(w_l, s_l)$. 
 \end{definice}
 
-Stavy následující po stavu $A$ nazýváme potomky $A$.
-
-\begin{definice}[Potomek]\label{potomek}
-  % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. 
-  % Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. Nechť $A = \left((u_1, r_1), \dots, (u_j,r_j)\right)$ je stav, $u \in H_{n,k}$ je kód a $r \in S$ ohodnocení. Potomka stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako stav $A_{u,r} = (\left((u_1, r_1), \dots, (u_j,r_j) ,(u,r)\right)$. 
-  
-  Potomek stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$ je stav, na který se ze stavu $A$ dostaneme hranou $(u,r)$. 
-  
-  Nechť $K$ je množina kódů, potom potomka $K$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako množinu
-  \[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] 
-\end{definice}
-
-\begin{pozn}
-    Potomkem $K$, vzhledem ke kódu $u$ nazýváme množinu $K_{u,r}$ pro nějaké $r \in S$. Potomkem $K$ nazýváme množinu $K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S$. 
-\end{pozn}
-
-
-
-\begin{pozn}
-    Používáme stejnou definici pro dva různé objekty. Jejich význam je ale velice podobný. Označíme-li $K$ množina kandidátů stavu $A$, tak množina kandidátů stavu $A_{u,r}$ je právě právě $K_{u,r}$. Množina $K_{u,r}$ ale může odpovídat potomkům stavu vzhledem k různým kódům. 
-    %Platí, že množina kandidátů potomka stavu je potomek množiny. Potomek množiny ale může odpovídat více stavům. 
-\end{pozn}
-
-\begin{pozn}
-    Všimněme si, že $K_{u,r} \subset K \hspace{3px}\forall u\in H_{n,k} \hspace{3px}\forall r\in S$. Navíc pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
-    \[K = \bigcup_{r\in S} K_{u,r}\]
-    protože pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$ z definice potomka.
-    %, tedy že $w$ náleží do potomka $K$ vzhledem ke kódu $u$ a ohodnocení $s(u,w)$. 
-\end{pozn}
-
-%\begin{pozn} Platí následující pozorování.\[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] \end{pozn}
-% Šlo by definovat funkci, která stavu přiřadí množinu handidátů. Valuace a strategie by ale šly zachovat pro množinu kandidátů. 
-Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav a všechny jeho potomky. Jsou to všechny stavy, do kterých se lze dostat po prvním pokusu. 
+Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav a všechny stavy, do kterých se lze dostat po prvním pokusu. 
 
 
 \begin{figure}[h!]
@@ -119,20 +84,56 @@ Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav a všechny jeho potomk
     \label{fig22prvnitah}
 \end{figure}
 
-Průběh [n,k]-Mastermindu s nějakým tajným kódem $v$ lze sledovat ve stromu [n,k]-Mastermindu. Nechť $A$ je stav a hráč zvolí další pokus $u$. Touto volbou hráč vybral další vrstvu stavů hry, kterou jsou právě potomci stavu $A$ vzhledem ke kódu $u$. Zadavatel ohodnotí kód $u$ vzhledem ke kódu $v$ ohodnocením $r$. Ohodnocením určí, který stav z potomků $A$ vzhledem ke kódu $u$ bude následovat. Hráč tedy může vybrat následující pokus ten, který bude mít nejvhodnější vrstvu potomků vzhledem ke stavu $A$. Z těchto stavů ale neví, do kterého se hra dostane, protože nezná ohodnocení s tajným kódem. 
+Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme potomky $A$.
 
-% Kdybychom si zapisovali uvedený strom pro všechny tajné kódy $v \in H_{n,k}$, tedy bychom se mohli do všech následujících neprázdných stavů, pomocí různých tajných kódů.  sestrojili bychom takzvaný strom algoritmu. 
+\begin{definice}[Potomek stavu a množiny]\label{potomek}
+  % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. 
+  % Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. Nechť $A = \left((u_1, r_1), \dots, (u_j,r_j)\right)$ je stav, $u \in H_{n,k}$ je kód a $r \in S$ ohodnocení. Potomka stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako stav $A_{u,r} = (\left((u_1, r_1), \dots, (u_j,r_j) ,(u,r)\right)$. 
+  
+  Potomek stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$ je stav, do kterého vede ze stavu $A$ hrana $(u,r)$ a značíme ho $A_{u,r}$. 
+  
+  Nechť $K \subset H_{n,k}$ je množina kódů, potom potomka množiny $K$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako množinu
+  \[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] 
+\end{definice}
 
-Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro každý dosažitelný stav [n,k]-Mastermindu s libovolným kódem $v$ známe následující zahraný kód. Potom lze sestavit takzvaný strom algoritmu, který zobrazuje pro každý stav potomky vzhledem ke zvolenému kódu pro tento stav. Další pokus má smysl hledat pouze pro neprázdné stavy, které nejsou konečné. Konečné stavy totiž odpovídají skončené hře. 
+\begin{pozn}
+    Používáme stejné názvosloví pro dva různé objekty. Jejich význam je ale obdobný. Označíme-li $K$ množina kandidátů stavu $A$, tak množina kandidátů stavu $A_{u,r}$ je právě právě $K_{u,r}$. Množina $K_{u,r}$ ale může odpovídat potomkům stavu vzhledem k různým kódům. 
+    % Množina kandidátů neurčuje jednoznačně stav (například prohozením prvků stavu bychom došli do stejné množiny kandidátů). Naopak stav jednoznačně určuje množinu kandidátů. 
+    % V případě, kdy je určen kód $u$ pro nějaký stav $A$, tak potom množina kandidátů jednoznačně určuje 
+    % Platí, že množina kandidátů potomka stavu je potomek množiny. Potomek množiny ale může odpovídat více stavům. 
+    Potomkem $K$, vzhledem ke kódu $u$ nazýváme množinu $K_{u,r}$ pro nějaké $r \in S$. Potomkem $K$ nazýváme množinu $K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S$. Obdobně nazýváme potomky stavu. 
+\end{pozn}
 
-% Zajímají nás všichni potomci až do chvíle, kdy dospějeme do konečného stavu, který odpovídá dohrané hře. 
+\begin{lemma}[Vztah potomků]
+    Nechť $S$ je množina všech ohodnocení kódů v $H_{n,k}$. Pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
+    \[K = \dot\bigcup_{r\in S} K_{u,r}\]
+\end{lemma}
+\begin{dukaz}
+    Dokážeme obě inkluze. Z definice $K_{u,r}$ platí $\dot\bigcup_{r\in S} K_{u,r} \subset K$. Nechť $u \in H_{n,k}$. Potom pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$ a tedy $K \subset \dot\bigcup_{r\in S} K_{u,r}$. Zároveň žádný kód $w \in K$ nemůže mít s kódem $u$ dvě různá ohodnocení, a tedy sjednocení je disjunktní. 
+\end{dukaz}
 
-% Zadavatel ohodnocením kódu ... Toto ohodnocení následně určí zadavatel. ...Následně zahraný kód s ohodnocením jednoznačně definují další stav. ...který udělením ohodnocení určí, který z potomků odpovídá ohodnocení vzhledem k tajnému kódu. ...Zadavatel následně určí, který z potomků odpovídá ohodnocení vzhledem k tajnému kódu. 
+% \begin{pozn}
+%     Všimněme si, že $K_{u,r} \subset K \hspace{3px}\forall u\in H_{n,k} \hspace{3px}\forall r\in S$. Navíc pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
+%     \[K = \dot\bigcup_{r\in S} K_{u,r}\]
+%     protože pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$.
+%     %, tedy že $w$ náleží do potomka $K$ vzhledem ke kódu $u$ a ohodnocení $s(u,w)$. 
+% \end{pozn}
 
-% stavu, kterým je potomek $A$ vzhledem ke kódu $u$ a ohodnocení $r$. 
 
 
-% Nyní definujeme strom algoritmu, který odpovídá průběhu hry při pevně zvolené metodě výběru dalších pokusů. Stavy se větví podle různých ohodnocení pokusů. 
+
+\begin{definice}[Prázdný a konečný stav]\label{kandidat}
+  Nechť $P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že $P$ je prázdný, pokud je množina kandidátů tohoto stavu prázdná. 
+
+  Řekneme, že stav $P$ je konečný, pokud je neprázdný a poslední člen je roven $(u,(n,0))$ pro nějaký kód $u$.
+\end{definice}
+
+Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chvíli žádný kód nemůže být tajným kódem. V reálné hře by ho šlo dosáhnout pouze při chybě v ohodnocení pokusu. Konečný stav odpovídá konci hry, kdy se pokus shoduje s tajným kódem. Množina jeho kandidátů v tu chvíli obsahuje právě tajný kód. 
+
+\subsubsection{Strom algoritmu}
+Průběh [n,k]-Mastermindu s nějakým tajným kódem $v$ lze sledovat ve stromu [n,k]-Mastermindu. Nechť $A$ je stav a hráč zvolí další pokus $u$. Touto volbou hráč vybral část potomků, do kterých se stav hry může dostat. Jsou to právě potomci stavu $A$ vzhledem ke kódu $u$. Zadavatel ohodnotí kód $u$ vzhledem ke kódu $v$ ohodnocením $r$. Ohodnocením určí, který stav z potomků $A$ vzhledem ke kódu $u$ bude následovat. Hráč tedy může vybrat jako následující pokus ten, který bude mít nejvhodnější vrstvu potomků vzhledem ke stavu $A$ (například podle množin kandidátů potomků). Z těchto potomků ale neví, do kterého se hra dostane, protože nezná ohodnocení s tajným kódem. 
+
+Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro každý dosažitelný stav $A$ [n,k]-Mastermindu s libovolným kódem $v$ známe následující zahraný kód $u$. Potom lze sestavit takzvaný strom algoritmu, který zobrazuje pro stav $A$ potomky vzhledem k zahranému kódu $u$. Potomky pro prázdné a konečné stavy nehledáme, protože jsou buď nedosažitelné, anebo označují konec hry. 
 
 \begin{definice}[Strom algoritmu \text{[n,k]-Mastermindu}]
   Strom algoritmu definujeme jako souvislý podgraf stromu [n,k]-Mastermindu, který splňuje následující podmínky.
@@ -143,15 +144,26 @@ Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro ka
   \end{enumerate}
 \end{definice}
 
+% Šlo by definovat funkci, která stavu přiřadí množinu handidátů. Valuace a strategie by ale šly zachovat pro množinu kandidátů. 
+
+% Nyní definujeme strom algoritmu, který odpovídá průběhu hry při pevně zvolené metodě výběru dalších pokusů. Stavy se větví podle různých ohodnocení pokusů. 
+
+
+
 % Nechť máme nějaký algoritmus, který pro každý stav vybere deterministicky nějaký další pokus. Strom algoritmu lze sestrojit rekurzivně. Pro každý stav algoritmus nalezne další pokus. Do stromu zakreslíme všechny potomky stavu vzhledem k tomuto pokusu.
 
 \begin{pozn}
     % Podmínka souvislosti grafu značí, že zapisujeme stavy, do který se následně lze dostat cestou z počátečního stavu. První podmínka zaručuje, že pro každý stav lze zahrát maximálně jeden kód. 
     
-    Nechť $A$ je stav. Platí, že pro nějaký kód $u$ jsou množiny kandidátů potomků $A$ vzhledem ke kódu $u$ disjunktní a sjednocením dávají množinu kandidátů stavu $A$. Všechny stavy, do kterých se dostaneme cestou z nějakého stavu $A$ za dodržení podmínky $1$ tedy mají kandidáty z množiny kandidátů stavu $A$. 
+    %Nechť $A$ je stav. 
+    
+    %Platí, že pro nějaký kód $u$ jsou množiny kandidátů potomků $A$ vzhledem ke kódu $u$ disjunktní a sjednocením dávají množinu kandidátů stavu $A$. Všechny stavy, do kterých se dostaneme cestou z nějakého stavu $A$ za dodržení podmínky $1$ tedy mají kandidáty z množiny kandidátů stavu $A$. 
 
-    Díky konstrukci stromu [n,k]-Mastermindu strom algoritmu neobsahuje žádné cykly a díky souvislosti a orientaci hran obsahuje nějaký kořen. Pokud by kořenem nebyl počáteční stav, množina kandidátů kořene by nebyla $H_{n,k}$. Proto by nešlo najít cestu do konečného stavu s nějakým kódem $u$, a tedy by nebyla splněna podmínka $2$. 
+% ======================= tohle bych chtěl přeformulovat =================
+    Strom algoritmu neobsahuje žádné cykly díky definici hran ve stromě [n,k]-Mastermindu. Zároveň do každého stavu (kromě počátečního) ústí právě jedna hrana a díky souvislosti tedy obsahuje nějaký kořen. Pokud by kořenem nebyl počáteční stav, množina kandidátů kořene by nebyla $H_{n,k}$. Tedy by existoval kód $u$, který nenáleží do množiny kandidátů kořene a tedy by konečný stav s posledním členem $(u, (n,0))$ byl prázdný. To je spor s druhou podmínkou a tedy $H_{n,k}$ je kořenem stromu algoritmu. 
 
+    Protože rozklad množiny $K$ na $K_{u,r}$ je disjunktní, tak je-li stav $A$, který není konečný, ve stromu algoritmu, ve stromu algoritmu budou poté i všichni potomci stavu $A$ vzhledem k nějakému kódu $u$ (za splnění podmínky $1$). V opačném případě by stejně jako výše nebyla splněna podmínka $2$.
+    
     Nechť nyní $v\in H_{n,k}$ je nějaký tajný kód a máme nějaký algoritmus popsaný stromem algoritmu. Potom průběh hry je popsán právě cestou z počátečního stavu do konečného stavu s posledním prvkem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{fig22minmax}. 
     
     % Použitím obou podmínek tedy dospějeme k závěru, že strom algoritmu musí obsahovat počáteční stav. 
@@ -209,13 +221,32 @@ Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro ka
 %\end{definice}
 
 
+
+
+% ======================== napsat u obecn0ho algoritmu =====================
+
+
 \subsubsection{Obecný algoritmus}
-Nyní přistoupíme k popisu skupiny deterministických algoritmů řešící hru [n,k]-Mastermind. Využijeme k tomu dvě funkce, valuaci a strategii.
+Nyní přistoupíme k popisu skupiny deterministických algoritmů řešící hru [n,k]-Mastermind. Algoritmy popisujeme podle funkcí, které pro jakýkoliv stav naleznou další pokus. Nazýváme je, valuace a strategie. 
+
+Pro zjednodušení tyto funkce definujeme pro množiny kandidátů stavů. Pro dva různé stavy, které ale mají shodnou množinu kandidátů je problém nalezení dalšího kódu ekvivalentní. Předpokládáme totiž, že všechny kódy mohou být tajným kódem se stejnou pravděpodobností. Stejné množiny kandidátů pro dva různé stavy lze například dosáhnout prohozením prvků stavu. 
+
+% Ve chvíli, kdy mají nějaké dva stavy stejnou množinu kandidátů, nezáleží na tom, jaké prvky stav obsahuje. Platí, že při následném zvolení stejných pokusů pro oba stavy dosáhneme stejného výsledku. Dojdeme ke stejnému konečnéme stavu.
+
+% Pro dva různé stavy, které ale mají shodnou množinu kandidátů je problém nalezení dalšího kódu ekvivalentní. Předpokládáme totiž, že všechny kódy mohou být tajným kódem se stejnou pravděpodobností. Stejné množiny kandidátů pro dva různé stavy lze například dosáhnout prohozením prvků stavu. 
+
+
+% K popisu výběru dalšího tahu algoritmy nebudou používat stav hry jako v definici \ref{defstav}. Místo toho vybírají další kód za pomocí množiny kandidátů tohoto stavu. 
+
+% Našim cílem je totiž co nejlépe rozlišit, který kandidát je tajným kódem. Různé stavy které ale mají stejnou množinu kandidátů se v této informaci neliší. Proto výběr dalšího tahu lze vztáhnout pouze na množinu kandidátů aktuálního stavu. 
+
+
+
 % U této definice si nejsem jistý, jak to smyslupně definovat. Vazba "která lz e vyjádřit pomocí potomků" se mi moc nelíbí - definovat valuaci a až potom jednokrokové valuace
 \begin{definice}[Valuace]
     Nechť $G = (V,E)$ je graf [n,k]-Mastermindu a $K \in V$ je vrchol. Potom valuaci vzhledem k množině $K$ definujeme jako funkci $f_K(u) \colon H_{n,k} \to \mathbb{R}$.
 \end{definice}
-Nejprve si musíme uvědomit, že pro dva různé stavy, které ale mají shodnou množinu kandidátů je problém nalezení dalšího kódu ekvivalentní. Předpokládáme totiž, že všechny kódy mohou být tajným kódem se stejnou pravděpodobností. Stejné množiny kandidátů pro dva různé stavy lze například dosáhnout prohozením prvků stavu. 
+
 
 Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako dalšího pokusu pro stav vyjádřený množinou kandidátů $K\subset H_{n,k}$. Tato hodnota bude obvykle záviset na potomcích $K$ vzhledem ke kódu $u$. Potomci $K$ vzhledem ke kódu $u$ totiž určují možné následující stavy v případě, kdy zvolíme kód $u$ jako další pokus. Valuace nám umožňuje ohodnotit kód podle toho, jak dobré jsou jeho následující stavy. 
 
@@ -292,27 +323,27 @@ Pokud by tato podmínka nebyla splněna, mohlo by se stát, že množina $U$ bud
  %   Algoritmus \ref{alg-default}
 %\end{veta}
 
-\begin{tvrz}[Počet ohodnocení]
-Nechť $n\in \mathbb{N}, k\in \mathbb{N}, k \geq 3$. Potom počet všech možných ohodnocení kódů v $H_{n,k}$ je $\frac{n^2 + 3n}{2}$.
-\end{tvrz}
-\begin{dukaz}
-Pro $b \leq n,\hspace{3px} b \neq n-1$ černých kolíčků existuje $n-b+1$ možností na počet bílých kolíčků podle tvrzení \ref{tvrzohodnoceni}. Pro $b = n-1$ existuje pouze jedno ohodnocení. Součtem přes počet černých kolíčků dostáváme následující počet možností ohodnocení.
-    \[|S| = (n+1) + n + (n-1)  + \dots + 3 + 1 + 1 \]
-Vzorcem pro součet aritmetické řady se dobereme k výsledku.
-    \[|S| = \frac{(n+1)(n+2)}{2} - 1 \]
-    \[|S| = \frac{n^2 + 3n}{2}\]
-\end{dukaz}
+% \begin{tvrz}[Počet ohodnocení]
+% Nechť $n\in \mathbb{N}, k\in \mathbb{N}, k \geq 3$. Potom počet všech možných ohodnocení kódů v $H_{n,k}$ je $\frac{n^2 + 3n}{2}$.
+% \end{tvrz}
+% \begin{dukaz}
+% Pro $b \leq n,\hspace{3px} b \neq n-1$ černých kolíčků existuje $n-b+1$ možností na počet bílých kolíčků podle tvrzení \ref{tvrzohodnoceni}. Pro $b = n-1$ existuje pouze jedno ohodnocení. Součtem přes počet černých kolíčků dostáváme následující počet možností ohodnocení.
+%     \[|S| = (n+1) + n + (n-1)  + \dots + 3 + 1 + 1 \]
+% Vzorcem pro součet aritmetické řady se dobereme k výsledku.
+%     \[|S| = \frac{(n+1)(n+2)}{2} - 1 \]
+%     \[|S| = \frac{n^2 + 3n}{2}\]
+% \end{dukaz}
 
-\begin{tvrz}[Časová složitost algoritmu \ref{alg-default}]
-    Uvažujeme případ, kdy $F$ je minimizér/maximizér.
-    Algoritmus \ref{alg-default} má časovou složitost
-    % \[O( k^n O(f_K))\]
-    \[O \left( \sum_{j = 1}^z k^n \cdot m_j \cdot n^2 \cdot \frac{n^2 + 3n}{2}\right)\]
+% \begin{tvrz}[Časová složitost algoritmu \ref{alg-default}]
+%     Uvažujeme případ, kdy $F$ je minimizér/maximizér.
+%     Algoritmus \ref{alg-default} má časovou složitost
+%     % \[O( k^n O(f_K))\]
+%     \[O \left( \sum_{j = 1}^z k^n \cdot m_j \cdot n^2 \cdot \frac{n^2 + 3n}{2}\right)\]
     
-\end{tvrz}
-\begin{dukaz}
-    $k^n$ je počet všech kódů, které musím projít, abych našel ten nejlepší, $m_j$ je maximální počet kandidátů v j-té iteraci, $z$ je maximální počet iterací algoritmu. $\frac{n^2 + 3n}{2}$ je počet všech ohodnocení, $n^2$ je časová složitost ohodnocení.
+% \end{tvrz}
+% \begin{dukaz}
+%     $k^n$ je počet všech kódů, které musím projít, abych našel ten nejlepší, $m_j$ je maximální počet kandidátů v j-té iteraci, $z$ je maximální počet iterací algoritmu. $\frac{n^2 + 3n}{2}$ je počet všech ohodnocení, $n^2$ je časová složitost ohodnocení.
 
-    Potřebuji ještě limit na počet iterací $z$, horní odhad na $m_j$ a zjistit složitost nalezení průniku $U$ a $K$.
-\end{dukaz}
+%     Potřebuji ještě limit na počet iterací $z$, horní odhad na $m_j$ a zjistit složitost nalezení průniku $U$ a $K$.
+% \end{dukaz}
 

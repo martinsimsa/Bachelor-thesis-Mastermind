@@ -2,14 +2,14 @@
 V následující kapitole porovnáme tři popisované algoritmy. 
 
 \section{Vlastnosti algoritmů}
-Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat \textbf{maximální počet pokusů}, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$. 
+Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat maximální počet pokusů, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$. 
 Druhá možnost je sestrojit strom algoritmu a nalézt maximální délku cesty od listu ke kořeni.
 
 \begin{definice}[Maximální počet pokusů]\label{defmaxpocetpokusu}
     Nechť $T$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Maximální počet pokusů tohoto algoritmu definujeme jako nejdelší délku cesty od kořene $T$ k nějakému listu $T$. 
 \end{definice}
 
-Druhý ukazatel, který u algoritmů budeme srovnávat je \textbf{průměrný počet pokusů} na hru. Ten lze opět vyčíst ze stromu algoritmu.
+Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pokusů na hru. Ten lze opět vyčíst ze stromu algoritmu.
 
 \begin{definice}[Průměrný počet pokusů]\label{defprumpocetpokusu}
     Nechť $T = (V,E)$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $P$ označíme $d(P)$ délku cesty od kořene k tomuto listu. Průměrný počet pokusů algoritmu definujeme jako 
@@ -67,7 +67,7 @@ Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojov
 
 % Výsledky algoritmů byly nalezeny pomocí programu napsaného v jazyce Python pro účel této práce \cite{Simsa_Strategies_for_Mastermind_2025}. Maximální a průměrné počty pokusů byly nalezeny za pomocí sestavení stromu řešení [4,6]-Mastermind jako na obrázku \ref{fig22minmax}. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, uchová si aktuální počet pokusů potřebný k nalezení daného tajného kódu. Program končí ve chvíli, kdy je každý kód v listu. Nakonec se spočítá očekávaný a maximální počet pokusů ze zachovaných hodnot pro jednotlivé kódy.
 
-Existují dvě situace, pro které se stav dostane do listu. První je v případě, kdy stav je složen z více kódů a tedy nevíme, který z nich je tajný kódem. V případě, že algoritmus vybere jako další pokus kandidáta, může se stát, že tento kandidát byl dokonce tajným kódem. V tu chvíli máme štěstí a nalezli jsme počet pokusů, který potřebuje min-max algoritmus k nalezení tohoto tajného kódu. Druhá situace nastává, kdy stavem je jednoprvková množina s pouze jedním kódem. Zároveň ho min-max algoritmus zatím nezahrál. V tuto chvíli algoritmus ví, který kód je tajným, ale musí ho ještě zahrát, protože hra končí ve chvíli, kdy je zahraný tajný kód. 
+% Existují dvě situace, pro které se stav dostane do listu. První je v případě, kdy stav je složen z více kódů a tedy nevíme, který z nich je tajný kódem. V případě, že algoritmus vybere jako další pokus kandidáta, může se stát, že tento kandidát byl dokonce tajným kódem. V tu chvíli máme štěstí a nalezli jsme počet pokusů, který potřebuje min-max algoritmus k nalezení tohoto tajného kódu. Druhá situace nastává, kdy stavem je jednoprvková množina s pouze jedním kódem. Zároveň ho min-max algoritmus zatím nezahrál. V tuto chvíli algoritmus ví, který kód je tajným, ale musí ho ještě zahrát, protože hra končí ve chvíli, kdy je zahraný tajný kód. 
 
 \section{min-max}
 
@@ -94,9 +94,9 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 \caption{Výsledky min-max algoritmu}\label{tabminmaxvysl}
 \end{table}
 
-\subsection{entropie}
+\subsection{Max entropy}
 
-Algoritmus s entropií vybírá jako první pokus kód $1234$. Dosahuje průměrného počtu pokusů $4.415$, jak ukazuje tabulka \ref{tabentropievysl}. Pokud by ale tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus s entropií tedy není konzistentní. 
+Algoritmus Max entropy vybírá jako první pokus kód $1234$. Dosahuje průměrného počtu pokusů $4.415$, jak ukazuje tabulka \ref{tabentropievysl}. Pokud by ale tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus Max entropy tedy není konzistentní. 
 
 \begin{table}[h]
 \centering
@@ -119,7 +119,7 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 
 
 
-\subsection{počet částí}
+\subsection{Most parts}
 Metoda popsána Barteldem Kooi je konzistentní. Volí jako první tah kód $1123$ a dosahuje průměrného počtu pokusů $4.373$. Výsledky pro další počáteční tahy znázorňuje tabulka \ref{tabcastivysl}.
 
 
@@ -165,10 +165,10 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 \end{table}
 
 \section{Varianty/zlepšení algoritmů}
-\subsubsection{Volba pokusů z kandidátů}
-Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Ve chvíli, kdy se nacházíme ve stavu $K$ (množina kandidátů na tajný kód) a zahrajeme kód, který nenáleží do této množiny, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů by tedy byl způsob, kdybychom další kód vybírali pouze z množiny kandidátů (stavu) $K$. V základním algoritmu \ref{alg-default} by množina $U$ měla tvar
+\subsubsection{Volba pokusů pouze z kandidátů}
+Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $P$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů stavu. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $8$ měla tvar
 \[U = \{u \in K \mid f_K(u) = F(f_K)\}.\]
-Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind.
+Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind. Výsledky byly dosaženy stejným postupem jako u algoritmů výše, tedy postupným sestrojením stromu algoritmů. 
 
 \begin{table}[h]
 \centering
@@ -189,7 +189,7 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 \caption{Výsledky algoritmů volící pouze kandidáty}\label{tabminmaxvysl}
 \end{table}
 
-Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale zmenší časovou složitost algoritmů.
+Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale zmenší časovou složitost algoritmů. 
 
 \begin{tvrz}
     Uvažujme algoritmus \ref{alg-default} s výběrem množiny $U$ na řádku $7$ podle následujícího předpisu.
@@ -200,6 +200,9 @@ Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-ma
 \begin{dukaz}
     Tvrzení plyne z tvrzení ...
 \end{dukaz}
+
+\subsubsection{Jiná volba prvního tahu}
+
 
 
 \section{Diskuze}
