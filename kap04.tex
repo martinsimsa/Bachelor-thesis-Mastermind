@@ -2,17 +2,16 @@
 V následující kapitole porovnáme tři popisované algoritmy. 
 
 \section{Vlastnosti algoritmů}
-Při srovnávání algoritmů budeme používat několik kritérií. Jedním z přirozených možností je sledovat maximální počet pokusů, které algoritmus potřebuje k nalezení jakéhokoli tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů nám tedy stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$. 
-Druhá možnost je sestrojit strom algoritmu a nalézt maximální délku cesty od listu ke kořeni.
+Při srovnávání algoritmů budeme používat několik kritérií. První hodnotou je maximální počet pokusů, které algoritmus potřebuje k nalezení libovolného tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$. V sekci se stromem algoritmu jsme ukázali, že tato hodnota je ekvivalentní největší vzdálenosti listu od kořene ve stromě algoritmu ve smyslu počtu hran.
 
 \begin{definice}[Maximální počet pokusů]\label{defmaxpocetpokusu}
     Nechť $T$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Maximální počet pokusů tohoto algoritmu definujeme jako nejdelší délku cesty od kořene $T$ k nějakému listu $T$. 
 \end{definice}
 
-Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pokusů na hru. Ten lze opět vyčíst ze stromu algoritmu.
+Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pokusů na hru. Ten lze opět nalézt ze stromu algoritmu.
 
 \begin{definice}[Průměrný počet pokusů]\label{defprumpocetpokusu}
-    Nechť $T = (V,E)$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $P$ označíme $d(P)$ délku cesty od kořene k tomuto listu. Průměrný počet pokusů algoritmu definujeme jako 
+    Nechť $T = (V,E)$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $P$ označíme $d(P)$ jeho vzdálenost od kořene ve smyslu počtu hran. Průměrný počet pokusů algoritmu definujeme jako 
     \[\frac{1}{k^n}\sum_{P\in V, P \text{ list}} d(P).\]
 \end{definice}
 
@@ -57,9 +56,9 @@ Entropie je zaokrouhlena na dvě desetinná místa.
 
 
 \section{Způsob testování}
-Výsledky algoritmů byly nalezeny vytvořením stromu algoritmu pro každou metodu. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, je uložena aktuální vzdálenost listu od kořene (počet pokusů potřebný k nalezení daného tajného kódu) do seznamu s počty pokusů. 
+Výsledky algoritmů byly nalezeny vytvořením stromu algoritmu pro každou metodu. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus podle zvolené valuace a strategie. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, je uložena aktuální vzdálenost listu od kořene (počet pokusů potřebný k nalezení daného tajného kódu) do seznamu s počty pokusů. 
 %V průběhu vytváření stromu byly zjišťovány vzdálenosti konečných stavů (listů) od kořene odpovídající počtu pokusů potřebných k uhádnutí daného kódu. 
-Následně z těchto hodnot byly vypočteny hodnoty Maximální počet pokusů a Průměrný počet pokusů. Konzistence algoritmů byla nalezena za pomocí pevného určení prvního pokusu při vytváření stromu algoritmů. 
+Následně z těchto hodnot byly vypočteny hodnoty Maximální počet pokusů a Průměrný počet pokusů. Konzistence algoritmů byla nalezena sestrojením stromu algoritmu s pevně zvoleným prvním tahem.
 
 Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojový kód a jeho dokumentace je dostupný na GitHub \cite{Simsa_Strategies_for_Mastermind_2025}. 
 
@@ -69,11 +68,13 @@ Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojov
 
 % Existují dvě situace, pro které se stav dostane do listu. První je v případě, kdy stav je složen z více kódů a tedy nevíme, který z nich je tajný kódem. V případě, že algoritmus vybere jako další pokus kandidáta, může se stát, že tento kandidát byl dokonce tajným kódem. V tu chvíli máme štěstí a nalezli jsme počet pokusů, který potřebuje min-max algoritmus k nalezení tohoto tajného kódu. Druhá situace nastává, kdy stavem je jednoprvková množina s pouze jedním kódem. Zároveň ho min-max algoritmus zatím nezahrál. V tuto chvíli algoritmus ví, který kód je tajným, ale musí ho ještě zahrát, protože hra končí ve chvíli, kdy je zahraný tajný kód. 
 
-\section{min-max}
+\section{Výsledky}
 
-Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Byla sestrojena za pomoci programu v pythonu, který byl vytvořen pro tuto práci. \cite{Simsa_Strategies_for_Mastermind_2025} 
+\subsection{min-max}
 
-Maximální počet pokusů, který min-max algoritmus (začínající kódem 1122) potřebuje na prolomení tajného kódu je $5$. Průměrně pak potřebuje $4.476$ pokusů. K porovnání jsou uvedeny maximální a průměrné počty pokusů pro jiné počáteční kódy. Mohli bychom totiž očekávat, že by průměrný nebo maximální počet pokusů byl menší pro jiný počáteční kód, jak bylo znázorněno v příkladu \ref{malyprikladminmax}. Nejlepších výsledků ale algoritmus dosahuje v při volbě prvního tahu $1122$, který odpovídá přirozenému výběru prvního tahu podle definice Knuthova algoritmu. 
+Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Tabulka \ref{tabvaluaceprvnichtahu} ukazuje valuace pěti použitých kódů. Min-max algoritmus tedy jako první tah volí kód $1122$. Maximální počet pokusů Min-max algoritmu je $5$ a tedy je v tomto směru optimální. Průměrně pak potřebuje $4.476$ pokusů. Při volbě jiného prvního tahu jsou ve všech případech oba výsledky horší. Min-max algoritmus je tedy konzistentní.
+
+% Maximální počet pokusů, který min-max algoritmus (začínající kódem 1122) potřebuje na prolomení tajného kódu je $5$. Průměrně pak potřebuje $4.476$ pokusů. K porovnání jsou uvedeny maximální a průměrné počty pokusů pro jiné počáteční kódy. Mohli bychom totiž očekávat, že by průměrný nebo maximální počet pokusů byl menší pro jiný počáteční kód, jak bylo znázorněno v příkladu \ref{malyprikladminmax}. Nejlepších výsledků ale algoritmus dosahuje v při volbě prvního tahu $1122$, který odpovídá přirozenému výběru prvního tahu podle definice Knuthova algoritmu. 
 
 \begin{table}[h]
 \centering
@@ -96,8 +97,10 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 
 \subsection{Max entropy}
 
-Algoritmus Max entropy vybírá jako první pokus kód $1234$. Dosahuje průměrného počtu pokusů $4.415$, jak ukazuje tabulka \ref{tabentropievysl}. Pokud by ale tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus Max entropy tedy není konzistentní. 
+Algoritmus Max entropy vybírá jako první pokus kód $1234$, protože tento kód dosahuje největší valuace entropie jak znázorňuje tabulka \ref{tabvaluaceprvnichtahu}. Tabulka \ref{tabentropievysl} zobrazuje výsledky algoritmu Max entropy. Dosahuje průměrného počtu pokusů $4.415$, což je lepší výsledek než v případě Min-max algoritmu. Tento algoritmus ale nedokáže zaručit vítězství na pět pokusů. 
 
+Navíc, pokud by tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus Max entropy tedy není konzistentní. Vysvětlením by mohl být fakt, že entropie neodhaduje ideálně počet pokusů. Mohlo by to být tím, že rozdělení množiny $K$ do potomků $K_{u,r}$ není rovnoměrné. 
+%Kdybychom uvažovali valuace, které by srovnávali velikosti potomků do hloubky $2$. 
 \begin{table}[h]
 \centering
 \begin{tabular}{l l l l l l}
@@ -120,7 +123,7 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 
 
 \subsection{Most parts}
-Metoda popsána Barteldem Kooi je konzistentní. Volí jako první tah kód $1123$ a dosahuje průměrného počtu pokusů $4.373$. Výsledky pro další počáteční tahy znázorňuje tabulka \ref{tabcastivysl}.
+Algoritmus Most parts volí jako první tah kód $1123$ (plyne z tabulky \ref{tabvaluaceprvnichtahu}) a dosahuje průměrného počtu pokusů $4.373$. Tento výsledek, zobrazený v tabulce \ref{tabcastivysl}, je ze všech porovnávaných algoritmů nejlepší. Maximální počet pokusů je ale zase horší než u algoritmu Min-max, a to 6. Tato metoda popsána Barteldem Kooi je konzistentní. 
 
 
 \begin{table}[h]
@@ -143,26 +146,31 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 \end{table}
 
 
-\subsection{Očekávaný počet}
-Případná čtvrtá strategie...
-\begin{table}[h]
-\centering
-\begin{tabular}{l l l l l l}
-\toprule
-první pokus & 1111 & 1112 & 1122 & 1123 & 1234 \\
-\midrule
+% \subsection{Očekávaný počet}
+% Případná čtvrtá strategie...
+% \begin{table}[h]
+% \centering
+% \begin{tabular}{l l l l l l}
+% \toprule
+% první pokus & 1111 & 1112 & 1122 & 1123 & 1234 \\
+% \midrule
 
-maximální počet pokusů 
-& 6 & 6 & 5 & 6 & 6 \\
+% maximální počet pokusů 
+% & 6 & 6 & 5 & 6 & 6 \\
 
-průměrný počet pokusů 
-& 4.911 & 4.529 & 4.453 & 4.394 & 4.434 \\
-\bottomrule
-\multicolumn{6}{l}{\footnotesize \textit{Pozn:}
-Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
-\end{tabular}
-\caption{Výsledky algoritmu s očekávaným počtem kandidátů}\label{tabminmaxvysl}
-\end{table}
+% průměrný počet pokusů 
+% & 4.911 & 4.529 & 4.453 & 4.394 & 4.434 \\
+% \bottomrule
+% \multicolumn{6}{l}{\footnotesize \textit{Pozn:}
+% Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+% \end{tabular}
+% \caption{Výsledky algoritmu s očekávaným počtem kandidátů}\label{tabminmaxvysl}
+% \end{table}
+
+\subsection{Srovnání algoritmů}
+Nejlepší maximální počet pokusů v případě Min-max algoritmu dává smysl, protože algoritmus minimalizuje maximální počet kódů v potomcích aktuální množiny kandidátů. Fakt, že algoritmus Max entropy dosahuje lepšího průměrného počtu pokusů než Min-max odpovídá tomu, že Max entropy vybírá kód, který minimalizuje očekávanou hodnotu počtu pokusů. Výsledek algoritmu Most parts je do jisté míry překvapivý. Most parts algoritmus totiž maximalizuje pravděpodobnost, že tajný kód v dalším kole uhodneme a nijak se nesnaží odhadnout očekávaný počet pokusů. Domnívám se, že 
+
+Zároveň fakt, že zbylé algoritmy dosahují lepšího průměrného počtu pokusů také odpovídá tomu, že optimalizují nějakou očekávanou hodnotu následujících stavů. V případě algoritmu Max entropy to je očekávaná hodnota počtu otázek. 
 
 \section{Varianty/zlepšení algoritmů}
 \subsubsection{Volba pokusů pouze z kandidátů}
@@ -189,37 +197,41 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 \caption{Výsledky algoritmů volící pouze kandidáty}\label{tabminmaxvysl}
 \end{table}
 
-Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale zmenší časovou složitost algoritmů. 
+Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale zmenší časovou složitost algoritmů. To plyne z toho, že algoritmus v každém stavu algoritmus neporovnává všechny kódy ale pouze kandidáty. 
 
-\begin{tvrz}
-    Uvažujme algoritmus \ref{alg-default} s výběrem množiny $U$ na řádku $7$ podle následujícího předpisu.
-    \[U = \{u \in K \mid f_K(u) = F(f_K)\}\]
-    Potom tento algoritmus má časovou složitost 
-     \[O \left( \sum_{j = 1}^z  m_j^2 \cdot n^2 \cdot \frac{n^2 + 3n}{2}\right)\]
-\end{tvrz}
-\begin{dukaz}
-    Tvrzení plyne z tvrzení ...
-\end{dukaz}
+% \begin{tvrz}
+%     Uvažujme algoritmus \ref{alg-default} s výběrem množiny $U$ na řádku $7$ podle následujícího předpisu.
+%     \[U = \{u \in K \mid f_K(u) = F(f_K)\}\]
+%     Potom tento algoritmus má časovou složitost 
+%      \[O \left( \sum_{j = 1}^z  m_j^2 \cdot n^2 \cdot \frac{n^2 + 3n}{2}\right)\]
+% \end{tvrz}
+% \begin{dukaz}
+%     Tvrzení plyne z tvrzení ...
+% \end{dukaz}
+
+\subsubsection{Vícekrokové algoritmy}
+Všechny popisované algoritmy používaly valuace, které zkoumají rozložení kandidátů u potomků daného stavu. Zkoumali tedy stavy o maximálně jednu hranu v grafu [n,k]-Mastermindu dál. Intuice napovídá, že pokud bychom zkoumali stavy o dvě hrany dál, algoritmy by měli lepší výsledky. Časová složitost těchto algoritmů by ale prudce rostla. Vzhledem k tomu, že optimální strategie pro malé hodnoty $n$ a $k$ již byly nalezeny, tak jsme tyto algoritmy dále nezkoumali. 
+
+% šlo by ale naimplementovat a uvést k porovnání.
+
+
 
 \subsubsection{Jiná volba prvního tahu}
 
 
 
 \section{Diskuze}
-
-
-
 Poznámky:
+
 \begin{itemize}
-    \item Nejlepší maximální počet pokusů v případě min-max algoritmu dává smysl, protože algoritmus minimalizuje maximální počet kandidátů v tabulce rozdělení. 
-    \item Zároveň fakt, že zbylé algoritmy dosahují lepšího průměrného počtu pokusů také odpovídá tomu, že sledují nějakou očekávanou hodnotu v tabulce rozdělení. - očekávaná hodnota počtu otázek v případě entropie, pravděpodobnost, že v následujícím tahu uhodneme tajný kód v případě počtu částí. 
     \item Algoritmy, které by zkoumaly tabulky rozdělení dva kroky dopředu by jistě byly lepší, výpočetně by to ale bylo mnohem náročnější.
     \item šlo by najít nějakou variantu zmíněných algoritmů, která by řešila mastermind na 5 tahů s výrazně lepším průměrem? - Knuth něco na tenhle způsob ukazoval, ale možná jen v případě jeho algoritmu.
     \item Volba prvního tahu, který by obsahoval vyšší barvy by mohla být lepší, protože algoritmus volí lexikograficky menší kódy. Podobně by bylo možné náhodně promíchat seřazení všech kódů. 
     \item Čím je strategie optimálnější, tím hůře jde popsat.
     \item Strategii optimalizující průměrný počet pokusů nalezl v roce 1993 K. Koyama \cite{koyama}. Ukázal, že lze dosáhnout strategie s průměrným počtem pokusů $4.340$.
     \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
-    \item odhad s entropií nefunguje tak dobře. Mohlo by to být silně nerovnoměrně rozdělenými kódy. 
+    \item odhad s entropií nefunguje tak dobře. Mohlo by to být silně nerovnoměrně rozdělenými kódy. Entropie neodpovídá ohodnocení, není to binární.
+
 \end{itemize}
 
 

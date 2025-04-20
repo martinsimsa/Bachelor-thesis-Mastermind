@@ -41,15 +41,49 @@ Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}
 Algoritmus min-max bude v každém kroku (iteraci while cyklu) algoritmu \ref{alg-default} pro množinu kandidátů $K$ vybírat kód z množiny 
 %\[U = \{u \in H_{n,k} \mid m_K(u) = L(m_K)\}\] tedy
 \[U = \{u \in H_{n,k} \mid \max_{r\in S}\{|K_{u,r}| \} = \min_{w \in H_{n,k}}\{\max_{r\in S}\{|K_{w,r}|\} \} \}\]
-Chod Knuthova algoritmu nastíníme na [2,2]-Mastermindu. 
+Pro [2,2]-Mastermind sestrojíme strom Min-max algoritmu a nastíníme na něm chod Knuthova algoritmu.
 
 
 \subsubsection{[2,2]-Mastermind}
-Prostor kódů [2,2]-Mastermindu je množina $H_{2,2} = \{11,12,21,22\}$. Množina všech ohodnocení je podle tvrzení \ref{tvrzohodnoceni2} rovna $S = \{(0,0), (0,2), (1,0), (2,0)\}$. Na obrázku \ref{fig22prvnitah} v minulé kapitoly jsou zobrazeny potomci $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Maximální počty prvků ve vrcholech potomků $H_{2,2}$ (hodnoty $m_{H_{2,2}}$) jsou tedy následující. 
+Prostor kódů [2,2]-Mastermindu je množina $H_{2,2} = \{11,12,21,22\}$. Množina všech ohodnocení je podle tvrzení \ref{tvrzohodnoceni2} rovna $S = \{(0,0), (0,2), (1,0), (2,0)\}$. Na obrázku \ref{fig22prvnitahmnoziny} jsou zobrazeni potomci $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Maximální počty prvků ve vrcholech potomků $H_{2,2}$ (hodnoty $m_{H_{2,2}}$) jsou následující. 
 \[m_{H_{2,2}} (11) = m_{H_{2,2}} (12) = m_{H_{2,2}} (21) = m_{H_{2,2}} (22) = 2\]
 Knuthův algoritmus tedy volí jako první pokus kód $11$. 
 
-Nyní algoritmus volí druhý pokus. Pro $K \neq \emptyset$ a $u \in H_{n,k}$ platí, že $m_K(u) \geq 1$, protože pro $K = \bigcup_{r\in S} K_{u,r}$. Proto, když lexikograficky nejnižší kandidát $u$ dosahuje hodnoty $m_K(u) = 1$, algoritmus min-max ho vždy vybere. Konkrétně to bude platit pro jednoprvkové množinu kandidátů $\{11\},\{22\}$. Algoritmus jako druhý pokus vybírá jediného zbývajícího kandidáta. 
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+    \node (1) at (0,0) {\{11,12,21,22\}};
+    \node (2) at (-3,-3) {\{22\}};
+    \draw[->,blue] (1) -- (2) node[pos=0.5, below, sloped] {\footnotesize$11,(0,0)$};
+    \node (3) at (0,-3) {\{12, 21\}};
+    \draw[->,blue] (1) -- (3) node[pos=0.5, below, sloped] {\footnotesize$11,(1,0)$};
+    \node (4) at (3,-3) {\{11\}};
+    \draw[->,blue] (1) -- (4) node[pos=0.5, below, sloped] {\footnotesize$11,(2,0)$};
+    \node (5) at (6,-2) {\{21\}};
+    \draw[->,black!60!green] (1) -- (5) node[pos=0.5, above, sloped] {\footnotesize$12,(0,2)$};
+    \node (6) at (6,0) {\{11, 22\}};
+    \draw[->,black!60!green] (1) -- (6) node[pos=0.5, above, sloped] {\footnotesize$12,(1,0)$};
+    \node (7) at (6,2) {\{12\}};
+    \draw[->,black!60!green] (1) -- (7) node[pos=0.5, above, sloped] {\footnotesize$12,(2,0)$};
+    \node (8) at (-3,3) {\{12\}};
+    \draw[->] (1) -- (8) node[pos=0.5, above, sloped] {\footnotesize$21,(0,2)$};
+    \node (9) at (0,3) {\{11, 22\}};
+    \draw[->] (1) -- (9) node[pos=0.5, above, sloped] {\footnotesize$21,(1,0)$};
+    \node (10) at (3,3) {\{21\}};
+    \draw[->] (1) -- (10) node[pos=0.5, above, sloped] {\footnotesize$21,(2,0)$};
+    \node (11) at (-6,-2) {\{11\}};
+    \draw[->,red] (1) -- (11) node[pos=0.5, above, sloped] {\footnotesize$22,(0,0)$};
+    \node (12) at (-6,0) {\{12, 21\}};
+    \draw[->,red] (1) -- (12) node[pos=0.5, above, sloped] {\footnotesize$22,(1,0)$};
+    \node (13) at (-6,2) {\{22\}};
+    \draw[->,red] (1) -- (13) node[pos=0.5, above, sloped] {\footnotesize$22,(2,0)$};
+    \end{tikzpicture}
+    \caption{Graf všech potomků $H_{2,2}$}
+    \label{fig22prvnitahmnoziny}
+\end{figure}
+
+
+Nyní algoritmus volí druhý pokus. Pro $K \neq \emptyset$ a $u \in H_{n,k}$ platí, že $m_K(u) \geq 1$, protože pro $K = \dot\bigcup_{r\in S} K_{u,r}$. Proto, když lexikograficky nejnižší kandidát $u$ dosahuje hodnoty $m_K(u) = 1$, algoritmus min-max ho vždy vybere. Konkrétně to bude platit pro jednoprvkové množinu kandidátů $\{11\},\{22\}$. Algoritmus jako druhý pokus vybírá jediného zbývajícího kandidáta. 
 
 V případě, že ohodnocení kódu $11$ v prvním pokusu je $(1,0)$, nacházíme se ve stavu $\{12,21\}$. Potomci vrcholu $\{12,21\}$ jsou znázorněni na obrázku \ref{fig22druhytah}. 
 \begin{figure}[h!]
@@ -87,19 +121,19 @@ Na obrázku \ref{fig22minmax} jsou doplněny potomci všech vrcholů vzhledem k 
     \begin{tikzpicture}
     \node (1) at (0,0) {\{11,12,21,22\}};
     \node (2) at (-4,-2) {\{22\}};
-    \draw[->] (1) -- (2) node[pos=0.5, left] {$11,(0,0)$};
+    \draw[->] (1) -- (2) node[pos=0.5, above, sloped] {\footnotesize$11,(0,0)$};
     \node (3) at (0,-2) {\{12, 21\}};
-    \draw[->] (1) -- (3) node[pos=0.5, right] {$11,(1,0)$};
+    \draw[->] (1) -- (3) node[pos=0.5, right] {\footnotesize$11,(1,0)$};
     \node (4) at (4,-2) {\{11\}};
-    \draw[->, thick, blue] (1) -- (4) node[pos=0.5, right] {$11,(2,0)$};
+    \draw[->, thick, blue] (1) -- (4) node[pos=0.5, above, sloped] {\footnotesize$11,(2,0)$};
     \node (5) at (-2,-4) {\{21\}};
-    \draw[->] (3) -- (5) node[pos=0.5, left] {$12,(0,2)$};
+    \draw[->] (3) -- (5) node[pos=0.5, above, sloped] {\footnotesize$12,(0,2)$};
     \node (6) at (2,-4) {\{12\}};
-    \draw[->, thick, blue] (3) -- (6) node[pos=0.5, right] {$12,(2,0)$};
+    \draw[->, thick, blue] (3) -- (6) node[pos=0.5, above, sloped] {\footnotesize$12,(2,0)$};
     \node (7) at (-6,-4) {\{22\}};
-    \draw[->, thick, blue] (2) -- (7) node[pos=0.5, right] {$22,(2,0)$};
+    \draw[->, thick, blue] (2) -- (7) node[pos=0.5, above, sloped] {\footnotesize$22,(2,0)$};
     \node (8) at (-2,-6) {\{21\}};
-    \draw[->, thick, blue] (5) -- (8) node[pos=0.5, left] {$21,(2,0)$};
+    \draw[->, thick, blue] (5) -- (8) node[pos=0.5, left] {\footnotesize$21,(2,0)$};
     \end{tikzpicture}
     \caption{Zahrané tahy min-max algoritmem}
 \label{fig22minmax}
@@ -203,10 +237,10 @@ a můžeme ji interpretovat jako očekávaný počet otázek, který potřebujem
 \begin{tikzpicture}
     \draw[black, thick] (0,0) rectangle (4,4);
     \begin{scope}
-        \node (1) at (1,0.5) {a - 1/8}
-        \node (2) at (1,1.5) {b - 1/8}
-        \node (3) at (1,3) {c - 1/4}
-        \node (4) at (3,2) {d - 1/2}
+        \node (1) at (1,0.5) {a - 1/8};
+        \node (2) at (1,1.5) {b - 1/8};
+        \node (3) at (1,3) {c - 1/4};
+        \node (4) at (3,2) {d - 1/2};
     \end{scope}
     \draw[black, thick] (2,0) -- (2,4);
     \draw[black, thick] (0,2) -- (2,2);
@@ -235,7 +269,7 @@ Tato hodnota bude naším stavebním kamenem pro strategii za užití entropie. 
 
 %\[ u = \arg\min_{w \in H_{4,6}} \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i|\]
 
-\begin{veta}[Ekvivalence maximalizace entropie] \label{ekvivalencemaxentropynew}
+\begin{veta}[Ekvivalence maximalizace entropie] \label{vetaekvivalencemaxentropy}
     Uvažujme [4,6]-Mastermind s tajným kódem $v\in H_{4,6}$. Označme $K$ množinu kandidátů. Potom 
     \begin{align}\label{rceproentropii}
         \sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{|S|}|K_{u,r}| = \min_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{|S|}|K_{w,r}|
@@ -256,7 +290,7 @@ Tuto rovnici přenásobíme konstantou $(-1)$ a převrátíme argument logaritmu
 \[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{1}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{1}{|K_{u,r}|}\]
 Následně k oběma stranám přičteme hodnotu $\log_2|K|$.
 
-\[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{|K|}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{|K|}{|K_{u,r}|}\]
+\[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{|K|}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{|K|}{|K_{w,r}|}\]
 Využili jsme toho, že $\sum_{i=1}^n \frac{|K^u_i|}{|K|} = 1$ a součtového vzorce pro logaritmus. Z definice $h_K$ plyne 
 \[h_K(u) = \max_{w \in H_{n,k}} \{ h_K(w) \}.\]
 Všechny úpravy byly ekvivalentní, a tedy jsme hotovi.

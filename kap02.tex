@@ -19,10 +19,10 @@ V této práci budeme zkoumat pouze deterministické algoritmy.
 V každém kroku algoritmů vycházíme z určitého stavu hry, pro který daná metoda vybírá další pokus. Stav je posloupnost pokusů s ohodnocením a jsou to přesně ty informace, které má hráč [n,k]-Mastermindu k dispozici.
 
 \begin{definice}[Stav]\label{stav}
-   Nechť $u_i, i\in \{1,2,\dots m\}$ jsou kódy a $r_i = (b_i,w_i)$ jsou ohodnocení. Stav definujeme jako posloupnost $((u_1, r_1), \dots, (u_m, r_m))$. Počáteční stav definujeme jako prázdnou posloupnost.
+   Nechť $j \in \mathbb{N}$, $u_1, \dots , u_j$ jsou kódy a $r_i = (b_i,w_i), i \in \{1,2,\dots,j\}$ ohodnocení. Stav definujeme jako posloupnost $((u_1, r_1), \dots, (u_m, r_m))$. Počáteční stav definujeme jako prázdnou posloupnost $()$.
 \end{definice}
 
-Pro každý stav lze nalézt množinu kódů, které by podle dostupných informací mohly být tajným kódem. Jde o ty kódy, které mají s kódy ve stavu stejné ohodnocení jako příslušná ohodnocení ve stavu. 
+Pro každý stav lze nalézt množinu těch kódů, které by podle dostupných informací mohly být tajným kódem. Jde o ty kódy, které mají s kódy ve stavu stejné ohodnocení jako příslušná ohodnocení ve stavu. 
 
 \begin{definice}[kandidát]\label{kandidat}
   Nechť $P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že kód $u \in H_{n,k}$ je kandidát stavu $P$, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots j\}$. Pro počáteční stav definujeme množinu kandidátů jako celý prostor kódů $H_{n,k}$.
@@ -35,11 +35,10 @@ Pro každý stav lze nalézt množinu kódů, které by podle dostupných inform
 \end{definice}
 Množina kandidátů dává intuici za tím, jak blízko jsme uhádnutí tajného kódu. V případě, že množina kandidátů je jednoprvková, tak nám je znám tajný kód. Pokud je množina kandidátů veliká, nejspíš ještě budeme k rozlišení tajného kódu potřebovat více pokusů.
 
-
-Možný průběh hry popíšeme jako kořenový strom, kde vrcholy odpovídají stavům hry. Hrany znázorňují pokusy s ohodnocením, které hru posouvají do dalších stavů. 
-
+% Vazby stavů budeme interpretovat jako v kořenovém stromu, kde vrcholy odpovídají stavům. Hrany znázorňují pokusy s ohodnocením, které [n,k]-Mastermind posouvají do dalších stavů. 
+Stavy hry a vazby mezi nimi popíšeme grafem. Hrany znázorňují pokusy s ohodnocením, které hru [n,k]-Mastermind posouvají do dalších stavů. 
 \begin{definice}[Strom \text{[n,k]-Mastermindu}]
-  Strom \text{[n,k]-Mastermindu} definujeme jako orientovaný graf na množině stavů. Kořenem je počáteční stav. Ze stavu $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), (w_2,s_2), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a $\forall i \in \{1,2,\dots, j\} \colon (u_i, r_i) = (w_i, s_i)$. Tuto hranu značíme $(w_l, s_l)$. 
+  Strom \text{[n,k]-Mastermindu} definujeme jako orientovaný graf na množině stavů. Kořenem je počáteční stav. Ze stavu $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), (w_2,s_2), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a $\forall i \in \{1,2,\dots, j\} \colon (u_i, r_i) = (w_i, s_i)$. Tuto hranu značíme dvojicí $w_l, s_l$. 
 \end{definice}
 
 Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav a všechny stavy, do kterých se lze dostat po prvním pokusu. 
@@ -48,43 +47,43 @@ Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav a všechny stavy, do k
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
-    \node (1) at (0,0) {\{11,12,21,22\}};
+    \node (1) at (0,0) {$()$};
     
-    \node (2) at (-3,-3) {\{22\}};
-    \draw[->,blue] (1) -- (2) node[pos=0.5, below, sloped] {$11,(0,0)$};
-    \node (3) at (0,-3) {\{12, 21\}};
-    \draw[->,blue] (1) -- (3) node[pos=0.5, below, sloped] {$11,(1,0)$};
-    \node (4) at (3,-3) {\{11\}};
-    \draw[->,blue] (1) -- (4) node[pos=0.5, below, sloped] {$11,(2,0)$};
+    \node (2) at (-3,-3) {$((11,(0,0)))$};
+    \draw[->,blue] (1) -- (2) node[pos=0.5, below, sloped] {\footnotesize$11,(0,0)$};
+    \node (3) at (0,-3) {$((11,(1,0)))$};
+    \draw[->,blue] (1) -- (3) node[pos=0.5, below, sloped] {\footnotesize$11,(1,0)$};
+    \node (4) at (3,-3) {$((11,(2,0)))$};
+    \draw[->,blue] (1) -- (4) node[pos=0.5, below, sloped] {\footnotesize$11,(2,0)$};
     
-    \node (5) at (6,-2) {\{21\}};
-    \draw[->,black!60!green] (1) -- (5) node[pos=0.5, above, sloped] {$12,(0,2)$};
-    \node (6) at (6,0) {\{11, 22\}};
-    \draw[->,black!60!green] (1) -- (6) node[pos=0.5, above, sloped] {$12,(1,0)$};
-    \node (7) at (6,2) {\{12\}};
-    \draw[->,black!60!green] (1) -- (7) node[pos=0.5, above, sloped] {$12,(2,0)$};
+    \node (5) at (6,-2) {$((12,(0,2)))$};
+    \draw[->,black!60!green] (1) -- (5) node[pos=0.5, above, sloped] {\footnotesize$12,(0,2)$};
+    \node (6) at (6,0) {$((12,(1,0)))$};
+    \draw[->,black!60!green] (1) -- (6) node[pos=0.5, above, sloped] {\footnotesize$12,(1,0)$};
+    \node (7) at (6,2) {$((12,(2,0)))$};
+    \draw[->,black!60!green] (1) -- (7) node[pos=0.5, above, sloped] {\footnotesize$12,(2,0)$};
 
-    \node (8) at (-3,3) {\{12\}};
-    \draw[->] (1) -- (8) node[pos=0.5, above, sloped] {$21,(0,2)$};
-    \node (9) at (0,3) {\{11, 22\}};
-    \draw[->] (1) -- (9) node[pos=0.5, above, sloped] {$21,(1,0)$};
-    \node (10) at (3,3) {\{21\}};
-    \draw[->] (1) -- (10) node[pos=0.5, above, sloped] {$21,(2,0)$};
+    \node (8) at (-3,3) {$((21,(0,2)))$};
+    \draw[->] (1) -- (8) node[pos=0.5, above, sloped] {\footnotesize$21,(0,2)$};
+    \node (9) at (0,3) {$((21,(1,0)))$};
+    \draw[->] (1) -- (9) node[pos=0.5, above, sloped] {\footnotesize$21,(1,0)$};
+    \node (10) at (3,3) {$((21,(2,0)))$};
+    \draw[->] (1) -- (10) node[pos=0.5, above, sloped] {\footnotesize$21,(2,0)$};
 
-    \node (11) at (-6,-2) {\{11\}};
-    \draw[->,red] (1) -- (11) node[pos=0.5, above, sloped] {$22,(0,0)$};
-    \node (12) at (-6,0) {\{12, 21\}};
-    \draw[->,red] (1) -- (12) node[pos=0.5, above, sloped] {$22,(1,0)$};
-    \node (13) at (-6,2) {\{22\}};
-    \draw[->,red] (1) -- (13) node[pos=0.5, above, sloped] {$22,(2,0)$};
+    \node (11) at (-6,-2) {$((22,(0,0)))$};
+    \draw[->,red] (1) -- (11) node[pos=0.5, above, sloped] {\footnotesize$22,(0,0)$};
+    \node (12) at (-6,0) {$((22,(1,0)))$};
+    \draw[->,red] (1) -- (12) node[pos=0.5, above, sloped] {\footnotesize$22,(1,0)$};
+    \node (13) at (-6,2) {$((22,(2,0)))$};
+    \draw[->,red] (1) -- (13) node[pos=0.5, above, sloped] {\footnotesize$22,(2,0)$};
 
 
     \end{tikzpicture}
-    \caption{Graf všech potomků $H_{2,2}$}
+    \caption{Graf všech potomků počátečního stavu [2,2]-Mastermindu}
     \label{fig22prvnitah}
 \end{figure}
 
-Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme potomky $A$.
+Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme potomky stavu $A$. Zavádíme definici potomka množiny, která s potomkem stavu přímo souvisí. 
 
 \begin{definice}[Potomek stavu a množiny]\label{potomek}
   % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. 
@@ -96,7 +95,7 @@ Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme potomky $A$.
   \[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] 
 \end{definice}
 
-\begin{pozn}
+\begin{pozn}\label{poznvztahmezipotomkystavuamnoziny}
     Používáme stejné názvosloví pro dva různé objekty. Jejich význam je ale obdobný. Označíme-li $K$ množina kandidátů stavu $A$, tak množina kandidátů stavu $A_{u,r}$ je právě právě $K_{u,r}$. Množina $K_{u,r}$ ale může odpovídat potomkům stavu vzhledem k různým kódům. 
     % Množina kandidátů neurčuje jednoznačně stav (například prohozením prvků stavu bychom došli do stejné množiny kandidátů). Naopak stav jednoznačně určuje množinu kandidátů. 
     % V případě, kdy je určen kód $u$ pro nějaký stav $A$, tak potom množina kandidátů jednoznačně určuje 
@@ -104,7 +103,7 @@ Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme potomky $A$.
     Potomkem $K$, vzhledem ke kódu $u$ nazýváme množinu $K_{u,r}$ pro nějaké $r \in S$. Potomkem $K$ nazýváme množinu $K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S$. Obdobně nazýváme potomky stavu. 
 \end{pozn}
 
-\begin{lemma}[Vztah potomků]
+\begin{lemma}[Vztah množiny s jejími potomky]
     Nechť $S$ je množina všech ohodnocení kódů v $H_{n,k}$. Pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
     \[K = \dot\bigcup_{r\in S} K_{u,r}\]
 \end{lemma}
@@ -140,7 +139,9 @@ Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro ka
   \begin{enumerate}
       \item Z každého vrcholu vedou hrany pouze k neprázdným potomkům vzhledem k jednomu určitému kódu pro každý stav. 
       % \item Obsahuje $k^n$ listů, které jsou konečnými stavy.
-      \item Pro každý kód $u \in H_{n,k}$ existuje právě jeden list, který je konečným stavem s posledním členem $(u, (n,0))$. 
+      \item Pro každý kód $u \in H_{n,k}$ existuje právě jeden vrchol ve stromu algoritmu, který je konečným stavem s posledním členem $(u, (n,0))$ a zároveň je listem ve stromu algoritmu. 
+      
+      % list, který je konečným stavem s posledním členem $(u, (n,0))$. 
   \end{enumerate}
 \end{definice}
 
@@ -162,7 +163,7 @@ Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro ka
 % ======================= tohle bych chtěl přeformulovat =================
     Strom algoritmu neobsahuje žádné cykly díky definici hran ve stromě [n,k]-Mastermindu. Zároveň do každého stavu (kromě počátečního) ústí právě jedna hrana a díky souvislosti tedy obsahuje nějaký kořen. Pokud by kořenem nebyl počáteční stav, množina kandidátů kořene by nebyla $H_{n,k}$. Tedy by existoval kód $u$, který nenáleží do množiny kandidátů kořene a tedy by konečný stav s posledním členem $(u, (n,0))$ byl prázdný. To je spor s druhou podmínkou a tedy $H_{n,k}$ je kořenem stromu algoritmu. 
 
-    Protože rozklad množiny $K$ na $K_{u,r}$ je disjunktní, tak je-li stav $A$, který není konečný, ve stromu algoritmu, ve stromu algoritmu budou poté i všichni potomci stavu $A$ vzhledem k nějakému kódu $u$ (za splnění podmínky $1$). V opačném případě by stejně jako výše nebyla splněna podmínka $2$.
+    Protože rozklad množiny $K$ na $K_{u,r}$ je disjunktní, tak je-li stav $A$, který není konečný, ve stromu algoritmu, budou tam poté i všichni neprázdní potomci stavu $A$ vzhledem k nějakému kódu $u$ (za splnění podmínky $1$). V opačném případě by stejně jako výše nebyla splněna podmínka $2$.
     
     Nechť nyní $v\in H_{n,k}$ je nějaký tajný kód a máme nějaký algoritmus popsaný stromem algoritmu. Potom průběh hry je popsán právě cestou z počátečního stavu do konečného stavu s posledním prvkem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{fig22minmax}. 
     
@@ -187,21 +188,21 @@ Předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro ka
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
-    \node (1) at (0,0) {\{11,12,21,22\}};
+    \node (1) at (0,0) {$()$};
     \node (2) at (-4,-2) {$((11,(0,0)))$};
-    \draw[->] (1) -- (2) node[pos=0.5, left] {$11,(0,0)$};
+    \draw[->] (1) -- (2) node[pos=0.5, above, sloped] {\footnotesize{$11,(0,0)$}};
     \node (3) at (0,-2) {$(11,(1,0))$};
-    \draw[->] (1) -- (3) node[pos=0.5, right] {$11,(1,0)$};
+    \draw[->] (1) -- (3) node[pos=0.5, right] {\footnotesize{$11,(1,0)$}};
     \node (4) at (4,-2) {$(11,(2,0))$};
-    \draw[->, thick, blue] (1) -- (4) node[pos=0.5, right] {$11,(2,0)$};
+    \draw[->, thick] (1) -- (4) node[pos=0.5, above, sloped] {\footnotesize{$11,(2,0)$}};
     \node (5) at (-1,-4) {$((11,(1,0)), (12,(0,2)))$};
-    \draw[->] (3) -- (5) node[pos=0.5, left] {$12,(0,2)$};
+    \draw[->] (3) -- (5) node[pos=0.5, left] {\footnotesize{$12,(0,2)$}};
     \node (6) at (4,-4) {$((11,(1,0)), (12,(2,0)))$};
-    \draw[->, thick, blue] (3) -- (6) node[pos=0.5, right] {$12,(2,0)$};
+    \draw[->, thick] (3) -- (6) node[pos=0.5, above, sloped] {\footnotesize{$12,(2,0)$}};
     \node (7) at (-6,-4) {$((11,(1,0)), (22,(2,0)))$};
-    \draw[->, thick, blue] (2) -- (7) node[pos=0.5, right] {$22,(2,0)$};
+    \draw[->, thick] (2) -- (7) node[pos=0.5, above,sloped] {\footnotesize{$22,(2,0)$}};
     \node (8) at (-1,-6) {$((11,(1,0)), (12,(0,2)), (21,(2,0)))$};
-    \draw[->, thick, blue] (5) -- (8) node[pos=0.5, left] {$21,(2,0)$};
+    \draw[->, thick] (5) -- (8) node[pos=0.5, left] {\footnotesize{$21,(2,0)$}};
     \end{tikzpicture}
     \caption{Strom algoritmu pro [2,2]-Mastermind}
 \label{fig22minmax}
@@ -248,35 +249,43 @@ Pro zjednodušení tyto funkce definujeme pro množiny kandidátů stavů. Pro d
 \end{definice}
 
 
-Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako dalšího pokusu pro stav vyjádřený množinou kandidátů $K\subset H_{n,k}$. Tato hodnota bude obvykle záviset na potomcích $K$ vzhledem ke kódu $u$. Potomci $K$ vzhledem ke kódu $u$ totiž určují možné následující stavy v případě, kdy zvolíme kód $u$ jako další pokus. Valuace nám umožňuje ohodnotit kód podle toho, jak dobré jsou jeho následující stavy. 
+Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako dalšího pokusu pro stav vyjádřený množinou kandidátů $K\subset H_{n,k}$. Tato hodnota bude obvykle záviset na potomcích $K$ vzhledem ke kódu $u$. Potomci $K$ vzhledem ke kódu $u$ totiž určují množiny kandidátů možných následující stavů v případě, kdy zvolíme kód $u$ jako další pokus (Poznámka \ref{poznvztahmezipotomkystavuamnoziny}). Valuace nám umožňuje ohodnotit kód podle toho, jak dobré jsou jeho následující stavy. Obecně valuace nemusí být omezená na následující vrstvu. Mohla by odkazovat na stavy o více než jednu hranu dál. Tímto zobecněním se ale dále zabývat nebudeme.
 
 \begin{prikl}\label{prjednokrokfce}
-    Funkce $f_K$ je příklad valuace, která kódu $u$ přiřadí očekávaný počet kódů potomka $K$ vzhledem ke kódu $u$.
+    Funkce $f_K$ je příklad valuace, která kódu $u$ přiřadí maximální počet kódů potomka $K$ vzhledem ke kódu $u$.
     % jednokrokov8 funkce je taková, která kódu $u$ přiřadí hodnotu, která lze vyjádřit pomocí potomků $K$ vzhledem ke kódu $u$.
     \begin{align*}
         f_K \colon H_{n,k} &\to \mathbb{R} \\
-        u &\mapsto \sum_{r\in S}\frac{|K_{u,r}|}{|K|}|K_{u,r}| 
+        u &\mapsto \max_{r\in S}\{|K_{u,r}|\} 
     \end{align*}
-    Pro $K = H_{2,2}$ z obrázku \ref{fig22prvnitah} má $f_{K}$ konstantní hodnotu $\frac{3}{2}$.
+    % Pro $K = H_{2,2}$ z obrázku \ref{fig22prvnitah} má $f_{K}$ konstantní hodnotu $\frac{3}{2}$.
 \end{prikl}
 % množinu kandidátů na tajný kód
-Obecně valuace nemusí být omezená na následující vrstvu. Mohla by odkazovat na očekávaný počet kódů vrcholu o dvě či více vrstev dál. 
+
 
 \begin{definice}[Strategie]
-    Nechť $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor valuací. Potom strategii definujeme jako zobrazení $F \colon \mathcal{F} \to \mathbb{R}$. 
+    Nechť $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor valuací. Potom strategii definujeme jako zobrazení $F \colon \mathcal{F} \to \mathbb{R}$, pro které platí, že pro každou $f_K \in \mathcal{F}$ existuje $u\in H_{n,k}$ takové, že $F(f_K) = f_K(u)$.
 \end{definice}
 % Strategie určitým způsobem slouží k výběru následujícího kódu. 
 %Zjednodušeně řečeno slouží k určení, 
-Strategie v této práci bude určovat, zda chceme vybírat kódy s vyšší nebo nižší hodnotou valuace.
+Strategie určuje kritérium, podle kterého se vybírá další pokus v závislosti na valuaci. 
+
+% v této práci bude určovat, zda chceme vybírat kódy s vyšší nebo nižší hodnotou valuace.
 %Použití bude popsáno níže v popisu algoritmu \ref{alg-default}. 
 
 \begin{prikl}\label{prstrategie}
     Funkce $F$ je strategie, která funkci $f_K \in \mathcal{F} = \{f_K\}$ přiřadí její maximální hodnotu na $H_{n,k}$.
     \[F(f_K) =  \max_{u\in H_{n,k}}\{f_K(u)\}\]
-    Strategie je dobře definovaná, protože maximum na konečné množině reálných čísel má vždy jednoznačnou hodnotu.
+    Strategie je dobře definovaná, protože maximum na konečné množině reálných čísel má vždy jednoznačnou hodnotu a existuje $u\in H_{n,k}$, pro který platí $f_K(u) = \max_{u\in H_{n,k}}\{f_K(u)\}$.
 \end{prikl}
 
-Deterministické algoritmy popisujeme jako algoritmy, které pro následující pokus vybírají kód podle zvolené valuace a strategie. Postup je znázorněn v algoritmu \ref{alg-default}.
+\begin{definice}[Deterministický algoritmus řešící hru Mastermind]\label{defobecnyalg}
+    Deterministický algoritmus řešící hru [n,k]-Mastermind definujeme jako algoritmus se zvoleným prostorem valuací $\mathcal{F}$ a zvolenou strategií $F$ popsaný pro vstupní tajný kód $v$ v algoritmu \ref{alg-default}. 
+    
+    % které pro následující pokus vybírají kód podle zvolené valuace a strategie. Postup je znázorněn v algoritmu \ref{alg-default}.
+    
+\end{definice}
+
 
 % \subsection{Varianty algoritmů}
 
@@ -312,11 +321,7 @@ Deterministické algoritmy popisujeme jako algoritmy, které pro následující 
 \label{alg-default}
 \end{algorithm}
 
-Písmenem $K$ značíme množinu kandidátů na tajný kód pro aktuální stav hry (cestu pokusů s ohodnocením). Začínáme s $K = H_{n,k}$. Aktuální číslo pokusu značí $j$, $u_j$ je kód, který algoritmus zvolí jako $j$-tý pokus a $r_j$ je ohodnocení $u_j$ vzhledem k tajnému kódu $v$. Množina $U$ značí kódy, ve kterých valuace $f_K$ nabývá určitou optimální hodnotu danou strategií $F$. Z této množiny algoritmus vybírá další pokus $u_j$. Ve chvíli, kdy existuje kandidát v množině $U$ ($U\cap K \neq \emptyset$), algoritmus zvolí ten, který je lexikograficky nejmenší. Jinak algoritmus volí lexikograficky nejmenší kód z $U$. 
-
-Aby byla strategie $F$ použitelná v algoritmu, musí platit následující podmínka. 
-\[\forall K \in V \hspace{5px} \exists u \in H_{n,k} \colon F(f_K) = f_K(u)\]
-Pokud by tato podmínka nebyla splněna, mohlo by se stát, že množina $U$ bude prázdná a algoritmus nedokáže zvolit další pokus.
+Písmenem $K$ značíme množinu kandidátů na tajný kód pro aktuální stav hry. Ta vždy odpovídá aktuálnímu stavu díky poznámce \ref{poznvztahmezipotomkystavuamnoziny}. Hra začíná s počátečním stavem, a tedy počáteční množina kandidátů v algoritmu je $K = H_{n,k}$. Kód, který algoritmus zvolí jako j-tý pokus značíme $u_j$. Jeho ohodnocení vzhledem k tajnému kódu $v$ značíme $r_j$. Množina $U$ značí kódy, ve kterých valuace $f_K$ nabývá nejlepší hodnotu danou strategií $F$. Z této množiny algoritmus vybírá další pokus $u_j$. Ve chvíli, kdy existuje kandidát v množině $U$ ($U\cap K \neq \emptyset$), algoritmus zvolí ten, který je lexikograficky nejmenší. Jinak algoritmus volí lexikograficky nejmenší kód z $U$. Množina $U$ nikdy nebude prázdná díky podmínce z definice strategie. 
 
 % šlo by napsat pro dvojice funkce f, funkcionál F
 %\begin{veta}[Správnost algoritmu \ref{alg-default}]
