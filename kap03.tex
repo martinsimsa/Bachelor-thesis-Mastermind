@@ -13,7 +13,7 @@ Jednokrokové algoritmy jsou ty, jejichž valuace lze vyjádřit pouze pomocí n
     Nechť $H_{n,k}$ je prostor kódů. Pro $K \subset H_{n,k}$ definujeme funkci maximum potomka jako
     \begin{align*}
         m_K \colon H_{n,k} &\to \mathbb{R} \\
-        u &\mapsto \max_{r\in S}\{|K_{u,r}|\}.
+        u &\mapsto \max_{r\in S} |K_{u,r}|.
     \end{align*}
     Prostor všech funkcí $m_K$ označíme $\mathcal{M}$. 
 \end{definice}
@@ -22,11 +22,11 @@ Jednokrokové algoritmy jsou ty, jejichž valuace lze vyjádřit pouze pomocí n
     Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor funkcí. Potom na $\mathcal{F}$ definujeme strategii minimum $L$ jako
     \begin{align*}
         L \colon \mathcal{F} &\to \mathbb{R} \\
-        f &\mapsto \min_{u\in H_{n,k}}\{f(u)\}
+        f &\mapsto \min_{u\in H_{n,k}} f(u)
     \end{align*}
 \end{definice}
 
-Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}. Odpovídá algoritmu \ref{alg-default} se vstupním prostorem funkcí $\mathcal{M}$ a funkcionálem $L$. Jeho algoritmus tedy vybírá pro další pokus ten kód, který minimalizuje maximální počet kódů v potomcích vzhledem k nějakému kódu. 
+Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}. Odpovídá algoritmu \ref{alg-default} se vstupním prostorem valuací $\mathcal{M}$ a strategií $L$. Jeho algoritmus tedy vybírá pro další pokus ten kód, který minimalizuje maximální počet kódů v potomcích vzhledem k nějakému kódu. 
 %Tedy minimalizuje maximální počet kódů v nějakém stavu, do kterého se hra může dostat po zahrání dalšího kódu.
 
 \begin{definice}[Min-max algoritmus]
@@ -40,7 +40,7 @@ Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}
 
 Algoritmus min-max bude v každém kroku (iteraci while cyklu) algoritmu \ref{alg-default} pro množinu kandidátů $K$ vybírat kód z množiny 
 %\[U = \{u \in H_{n,k} \mid m_K(u) = L(m_K)\}\] tedy
-\[U = \{u \in H_{n,k} \mid \max_{r\in S}\{|K_{u,r}| \} = \min_{w \in H_{n,k}}\{\max_{r\in S}\{|K_{w,r}|\} \} \}\]
+\[U = \{u \in H_{n,k} \mid \max_{r\in S} |K_{u,r}| = \min_{w \in H_{n,k}} \max_{r\in S} |K_{w,r}| \}\]
 Pro [2,2]-Mastermind sestrojíme strom Min-max algoritmu a nastíníme na něm chod Knuthova algoritmu.
 
 
@@ -169,7 +169,7 @@ Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximalizují
     Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor funkcí. Potom na $\mathcal{F}$ definujeme funkcionál maximum $M$ následujícím předpisem.
     \begin{align*}
         M \colon \mathcal{F} &\to \mathbb{R} \\
-        f &\mapsto \max_{u\in H_{n,k}}\{f(u)\}
+        f &\mapsto \max_{u\in H_{n,k}} f(u)
     \end{align*}
 \end{definice}
 
@@ -275,13 +275,13 @@ Tato hodnota bude naším stavebním kamenem pro strategii za užití entropie. 
         \sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{|S|}|K_{u,r}| = \min_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{|S|}|K_{w,r}|
     \end{align}
     právě tehdy, když 
-    \[h_K(u) = \max_{w \in H_{n,k}} \{ h_K(w) \}\]
+    \[h_K(u) = \max_{w \in H_{n,k}} h_K(w) \]
     
 \end{veta}
 \begin{dukaz} Využíváme toho, že pro $x \in \mathbb{R}$ a konečnou množinu reálných čísel $A$ platí vztahy.
-\[z \cdot \min\{A\} = \min\{z\cdot a \mid a \in A\} \textrm{ pro } z \geq 0\]
+\[z \cdot \min\{a \mid a \in A\} = \min\{z\cdot a \mid a \in A\} \textrm{ pro } z \geq 0\]
 a 
-\[z \cdot \min\{A\} = \max\{z\cdot a \mid a \in A\}\textrm{ pro } z < 0.\]
+\[z \cdot \min \{a \mid a \in A\} = \max\{z\cdot a \mid a \in A\}\textrm{ pro } z < 0.\]
 Navíc platí $\log_{|S|} |K_{u,r}| = \frac{\log |K_{u,r}|}{\log |S|}$, a tedy
     \[\log_{2} |K_{u,r}| = \log_{|S|} |K_{u,r}| \cdot \frac{\log |S|}{\log 2}\]
 Po přenásobení rovnosti \ref{rceproentropii} konstantou $\frac{\log|S|}{\log2}$ dostáváme
@@ -292,7 +292,7 @@ Následně k oběma stranám přičteme hodnotu $\log_2|K|$.
 
 \[\sum_{r\in S} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{|K|}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{|K|}{|K_{w,r}|}\]
 Využili jsme toho, že $\sum_{i=1}^n \frac{|K^u_i|}{|K|} = 1$ a součtového vzorce pro logaritmus. Z definice $h_K$ plyne 
-\[h_K(u) = \max_{w \in H_{n,k}} \{ h_K(w) \}.\]
+\[h_K(u) = \max_{w \in H_{n,k}}  h_K(w) .\]
 Všechny úpravy byly ekvivalentní, a tedy jsme hotovi.
 \end{dukaz}
 
