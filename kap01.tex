@@ -6,13 +6,14 @@ V práci budeme používat následující značení:
     \item Nechť $S$ je konečná množina. Potom $|S|$ značíme její mohutnost, tedy počet prvků.
     \item Nechť $K$ je množina. Symbolem $\mathcal{P}(K)$ značíme množinu všech podmnožin $K$.
     \item Znakem $\bigsqcup$ budeme značit sjednocení disjunktních množin. Značení $\bigsqcup_{i\in \mathbb{N}} S_i$ implikuje, že $S_i$ jsou disjunktní. 
+    \item Nechť $K_1$ a $K_2$ jsou množiny. Značením $K_2 \subset K_1$ zakazujeme rovnost množin. Značení $K_2 \subseteq K_1$ rovnost množin povoluje.
 \end{itemize}
 
 Zavedeme definice potřebné pro vysvětlení průběhu hry Mastermind. Nejprve vymezíme prostor, se kterým pak dále budeme pracovat. 
 
 %množinu \[ \{ u = u_1u_2 \dots u_n \hspace{2px} \mid \hspace{2px} u_i \in \{1, 2, 3, \dots, k\}, \hspace{2px} i \in \{1, 2, 3, \dots, n\} \}\]
 \begin{definice}[Prostor kódů]\label{def01:1}
-  Nechť $n \in \N $, $k \in \N $. Potom prostor kódů o $n$ pozicích a $k$ barvách definujeme jako množinu $H_{n,k} = \{1, 2, 3, \dots, k\}^n$. Prvek $u = u_1u_2\dots u_n \in H_{n,k}$ nazýváme kód.
+  Nechť $n \in \N $, $k \in \N $. Potom prostor kódů o $n$ pozicích a $k$ barvách definujeme jako množinu $H_{n,k} = \{1, 2, 3, \dots, k\}^n$. Prvky množiny $H_{n,k}$ zapisujeme jako posloupnosti $u = u_1u_2\dots u_n$ a nazýváme je kódy.
 \end{definice}
 %Číslo $n \in \N $ budeme nazývat počet pozic a $k \in \N $ počet barev. Číslu $u_i \in \{1, 2, 3, \dots, k\}$ budeme říkat barva. 
 
@@ -104,7 +105,7 @@ Silnější tvrzení platí pro případ se dvěma barvami.
     Nechť $n \in \N, k=2$. Nechť dále $u, v \in H_{n,k}$ jsou kódy s ohodnocením $(b,w)$. Potom $b + w \leq n, \hspace{5px} (b,w) \neq (n-1,1)$ a $w$ je sudé.
 \end{tvrz}
 \begin{dukaz}
-$b + w \leq n, \hspace{5px} (b,w) \neq (n-1,1)$ platí obdobně jako v důkazu tvrzení \ref{pozmozneohodnoceni}. Kódy $u$ a $v$ lze permutací pozic dostat do následujícího tvaru
+Omezení $b + w \leq n, \hspace{3px} (b,w) \neq (n-1,1)$ platí obdobně jako v důkazu tvrzení \ref{tvrzohodnoceni}. Kódy $u$ a $v$ lze permutací pozic dostat do následujících tvarů:
     \[
   u = 
     \underbrace{11\dots1}_{c}
@@ -156,14 +157,14 @@ Nechť $n \in \N $, $k \in \N$. [n,k]-Mastermind je hra pro dvě osoby, zadavate
 probíhající podle následujícího schématu. 
 \begin{enumerate}
     \item Zadavatel vytvoří tajný kód $v \in H_{n,k}$.
-    \item Hra dále probíhá po kolech $i = 1,2,3,\dots$
+    \item Hra dále probíhá po kolech $i = 1,2,3,\dots$. Každé kolo se skládá ze dvou kroků:
         \begin{enumerate}
             \item Hráč určí kód (tah, pokus) $u_i \in H_{n,k}$.
             \item Zadavatel ohodnotí pokus $u_i$ vzhledem k tajnému kódu $v$. 
         \end{enumerate}
     \item Hra končí v případě, že pokus je ohodnocen $n$ černými kolíčky (zadaný kód se shoduje s tajným kódem). 
 \end{enumerate}
-Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů. V případě, že hráč neopakuje kódy v pokusech, hra jistě skončí.
+Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů. V případě, že hráč ve svých tazích neopakuje kódy, hra jistě skončí, neboť počet možných kódů je omezen hodnotou $n^k$.
 % vyčerpáním všech možností pro tajný kód.  
 
 % přidat různé varianty hry mastermind??? např statická verze, hra pouze s kandidáty atd. 
