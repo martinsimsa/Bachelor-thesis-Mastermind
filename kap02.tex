@@ -2,7 +2,9 @@
 
 \section{Kategorie algoritmů}
 % přidat definici algoritmu, který řeší mastermind - vytvoří posloupnost kódů, která končí tajným kódem s nejlepším ohodnocením. 
-Algoritmy řešící hru Mastermind lze rozdělit do dvou kategorií, \textbf{deterministické} a \textbf{nedeterministické}. Deterministický algoritmus pro dva shodné stavy volí další krok vždy jednoznačně. Nemůže se tedy stát, že by deterministický algoritmus pro dva stejné vstupy vrátil odlišné výsledky. Nedeterministické algoritmy naproti tomu mohou mít v každém stavu na výběr z více následujících kroků. Volit mohou například podle nějakého pravděpodobnostního rozdělení. Není tedy zaručeno, že pro stejný vstup vrátí vždy identický výsledek.
+Algoritmy řešící hru Mastermind lze rozdělit do dvou kategorií, \emph{deterministické} a \emph{nedeterministické}. Deterministický algoritmus pro dva shodné stavy volí další krok vždy jednoznačně. 
+%Nemůže se tedy stát, že by deterministický algoritmus pro dva stejné vstupy vrátil odlišné výsledky. 
+Nedeterministické algoritmy naproti tomu mohou mít v každém stavu na výběr z více následujících kroků. Volit mohou například podle nějakého pravděpodobnostního rozdělení. Není tedy zaručeno, že pro stejný vstup vrátí vždy identický výsledek.
 
 Deterministické algoritmy řešící hru Mastermind mohou mít velikou časovou složitost. To se snaží řešit nedeterministické algoritmy, které hledají rovnováhu mezi časovou složitostí a dobrými výsledky. 
 % Hlavní předností deterministických algoritmů je záruka výsledku. Na druhou stranu ale tyto typy algoritmů mohou mít velikou časovou složitost, protože jsou často založeny na procházení všech možností pokračování. To se snaží řešit nedeterministické algoritmy, které hledají rovnováhu mezi časovou složitostí a dobrými výsledky. 
@@ -19,13 +21,13 @@ V této práci budeme zkoumat pouze deterministické algoritmy.
 V každém kroku algoritmů vycházíme z určitého stavu hry, pro který daná metoda vybírá další pokus. Stav je posloupnost pokusů s ohodnocením a jsou to přesně ty informace, které má hráč [n,k]-Mastermindu k dispozici, a na základě kterých volí následující tah.
 
 \begin{definice}[Stav]\label{stav}
-   Nechť $j \in \mathbb{N}$, $u_1, \dots , u_j$ jsou kódy a $r_i = (b_i,w_i), i \in \{1,2,\dots,j\}$ ohodnocení. Stav definujeme jako posloupnost $((u_1, r_1), \dots, (u_m, r_m))$. Počáteční stav definujeme jako prázdnou posloupnost $()$.
+   Nechť $j \in \mathbb{N}$, $u_1, \dots , u_j \in H_{n,k}$ jsou kódy a $r_1, \dots, r_j \in S_{n,k}$ ohodnocení. \emph{Stav} definujeme jako posloupnost $((u_1, r_1), \dots, (u_m, r_m))$. Počáteční stav definujeme jako prázdnou posloupnost $()$.
 \end{definice}
 
 % Vazby stavů budeme interpretovat jako v kořenovém stromu, kde vrcholy odpovídají stavům. Hrany znázorňují pokusy s ohodnocením, které [n,k]-Mastermind posouvají do dalších stavů. 
 Stavy hry a vazby mezi nimi popíšeme grafem. Hrany znázorňují pokusy s ohodnocením, které hru [n,k]-Mastermind posouvají do dalších stavů. 
 \begin{definice}[Strom \text{[n,k]-Mastermindu}]
-  Strom \text{[n,k]-Mastermindu} definujeme jako kořenový strom na množině stavů. Kořenem je počáteční stav. Ze stavu $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), (w_2,s_2), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a $\forall i \in \{1,2,\dots, j\} \colon (u_i, r_i) = (w_i, s_i)$. Tuto hranu značíme dvojicí $w_l, s_l$. 
+  \emph{Strom [n,k]-Mastermindu} definujeme jako kořenový strom na množině stavů. Kořenem je počáteční stav. Ze stavu $A = \left((u_1, r_1),\dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a $\forall i \in \{1,2,\dots, j\} \colon (u_i, r_i) = (w_i, s_i)$. Tato hrana má obarvení $(w_l, s_l)$. 
 \end{definice}
 
 Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav [2,2]-Mastermindu a všechny stavy, do kterých se lze dostat po prvním pokusu. 
@@ -37,32 +39,32 @@ Obrázek \ref{fig22prvnitah} zobrazuje počáteční stav [2,2]-Mastermindu a v�
     \node (1) at (0,0) {$()$};
     
     \node (2) at (-3,-3) {$((11,(0,0)))$};
-    \draw[->,blue] (1) -- (2) node[pos=0.5, below, sloped] {\footnotesize$11,(0,0)$};
+    \draw[->,blue] (1) -- (2) node[pos=0.5, below, sloped] {\footnotesize$(11,(0,0))$};
     \node (3) at (0,-3) {$((11,(1,0)))$};
-    \draw[->,blue] (1) -- (3) node[pos=0.5, below, sloped] {\footnotesize$11,(1,0)$};
+    \draw[->,blue] (1) -- (3) node[pos=0.5, below, sloped] {\footnotesize$(11,(1,0))$};
     \node (4) at (3,-3) {$((11,(2,0)))$};
-    \draw[->,blue] (1) -- (4) node[pos=0.5, below, sloped] {\footnotesize$11,(2,0)$};
+    \draw[->,blue] (1) -- (4) node[pos=0.5, below, sloped] {\footnotesize$(11,(2,0))$};
     
     \node (5) at (6,-2) {$((12,(0,2)))$};
-    \draw[->,black!60!green] (1) -- (5) node[pos=0.5, above, sloped] {\footnotesize$12,(0,2)$};
+    \draw[->,black!60!green] (1) -- (5) node[pos=0.5, above, sloped] {\footnotesize$(12,(0,2))$};
     \node (6) at (6,0) {$((12,(1,0)))$};
-    \draw[->,black!60!green] (1) -- (6) node[pos=0.5, above, sloped] {\footnotesize$12,(1,0)$};
+    \draw[->,black!60!green] (1) -- (6) node[pos=0.5, above, sloped] {\footnotesize$(12,(1,0))$};
     \node (7) at (6,2) {$((12,(2,0)))$};
-    \draw[->,black!60!green] (1) -- (7) node[pos=0.5, above, sloped] {\footnotesize$12,(2,0)$};
+    \draw[->,black!60!green] (1) -- (7) node[pos=0.5, above, sloped] {\footnotesize$(12,(2,0))$};
 
     \node (8) at (-3,3) {$((21,(0,2)))$};
-    \draw[->] (1) -- (8) node[pos=0.5, above, sloped] {\footnotesize$21,(0,2)$};
+    \draw[->] (1) -- (8) node[pos=0.5, above, sloped] {\footnotesize$(21,(0,2))$};
     \node (9) at (0,3) {$((21,(1,0)))$};
-    \draw[->] (1) -- (9) node[pos=0.5, above, sloped] {\footnotesize$21,(1,0)$};
+    \draw[->] (1) -- (9) node[pos=0.5, above, sloped] {\footnotesize$(21,(1,0))$};
     \node (10) at (3,3) {$((21,(2,0)))$};
-    \draw[->] (1) -- (10) node[pos=0.5, above, sloped] {\footnotesize$21,(2,0)$};
+    \draw[->] (1) -- (10) node[pos=0.5, above, sloped] {\footnotesize$(21,(2,0))$};
 
     \node (11) at (-6,-2) {$((22,(0,0)))$};
-    \draw[->,red] (1) -- (11) node[pos=0.5, above, sloped] {\footnotesize$22,(0,0)$};
+    \draw[->,red] (1) -- (11) node[pos=0.5, above, sloped] {\footnotesize$(22,(0,0))$};
     \node (12) at (-6,0) {$((22,(1,0)))$};
-    \draw[->,red] (1) -- (12) node[pos=0.5, above, sloped] {\footnotesize$22,(1,0)$};
+    \draw[->,red] (1) -- (12) node[pos=0.5, above, sloped] {\footnotesize$(22,(1,0))$};
     \node (13) at (-6,2) {$((22,(2,0)))$};
-    \draw[->,red] (1) -- (13) node[pos=0.5, above, sloped] {\footnotesize$22,(2,0)$};
+    \draw[->,red] (1) -- (13) node[pos=0.5, above, sloped] {\footnotesize$(22,(2,0))$};
 
 
     \end{tikzpicture}
@@ -77,9 +79,9 @@ Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme následníky stav
   % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. 
   % Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. Nechť $A = \left((u_1, r_1), \dots, (u_j,r_j)\right)$ je stav, $u \in H_{n,k}$ je kód a $r \in S$ ohodnocení. Potomka stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako stav $A_{u,r} = (\left((u_1, r_1), \dots, (u_j,r_j) ,(u,r)\right)$. 
   
-  Následník stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$ je stav, do kterého vede ze stavu $A$ hrana $(u,r)$ a značíme ho $A_{u,r}$. 
+  \emph{Následník stavu $A$ vzhledem ke kódu $u$ a ohodnocení $r$} je stav, do kterého vede ze stavu $A$ hrana obarvená $(u,r)$. Značíme jej $A_{u,r}$. 
   
-  %Nechť $K \subset H_{n,k}$ je množina kódů, potom potomka množiny $K$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako množinu
+  %Nechť $K \subseteq H_{n,k}$ je množina kódů, potom potomka množiny $K$ vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako množinu
   %\[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] 
 \end{definice}
 
@@ -91,9 +93,9 @@ Pro každý stav lze nalézt množinu kódů, které by podle dostupných inform
 % Jde o ty kódy, které mají s kódy ve stavu stejné ohodnocení jako příslušná ohodnocení ve stavu. 
 
 \begin{definice}[Množina kandidátů]\label{kandidat}
-  Pro počáteční stav definujeme množinu kandidátů jako celý prostor kódů $H_{n,k}$. Nechť $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Množinu kandidátů stavu $A$ definujeme jako
-  \[K = \{w \in H_{n,k} \mid s(u_i,w) = r_i,  i \in \{1,2,\dots ,j\} \}.\]
-  Kód z této množiny nazveme kandidát stavu $A$. 
+  Pro počáteční stav definujeme \emph{množinu kandidátů} jako celý prostor kódů $H_{n,k}$. Nechť $A = \left((u_1, r_1), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in S_{n,k}$ je stav. \emph{Množinu kandidátů} stavu $A$ definujeme jako
+  \[K = \{w \in H_{n,k} \mid s(w,u_i) = r_i,  i \in \{1,2,\dots ,j\} \}.\]
+  Kód z této množiny nazveme \emph{kandidát} stavu $A$. 
   
   %Řekneme, že kód $u \in H_{n,k}$ je kandidát stavu $A$, pokud $s(u,u_i) = r_i \hspace{5px} \forall i \in \{1, \dots j\}$. 
 
@@ -108,52 +110,58 @@ Velikost a struktura množiny kandidátů určuje, jak blízko jsme uhodnutí ta
 % Množina kandidátů dává intuici za tím, jak blízko jsme uhádnutí tajného kódu. V případě, že množina kandidátů je jednoprvková, tak nám je znám tajný kód. Pokud je množina kandidátů veliká, nejspíš ještě budeme k rozlišení tajného kódu potřebovat více pokusů.
 
 
-\begin{definice}[Potomek množiny]\label{lemmasjednocenipotomku}
-  % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. 
-  Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. Nechť $K$ je podmnožina $H_{n,k}$, $ u \in H_{n,k}$ je kód a $r \in S$ ohodnocení. Potomka množiny $K$, vzhledem ke kódu $u$ a ohodnocení $r$ definujeme jako množinu 
-  \[K_{u,r} = \{w \in K \mid s(u,w) = r\}.\] 
+\begin{definice}[Potomek množiny]\label{defpotomekmnoziny}
+  % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. 
+  Nechť $K \subseteq H_{n,k}$ je množina kódů, $u \in H_{n,k}$ je kód a $r \in S_{n,k}$ je ohodnocení. \emph{Potomka množiny $K$, vzhledem ke kódu $u$ a ohodnocení $r$} definujeme jako množinu 
+  \[K_{u,r} = \{w \in K \mid s(w,u) = r\}.\] 
 \end{definice}
 
-Z definice plyne, že $\bigcup_{r\in S} K_{u,r} \subset K$. Zároveň žádný kód $w \in K$ nemůže mít s kódem $u$ dvě různá ohodnocení, a tedy sjednocení je disjunktní. Navíc pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$ a tedy platí následující lemma.
+Z definice plyne
+\[\bigcup_{r\in S_{n,k}} K_{u,r} \subseteq K.\] Zároveň žádný kód $w \in K$ nemůže mít s kódem $u$ dvě různá ohodnocení, a tedy sjednocení je disjunktní. Navíc pro každý kód $w \in K$ platí, že $w \in K_{u, s(w,u)}$, a tedy platí následující lemma.
 
-\begin{lemma}[Vztah množiny s jejími potomky]
-    Nechť $S$ je množina všech ohodnocení kódů v $H_{n,k}$. Pro každou množinu $K \subset H_{n,k}$ a kód $u \in H_{n,k}$ platí
-    \[K = \bigsqcup_{r\in S} K_{u,r}\]
+\begin{lemma}[Vztah množiny s jejími potomky]\label{lemmadisjunktnipotomci}
+    % Nechť $S_{n,k}$ je množina všech ohodnocení kódů v $H_{n,k}$. 
+    Pro každou množinu $K \subseteq H_{n,k}$ a kód $u \in H_{n,k}$ platí
+    \[K = \bigsqcup_{r\in S_{n,k}} K_{u,r}.\]
 \end{lemma}
 
 
 % \begin{dukaz}
 %     Dokážeme obě inkluze. Z definice $K_{u,r}$ platí 
-%     \[\bigsqcup_{r\in S} K_{u,r} \subset K.\] 
+%     \[\bigsqcup_{r\in S} K_{u,r} \subseteq K.\] 
 %     Nechť $u \in H_{n,k}$. Potom pro každý kód $w \in K$ platí, že $w \in K_{u, s(u,w)}$ a tedy 
-%     \[K \subset \bigsqcup_{r\in S} K_{u,r}.\] 
+%     \[K \subseteq \bigsqcup_{r\in S} K_{u,r}.\] 
 %     Zároveň žádný kód $w \in K$ nemůže mít s kódem $u$ dvě různá ohodnocení, a tedy sjednocení je disjunktní. 
 % \end{dukaz}
 
 % \begin{definice}[Graf \text{[n,k]-Mastermindu}]
 %   Uvažujeme množinu vrcholů $\mathcal{V} = \mathcal{P}(H_{n,k})$ a množinu orientovaných hran $\mathcal{E}$ mezi vrcholy a jejich potomky. 
 %   Cestu definujeme jako posloupnost navazujících hran. 
-%   Definujeme $V \subset \mathcal{V}$ jako množinu vrcholů, do kterých vede cesta z vrcholu $H_{n,k}$. Graf [n,k]-Mastermindu definujeme jako indukovaný podgraf grafu $(\mathcal{V}, \mathcal{E})$ množinou $V$. Hranu $(K, K_{u,r})$ budeme značit jako hranu $(u,r)$ z vrcholu $K$.
+%   Definujeme $V \subseteq \mathcal{V}$ jako množinu vrcholů, do kterých vede cesta z vrcholu $H_{n,k}$. Graf [n,k]-Mastermindu definujeme jako indukovaný podgraf grafu $(\mathcal{V}, \mathcal{E})$ množinou $V$. Hranu $(K, K_{u,r})$ budeme značit jako hranu $(u,r)$ z vrcholu $K$.
 % \end{definice}
 \begin{lemma}[Vztah následníků a potomků]\label{lemmapotomcistavuakandidati}
-    Označíme-li $K$ množina kandidátů stavu $A = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right)$, tak $K_{u,r}$ je množina kandidátů stavu $A_{u,r}$.
+    Označíme-li $K$ množina kandidátů stavu $A = \left((u_1, r_1), \dots, (u_j,r_j)\right)$, tak $K_{u,r}$ je množina kandidátů stavu $A_{u,r}$.
 \end{lemma}
 \begin{dukaz}
     $K_{u,r} = \{w \in K \mid s(u,w) = r\}$. Navíc $K = \{z \in H_{n,k} \mid s(u_i,z) = r_i,  i \in \{1,2,\dots ,j\} \}$. Lemma plyne z definice množiny kandidátů stavu $A_{u,r}$.
 \end{dukaz}
 
 
+% definice z wikipedie
 \begin{definice}[Multigraf prostoru kódů]
-  Uvažujeme multigraf $M_{n,k}$ na množině vrcholů $\mathcal{V} = \mathcal{P}(H_{n,k})$, kde z vrcholu $K_1$ do vrcholu $K_2$ vede hrana obarvená $(u,r)$, pokud $K_2$ je potomek $K_1$ vzhledem ke kódu $u$ a ohodnocení $r$.
+  Nechť $n, k\in \mathbb{N}$ a $S$ je množina všech ohodnocení kódů v $H_{n,k}$. Uvažujeme multigraf $G_{n,k}$ na množině vrcholů $\mathcal{V} = \mathcal{P}(H_{n,k})$ a multimnožině hran $\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V}$, kde každá hraná má přiřazené obarvení $r\in S$. Každá hrana je jednoznačně určená počátečním vrcholem a obarvením $r \in S$. Z vrcholu $K_1$ do vrcholu $K_2$ vede hrana obarvená $(u,r)$, pokud $K_2$ je potomek $K_1$ vzhledem ke kódu $u$ a ohodnocení $r$.
 \end{definice}
+\begin{pozn}
+    Multimnožina povoluje opakování prvků. 
+\end{pozn}
 
 \begin{definice}[Orientovaná cesta]
-    Orientovanou cestou (dále jen cestou) rozumíme prázdnou posloupnost, nebo posloupnost navazujících hran. 
-    % Řekneme, že do vrcholu $K_2$ vede cesta z vrcholu $K_1$, pokud 
+    Orientovanou cestou (dále jen cestou) rozumíme posloupnost navazujících hran označenou jejich obarveními $A = ((u_1,r_1), \dots, (u_j, r_j))$. Konstantní cestu na vrcholu $K$ značíme jako prázdnou posloupnost $A = ()$. Řekneme, že do vrcholu $K_2$ vede z vrcholu $K_1$ cesta $A$, pokud se z vrcholu $K_1$ dostaneme do vrcholu $K_2$ posloupností hran jednoznačně určenými obarveními z $A$. Konstantní posloupnost vede do počátečního vrcholu. 
+    % Řekneme, že do vrcholu $K_2$ vede cesta z vrcholu $K_1$, pokud se z vrcholu $K_1$ dostaneme do vrcholu
 \end{definice}
 
 \begin{definice}[Multigraf \text{[n,k]-Mastermindu}]
-  Multigraf [n,k]-Mastermindu definujeme jako podgraf multigrafu $M_{n,k}$ množinou vrcholů, do kterých vede cesta z vrcholu $H_{n,k}$. Značíme ho $M_{n,k}^*$.
+  Multigraf [n,k]-Mastermindu definujeme jako podgraf multigrafu $G_{n,k}$ indukovaný množinou vrcholů, do kterých vede cesta z vrcholu $H_{n,k}$. Značíme ho $G_{n,k}^*$.
   
   %a množinu orientovaných hran $\mathcal{E}$ mezi vrcholy a jejich potomky. 
   %Cestu definujeme jako posloupnost navazujících hran. 
@@ -193,27 +201,34 @@ Z definice plyne, že $\bigcup_{r\in S} K_{u,r} \subset K$. Zároveň žádný k
 
 % zdroj - wikipedie, https://en.wikipedia.org/wiki/Directed_acyclic_graph
 \begin{definice}[Orientovaný acyklický multigraf]
-    Řekneme, že orientovaný multigraf $H$ je orientovaný acyklický, pokud neexistuje cesta, která začíná i končí ve stejném vrcholu a není v tomto vrcholu konstantní.
+    Řekneme, že orientovaný multigraf $H$ je orientovaný acyklický, pokud neexistuje nekonstantní cesta, která začíná i končí ve stejném vrcholu.
 \end{definice}
 
 \begin{pozorovani}
-    Multigraf [n,k]-Mastermindu je orientovaný acyklický multigraf. 
+    Multigraf [n,k]-Mastermindu je orientovaný acyklický. 
 \end{pozorovani}
 \begin{dukaz}
-    Nechť $K_1$ a $K_2$ jsou vrcholy. Pokud z vrcholu $K_1$ vede cesta do vrcholu $K_2$, $K_2 \subseteq K_1$. Pokud $K_2 \neq K_1$, potom $K_2 \subset K_1$. Pokud existuje nějaká cesta z $K_1$ přes $K_2$ zpět do $K_1$, potom $K_2 \subset K_1 \subset K_2$, což je spor. Tedy neexistuje nekonstantní orientovaná cesta v [n,k]-Mastermindu a je to tedy orientovaný acyklický multigraf.
+    Nechť $K_1$ a $K_2$ jsou vrcholy. Pokud z vrcholu $K_1$ vede cesta do vrcholu $K_2$, $K_2 \subseteq K_1$. Pokud $K_2 \neq K_1$, potom $K_2 \subset K_1$. Pokud existuje nějaká cesta z $K_1$ přes $K_2$ zpět do $K_1$, potom $K_2 \subset K_1 \subset K_2$, což je spor. Neexistuje tedy nekonstantní orientovaná cesta v [n,k]-Mastermindu a multigraf [n,k]-Mastermindu je tedy orientovaný acyklický.
 \end{dukaz}
 
 % multigraf je "directed acyclic graph"
 \begin{definice}[Rozvinutí orientovaného acyklického multigrafu]
-    Nechť $H$ je orientovaný acyklický multigraf s jedním kořenem. 
-    Potom definujeme jeho rozvinutí jako následný strom:
-    Definujeme množinu vrcholů $V$ jako množinu cest v multigrafu $H$ začínající v kořeni. 
-    Hrany definujeme podle následujícího předpisu. Nechť $A, B \in V$ jsou vrcholy. Potom z vrcholu $A \in V$ do vrcholu $B \in V$ vede hrana právě tehdy, když cesta $B$ vznikne z cesty $A$ prodloužením o jednu hranu. Tuto hranu obarvujeme poslední hranou cesty $B$. 
+    Nechť $G$ je orientovaný acyklický multigraf s jedním kořenem. 
+    Potom definujeme jeho rozvinutí jako strom $T = (V, E)$, kde $V$ je množina vrcholů a $E$ množina hran definované následovně.
+    Množinu vrcholů $V$ je množina cest z kořene v multigrafu $G$.
+    Nechť $A, B \in V$ jsou vrcholy. Potom z vrcholu $A \in V$ do vrcholu $B \in V$ vede hrana právě tehdy, když cesta $B$ vznikne z cesty $A$ prodloužením o jednu hranu. Tato hrana je obarvená poslední hranou cesty $B$. 
 \end{definice}
 
 \begin{veta}
     Strom [n,k]-Mastermindu je rozvinutím multigrafu [n,k]-Mastermindu.
 \end{veta}
+\begin{dukaz}
+     chceme předpoklad, že hrana je jednoznačně určená počátečním vrcholem a obarvením, chtělo by to zmínit při konstrukci multigrafu, nebo při definici/označení cest v multigrafu. 
+
+     Nechť $A$ je vrchol ve stromu [n,k]-Mastermindu, potom $A$ značí i nějakou cestu v multigrafu. Z tohoto vrcholu vedou všechny možné hrany stejně tak jako z rozvinutí multigrafu [n,k]-Mastermindu. 
+
+     Z každého stavu vedou hrany obarvené všemi kódy s ohodnoceními. To samé platí pro vrcholy na multigrafu. 
+\end{dukaz}
 
 % Díky Lemmatu \ref{lemmapotomcistavuakandidati} můžeme popsat vztah mezi stromem a grafem [n,k]-Mastermindu. Nějaký vrchol $K$ grafu je množina kandidátů všech stavů, které odpovídají cestám z $H_{n,k}$ do tohoto vrcholu. 
 
@@ -280,7 +295,7 @@ Tento výběr popíšeme pomocí dvou funkcí, valuace a strategie.
 \end{definice}
 
 
-Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako dalšího pokusu pro stav s množinou kandidátů $K\subset H_{n,k}$. Tato hodnota bude obvykle záviset na potomcích $K$ vzhledem ke kódu $u$. Potomci $K$ vzhledem ke kódu $u$ totiž určují množiny kandidátů možných následující stavů v případě, kdy zvolíme kód $u$ jako další pokus (Lemma \ref{lemmapotomcistavuakandidati}). Valuace nám umožňuje ohodnotit kód podle toho, jak dobré jsou jeho následující stavy. Valuace by nemusela být omezená na následující vrstvu. Mohla by odkazovat na stavy o více než jednu hranu dál.
+Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako dalšího pokusu pro stav s množinou kandidátů $K\subseteq H_{n,k}$. Tato hodnota bude obvykle záviset na potomcích $K$ vzhledem ke kódu $u$. Potomci $K$ vzhledem ke kódu $u$ totiž určují množiny kandidátů možných následující stavů v případě, kdy zvolíme kód $u$ jako další pokus (Lemma \ref{lemmapotomcistavuakandidati}). Valuace nám umožňuje ohodnotit kód podle toho, jak dobré jsou jeho následující stavy. Valuace by nemusela být omezená na následující vrstvu. Mohla by odkazovat na stavy o více než jednu hranu dál.
 
 \begin{prikl}\label{prjednokrokfce}
     Funkce $f_K$ je příklad valuace, která kódu $u$ přiřadí maximální počet kódů potomka $K$ vzhledem ke kódu $u$.
@@ -295,7 +310,7 @@ Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako da
 
 
 \begin{definice}[Strategie]
-    Nechť $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor valuací. Potom řekneme, že zobrazení $F \colon \mathcal{F} \to \mathbb{R}$ je strategie, pokud pro každou $f_K \in \mathcal{F}$ existuje $u\in H_{n,k}$ takové, že $F(f_K) = f_K(u)$.
+    Nechť $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$ je prostor valuací. Potom řekneme, že zobrazení $F \colon \mathcal{F} \to \mathbb{R}$ je strategie, pokud pro každou $f_K \in \mathcal{F}$ existuje $u\in H_{n,k}$ takové, že $F(f_K) = f_K(u)$.
 \end{definice}
 % Strategie určitým způsobem slouží k výběru následujícího kódu. 
 %Zjednodušeně řečeno slouží k určení, 
@@ -397,24 +412,22 @@ Obecně tedy platí, že deterministický algoritmus s prostorem valuací $\math
 
 \subsubsection{Strom algoritmu}
 
-\begin{definice}[Prázdný a konečný stav]\label{kandidat}
-  Nechť $P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0$ je stav. Řekneme, že $P$ je prázdný, pokud je množina kandidátů tohoto stavu prázdná. 
-
-  Řekneme, že stav $P$ je konečný, pokud je neprázdný a poslední člen je roven $(u,(n,0))$ pro nějaký kód $u$.
+\begin{definice}[Prázdný a koncový stav]\label{kandidat}
+  % Nechť $A = \left((u_1, r_1), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in S_{n,k}$ je stav. 
+  Řekneme, že stav $A$ je \emph{prázdný}, pokud je množina kandidátů tohoto stavu prázdná. Řekneme, že stav $A$ je \emph{konečný}, pokud je neprázdný a poslední člen je roven $(u,(n,0))$ pro nějaký kód $u$.
 \end{definice}
 
-Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chvíli žádný kód nemůže být tajným kódem. V reálné hře by ho šlo dosáhnout pouze při chybě v ohodnocení pokusu. Konečný stav odpovídá konci hry, kdy se pokus shoduje s tajným kódem. Množina jeho kandidátů v tu chvíli obsahuje právě tajný kód. 
+Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chvíli žádný kód nemůže být tajným kódem. V reálné hře by ho šlo dosáhnout pouze při chybě v ohodnocení pokusu. Koncový stav odpovídá konci hry, kdy se pokus shoduje s tajným kódem. Množina jeho kandidátů v tu chvíli obsahuje právě tajný kód. 
 
 
 
 
-Nyní předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro každý dosažitelný stav $A$ [n,k]-Mastermindu známe následující zahraný kód $u_A$. Potom lze sestavit takzvaný strom algoritmu, který zobrazuje pro každý stav $A$ potomky vzhledem k zahranému kódu $u_A$. Prázdné stavy jsou vynechány, protože jsou v průběhu hry nedosažitelné. Potomci konečných stavů neuvažujeme, protože by to byly pokusy po konci hry. 
+
 % Prázdné stavy a potomci konečných stavů ve stromu algoritmu neuvažujeme ze zřejmých důvodů.
 
 \begin{definice}[Strom algoritmu \text{[n,k]-Mastermindu}]
-  Strom algoritmu definujeme jako podgraf stromu [n,k]-Mastermindu, který splňuje následující podmínky.
+  Strom algoritmu definujeme jako souvislý podgraf stromu [n,k]-Mastermindu, který splňuje následující podmínky.
   \begin{enumerate}
-      \item Je souvislý.
       \item Neobsahuje prázdné stavy.
       \item Hrany z každého vrcholu tohoto grafu jsou obarveny nejvýše jedním kódem. 
       \item Pro každý kód $w \in H_{n,k}$ má tento graf právě jeden koncový stav s posledním členem $(w, (n,0))$, který je zároveň listem v tomto grafu.
@@ -437,26 +450,35 @@ Nyní předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a 
     
 \end{tvrz}
 \begin{dukaz}
-    Strom algoritmu neobsahuje žádné orientované cykly (cesty se začátkem i koncem ve stejném vrcholu) díky definici hran ve stromě [n,k]-Mastermindu. Zároveň do každého stavu (kromě počátečního) ústí právě jedna hrana a díky souvislosti tedy strom algoritmu obsahuje nějaký kořen. Označím $K$ jeho množinu kandidátů.
+    Strom algoritmu neobsahuje žádné orientované cykly (cesty se začátkem i koncem ve stejném vrcholu) díky definici hran.
+    % ve stromě [n,k]-Mastermindu. 
+    Zároveň do každého stavu (kromě počátečního) ústí právě jedna hrana a díky souvislosti tedy strom algoritmu obsahuje nějaký kořen. Označíme $K$ jeho množinu kandidátů.
 
-    Nyní využijeme lemmatu \ref{lemmapotomcistavuakandidati} o disjunktním sjednocení potomků množin kandidátů. Díky podmínce $3$ jsou množiny kandidátů všech stavů podmnožinami $K$. Pokud stav obsahuje člen $(u, (n,0))$, množina jeho kandidátů je maximálně $\{u\}$ vzhledem k inkluzi. Pokud $K \neq H_{n,k}$, existoval by kód $w \in H_{n,k} \setminus K$. Potom pokud by strom algoritmu obsahoval stav se členem $(u, (n,0))$, tento stav by byl prázdný. Nemohl by tedy pro tento kód existovat koncový stav. Množina kandidátů kořene je tedy rovna $H_{n,k}$. Z lemmatu \ref{lemmakandidatipocstavu} plyne, že kořenem je právě počáteční stav. 
+    Nyní využijeme lemmatu \ref{lemmapotomcistavuakandidati} o disjunktním sjednocení potomků množin kandidátů. Díky podmínce $2$ jsou množiny kandidátů všech stavů podmnožinami $K$. Pokud $K \neq H_{n,k}$, existoval by kód $u \in H_{n,k} \setminus K$. Potom pokud by strom algoritmu obsahoval stav se členem $(u, (n,0))$, tento stav by byl prázdný. Nemohl by tedy pro tento kód existovat koncový stav. Množina kandidátů kořene je tedy rovna $H_{n,k}$. Z lemmatu \ref{lemmakandidatipocstavu} plyne, že kořenem je právě počáteční stav. 
 
-    Pokud by z nějakého nekoncového stavu ve stromu algoritmu nevedly hrany do všech neprázdných následníků tohoto stavu vzhledem k určitému kódu, došli bychom opět ke sporu s existencí koncového stavu pro nějaký kód. 
+    Pokud by z nějakého nekoncového stavu ve stromu algoritmu nevedly hrany do všech neprázdných následníků tohoto stavu vzhledem k určitému kódu, došli bychom opět 
+    % , díky disjunktnímu rozkladu množiny do jejích potomků, 
+    ke sporu s existencí koncového stavu pro nějaký kód. 
     
     % Pokud by kořenem nebyl počáteční stav, množina kandidátů kořene by nebyla $H_{n,k}$ z lemmatu \ref{lemmakandidatipocstavu}. Množina kandidátů všech ostatních vrcholů ve stromu algoritmu je tedy podmnožinou $K$ z lemmatů \ref{lemmasjednocenipotomku} a \ref{lemmapotomcistavuakandidati}. 
     
-    % Tedy by existoval kód $u$, který nenáleží do množiny kandidátů kořene. Pokud by ve stromu algoritmu byl vrchol, který by obsahoval člen $(u, (n,0))$, tento stav by byl prázdný.
-    
-    % A díky lemmatu \ref{lemmasjednocenipotomku} by nemohl existovat koncový stav s posledním členem $(u, (n,0))$. To je spor s druhou podmínkou a tedy $H_{n,k}$ je kořenem stromu algoritmu. 
 
     % Protože rozklad množiny $K$ na $K_{u,r}$ je disjunktní, tak je-li stav $A$, který není konečný, ve stromu algoritmu, budou tam poté i všichni neprázdní potomci stavu $A$ vzhledem k vybranému kódu $u_A$ (za splnění podmínky $1$). V opačném případě by stejně jako výše nebyla splněna podmínka $2$.
 \end{dukaz}
 
-Nechť máme strom algoritmu. Potom průběh hry s tajným kódem $v\in H_{n,k}$ je popsán právě cestou z počátečního stavu do konečného stavu s posledním prvkem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{fig22minmax}. 
+% Nyní předpokládejme, že máme nějaký algoritmus výběru dalšího tahu a pro každý dosažitelný stav $A$ [n,k]-Mastermindu známe následující zahraný kód $u_A$. Potom lze sestavit takzvaný strom algoritmu, který zobrazuje pro každý stav $A$ potomky vzhledem k zahranému kódu $u_A$. 
 
-Nechť máme nějaký algoritmus, který pro každý stav vybere deterministicky nějaký další pokus. Strom algoritmu lze sestrojit rekurzivně. Pro každý stav algoritmus nalezne další pokus. Do stromu zakreslíme všechny neprázdné následníky stavu vzhledem k tomuto pokusu.
+% Prázdné stavy jsou vynechány, protože jsou v průběhu hry nedosažitelné. Potomci konečných stavů neuvažujeme, protože by to byly pokusy po konci hry. 
 
+Strom algoritmu popisuje průběh hry pro všechny tajné kódy za použití nějakého konkrétního algoritmu. Jednotlivá kola [n,k]-Mastermindu s tajným kódem $v\in H_{n,k}$ odpovídají hranám cesty z počátečního stavu do koncového stavu s posledním prvkem $(v,(n,0))$.
 
+Uvažujme nějaký algoritmus výběru dalšího tahu, kdy pro každý dosažitelný stav $A$ [n,k]-Mastermindu známe následující zahraný kód $u_A$. Potom strom tohoto algoritmu lze sestavit rekurzivně, kdy pro každý stav $A$ přidáme do stromu potomky $A$ vzhledem k zahranému kódu $u_A$. Ze stromu algoritmu tedy lze vyčíst počty pokusů, které algoritmus potřebuje k nalezení tajných kódů
+
+Hledání algoritmu s nejlepším průměrným nebo maximálním počtem pokusů lze převést na hledání stromu algoritmu, který bude mít maximální nebo průměrnou délku cesty od kořene do listu co nejmenší. 
+
+% Uvažujme nějaký algoritmus, který pro každý stav, do kterého se za použití algoritmu můžeme dostat, vybere deterministicky nějaký další pokus. Strom algoritmu lze sestrojit rekurzivně. Pro každý stav $A$ algoritmus nalezne další pokus $u_A$. Do stromu zakreslíme všechny neprázdné následníky stavu $A$ vzhledem k $u_A$.
+
+Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{fig22minmax}. 
 
         
     %Platí, že pro nějaký kód $u$ jsou množiny kandidátů potomků $A$ vzhledem ke kódu $u$ disjunktní a sjednocením dávají množinu kandidátů stavu $A$. Všechny stavy, do kterých se dostaneme cestou z nějakého stavu $A$ za dodržení podmínky $1$ tedy mají kandidáty z množiny kandidátů stavu $A$. 
