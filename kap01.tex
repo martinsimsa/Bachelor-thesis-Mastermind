@@ -155,21 +155,23 @@ Omezení $b + w \leq n, \hspace{3px} (b,w) \neq (n-1,1)$ platí obdobně jako v 
 
 Nyní jsme připraveni definovat hru Mastermind. 
 
-\section{Průběh hry Mastermind}
-Nechť $n \in \N $, $k \in \N$. [n,k]-Mastermind je hra pro dvě osoby, zadavatele a hráče, 
-% Šlo by oba hráče pojmenovat
-% Cílem hry je nalézt tajný kód na co nejmenší počet pokusů. 
-probíhající podle následujícího schématu. 
-\begin{enumerate}
-    \item Zadavatel vytvoří tajný kód $v \in H_{n,k}$.
-    \item Hra dále probíhá po kolech $i = 1,2,3,\dots$. Každé kolo se skládá ze dvou kroků:
-        \begin{enumerate}
-            \item Hráč určí kód (tah, pokus) $u_i \in H_{n,k}$.
-            \item Zadavatel ohodnotí pokus $u_i$ vzhledem k tajnému kódu $v$. 
-        \end{enumerate}
-    \item Hra končí v případě, že pokus je ohodnocen $n$ černými kolíčky (zadaný kód se shoduje s tajným kódem). 
-\end{enumerate}
-Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů. V případě, že hráč ve svých tazích neopakuje kódy, hra jistě skončí, neboť počet možných kódů je omezen hodnotou $n^k$.
+\begin{definice}[{[n,k]-Mastermind}]
+    Nechť $n \in \N $, $k \in \N$. \emph{[n,k]-Mastermind} je hra pro dvě osoby, zadavatele a hráče, 
+    probíhající podle následujícího schématu. 
+    \begin{enumerate}
+        \item Zadavatel vytvoří tajný kód $v \in H_{n,k}$.
+        \item Hra dále probíhá po kolech $i = 1,2,3,\dots$. Každé kolo se skládá ze dvou kroků:
+            \begin{enumerate}
+                \item Hráč určí kód (tah, pokus) $u_i \in H_{n,k}$.
+                \item Zadavatel ohodnotí pokus $u_i$ vzhledem k tajnému kódu $v$. 
+            \end{enumerate}
+        \item Hra končí v případě, že pokus je ohodnocen $n$ černými kolíčky (zadaný kód se shoduje s tajným kódem). 
+    \end{enumerate}
+    Cílem hry [n,k]-Mastermind je nalézt tajný kód na co nejmenší počet pokusů.
+\end{definice}
+\begin{pozn}
+     V případě, že hráč ve svých tazích neopakuje kódy, hra jistě skončí, neboť počet možných kódů je omezen hodnotou $n^k$.
+\end{pozn}
 % vyčerpáním všech možností pro tajný kód.  
 
 % přidat různé varianty hry mastermind??? např statická verze, hra pouze s kandidáty atd. 
