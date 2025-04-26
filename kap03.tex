@@ -1,6 +1,6 @@
 
 \chapter{Jednokrokové algoritmy}
-Jednokrokové algoritmy jsou ty, jejichž valuace lze vyjádřit pouze pomocí následující vrstvy potomků. Tedy ohodnocuje kód v závislosti na rozdělení potomků vzhledem k tomuto kódu. V této kapitole porovnáme tři jednokrokové algoritmy, které se liší pouze podle zvoleného prostoru valuací a strategiew. Jsou to algoritmy min-max, max entropy a most parts. 
+Jednokrokové algoritmy jsou ty, jejichž valuace lze vyjádřit pouze pomocí následující vrstvy potomků. Tedy ohodnocuje kód v závislosti na rozdělení potomků vzhledem k tomuto kódu. V této kapitole porovnáme tři jednokrokové algoritmy, které se liší pouze podle zvoleného prostoru valuací a strategie. Jsou to algoritmy Min-max, Max entropy a Most parts. 
 
 %definujeme následovně. Nechť $G = (V,E)$ je graf [n,k]-Mastermindu. Nechť $\mathcal{F} = \{f_K \mid K \in V \} $ je prostor jednokrokových funkcí, kde $f_K \colon H_{n,k} \to \mathbb{R}$ jsou jednokrokové funkce. Nechť $F$ je funkcionál na $\mathcal{F}$. Potom jednokrokový algoritmus s prostorem funkcí $\mathcal{F}$ a funkcionálem $F$ je definovaný v algoritmu \ref{alg-default}. 
 
@@ -50,12 +50,12 @@ Algoritmus Min-max pro libovolný stav $A$ s množinou kandidátů $K$ vybírá 
     Min-max algoritmus řeší hru [n,k]-Mastermind.
 \end{tvrz}
 \begin{dukaz}
-    Dokážeme, že v každém kroku algoritmu se zmenší velikost množiny kandidátů aktuálního stavu. Nechť $K$ je množina kandidátů obsahující alespoň dva kódy. Nechť $u \in K$. Potom $|K_{u,(n,0)}| = 1$, a tedy 
+    Jednoznačnost řešení plyne z předpisu valuace a strategie a z jednoznačnosti ohodnocení. Dále dokážeme, že v každém kroku algoritmu se zmenší velikost množiny kandidátů aktuálního stavu, a tedy algoritmus skončí. Nechť $K$ je množina kandidátů obsahující alespoň dva kódy. Nechť $u \in K$. Potom $|K_{u,(n,0)}| = 1$, a tedy 
     \[|\bigsqcup_{r\in S, r \neq (n,0)} K_{u,r} | = |K| - 1.\]
     Díky tomu platí následující nerovnost
     \[\min_{w \in H_{n,k}} \max_{r\in S} |K_{w,r}| \leq |K|-1.\]
     V každém kroku se tedy velikost množiny kandidátů aktuálního stavu snižuje. Pokud $|K| = 1$, algoritmus zvolí jako další pokus jedinný zbývající kód z množiny kandidátů, protože pro všechny kódy platí, že
-    \[\max_{r\in S} |K_{w,r}| = 1.\]
+    $\max_{r\in S} |K_{w,r}| = 1$.
     Zároveň tajný kód náleží v každém kroku do množiny kandidátů, a tedy jej algoritmus nalezne. 
 \end{dukaz}
 
@@ -103,7 +103,7 @@ Knuthův algoritmus tedy volí jako první pokus kód $11$.
 \end{figure}
 
 
-Nyní algoritmus volí druhý pokus. Pro $K \neq \emptyset$ a $u \in H_{n,k}$ platí, že $m_K(u) \geq 1$, protože pro $K = \bigsqcup_{r\in S} K_{u,r}$. Proto, když lexikograficky nejnižší kandidát $u$ dosahuje hodnoty $m_K(u) = 1$, algoritmus Min-max ho vždy vybere. Konkrétně to bude platit pro jednoprvkovou množinu kandidátů $\{22\}$. Algoritmus zde jako druhý pokus vybírá jediného zbývajícího kandidáta. 
+Nyní algoritmus volí druhý pokus. Pro $K \neq \emptyset$ a $u \in H_{n,k}$ platí, že $m_K(u) \geq 1$. Proto, když lexikograficky nejnižší kandidát $u$ dosahuje hodnoty $m_K(u) = 1$, algoritmus Min-max jej vždy vybere. Konkrétně to bude platit pro jednoprvkovou množinu kandidátů $\{22\}$. Algoritmus zde jako druhý pokus vybírá jediného zbývajícího kandidáta. 
 
 V případě, že ohodnocení kódu $11$ v prvním pokusu je $(1,0)$, nacházíme se ve stavu $\{12,21\}$. Potomci vrcholu $\{12,21\}$ jsou znázorněni na obrázku \ref{fig22druhytah}. 
 \begin{figure}[h!]
@@ -131,11 +131,11 @@ V případě, že ohodnocení kódu $11$ v prvním pokusu je $(1,0)$, nacházím
     \caption{Výběr druhého tahu}
 \label{fig22druhytah}
 \end{figure}
-Hodnoty valuací jednotlivých kódů jsou následující.
-\[m_{\{12,21\}} (11) = m_{\{12,21\}} (22) = 2, \hspace{10px} m_{\{12,21\}} (12) = m_{\{12,21\}} (21) = 1\]
+Hodnoty valuací jednotlivých kódů jsou následující:
+\[m_{\{12,21\}} (11) = m_{\{12,21\}} (22) = 2, \hspace{10px} m_{\{12,21\}} (12) = m_{\{12,21\}} (21) = 1.\]
 Algoritmus Min-max tedy v tomto stavu vybírá jako druhý pokus kód $12$. 
 
-Na obrázku \ref{fig22minmax} jsou doplněny potomci všech vrcholů vzhledem k zahraným tahům Min-max algoritmu. V případě ohodnocení $(2,0)$ hra končí.
+Na obrázku \ref{fig22minmax} je zobrazen strom Min-max algoritmu. Protože vrchol ve stromu algoritmu je roven obarvení cesty z počátku do tohoto vrcholu, pro znázornění postupu algoritmu vrcholy obarvujeme množinou kandidátů příslušného stavu. Algoritmus Min-max vyhraje [2,2]-Mastermind vždy na maximálně tři tahy. 
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -158,12 +158,6 @@ Na obrázku \ref{fig22minmax} jsou doplněny potomci všech vrcholů vzhledem k 
     \caption{Zahrané tahy Min-max algoritmem}
 \label{fig22minmax}
 \end{figure}
-Z tohoto stromu lze vyčíst počet pokusů Min-max algoritmu v případě různých tajných kódů. Je to vzdálenost listu s tímto kódem od kořene ve smyslu počtu hran. Algoritmus Min-max tedy vyhraje [2,2]-Mastermind vždy na maximálně tři tahy. 
-    
-
-
-
-
 
 % Přidat pseudokód algoritmu???
 

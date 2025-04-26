@@ -97,7 +97,7 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 
 \subsubsection{Max entropy}
 
-Algoritmus Max entropy vybírá jako první pokus kód $1234$, protože tento kód dosahuje největší valuace entropie, jak znázorňuje tabulka \ref{tabvaluaceprvnichtahu}. Tabulka \ref{tabentropievysl} zobrazuje výsledky algoritmu Max entropy. Dosahuje průměrného počtu pokusů $4.415$, což je lepší výsledek než v případě Min-max algoritmu. Tento algoritmus ale nedokáže zaručit vítězství na pět pokusů. 
+Algoritmus Max entropy vybírá jako první pokus kód $1234$, protože tento kód dosahuje největší valuace entropie, jak znázorňuje tabulka \ref{tabvaluaceprvnichtahu}. Tabulka \ref{tabentropievysl} zobrazuje výsledky algoritmu Max entropy. Dosahuje průměrného počtu pokusů $4.415$, což je lepší výsledek než v případě Min-max algoritmu. Tento algoritmus ale nedokáže zaručit vítězství na pět pokusů.
 
 Navíc, pokud by tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus Max entropy tedy není konzistentní. Vysvětlením by mohl být fakt, že entropie neodhaduje ideálně počet pokusů. Mohlo by to být tím, že rozdělení množiny $K$ do potomků $K_{u,r}$ není rovnoměrné. Entropie tedy nedokáže správně odhadnout rozložení množin kandidátů o dva tahy dál. 
 %Kdybychom uvažovali valuace, které by srovnávali velikosti potomků do hloubky $2$. 
@@ -168,7 +168,12 @@ Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
 % \end{table}
 
 \subsubsection{Srovnání algoritmů}
-Nejlepší maximální počet pokusů v případě Min-max algoritmu dává smysl, protože algoritmus minimalizuje maximální počet kódů v potomcích aktuální množiny kandidátů. Fakt, že algoritmus Max entropy dosahuje lepšího průměrného počtu pokusů než Min-max odpovídá tomu, že Max entropy vybírá kód, který minimalizuje očekávanou hodnotu počtu pokusů. 
+Nejlepší maximální počet pokusů v případě Min-max algoritmu dává smysl, protože algoritmus minimalizuje maximální počet kódů v potomcích. Algoritmus Most parts dosáhl ze všech zmíněných algoritmů nejlepšího průměrného počtu pokusů. B. Kooi \cite{kooi} srovnává svůj algoritmus Most parts s Min-max algoritmem z hlediska jejich stromů algoritmů následovně. Min-max algoritmus zkoumá pouze hloubku stromu ve smyslu maximálního počtu kandidátů. Most parts algoritmus naopak hledá strom, který bude nejširší z hlediska počtu neprázdných pokračování. 
+
+Algoritmus Max entropy dosahuje, možná překvapivě, o dost horšího průměrného počtu pokusů v porovnání s algoritmem Most parts. Je možné, že to je kvůli nešťastné volbě prvního tahu v případě čtyř pozic a šesti barev. G. Ville \cite{ville2013optimalmastermind47strategy} totiž ukázal výsledky zmíněných algoritmů v [4,7] a [5,8]-Mastermindu, kde Max entropy dosahuje naopak nejlepšího průměrného počtu pokusů. 
+
+
+
 
 % Výsledek algoritmu Most parts je do jisté míry překvapivý. Most parts algoritmus totiž maximalizuje pravděpodobnost, že tajný kód v dalším kole uhodneme a nijak se nesnaží odhadnout očekávaný počet pokusů. Domnívám se, že 
 
@@ -212,13 +217,10 @@ Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-ma
 % \end{dukaz}
 
 \subsubsection{Vícekrokové algoritmy}
-Všechny popisované algoritmy používaly valuace, které zkoumají rozložení kandidátů u potomků daného stavu. Zkoumali tedy stavy o maximálně jednu hranu v grafu [n,k]-Mastermindu dál. Intuice napovídá, že pokud bychom zkoumali stavy o dvě hrany dál, algoritmy by měli lepší výsledky. Časová složitost těchto algoritmů by ale prudce rostla. Vzhledem k tomu, že optimální strategie pro malé hodnoty $n$ a $k$ již byly nalezeny, tak jsme tyto algoritmy dále nezkoumali. 
-
-% šlo by ale naimplementovat a uvést k porovnání.
+Všechny popisované algoritmy používaly valuace, které zkoumají rozložení kandidátů u potomků daného stavu. Zkoumali tedy stavy o maximálně jednu hranu v grafu [n,k]-Mastermindu dál. Intuice napovídá, že pokud bychom zkoumali stavy o dvě hrany dál, algoritmy by měli lepší výsledky. Časová složitost těchto algoritmů by ale prudce rostla. Čím hlouběji bychom prohledávali strom [n,k]-Mastermindu, tím více bychom se blížili optimální metodě nalezené K. Koyamou a T. Laiem v roce 1993 \cite{koyama}. Jejich metoda dosahuje průměrného počtu pokusů $4.340$ s maximálním počtem pokusů $6$. V případě omezení maximálního počtu pokusů na $5$ dosáhli průměrného počtu pokusů $4.341$. 
 
 
-
-\subsubsection{Jiná volba prvního tahu}
+\subsubsection{Jiná volba prvního tahu, případně popsat lexikografický výběr}
 
 
 
@@ -226,11 +228,7 @@ Všechny popisované algoritmy používaly valuace, které zkoumají rozložení
 Poznámky:
 
 \begin{itemize}
-    \item Algoritmy, které by zkoumaly tabulky rozdělení dva kroky dopředu by jistě byly lepší, výpočetně by to ale bylo mnohem náročnější.
-    \item šlo by najít nějakou variantu zmíněných algoritmů, která by řešila mastermind na 5 tahů s výrazně lepším průměrem? - Knuth něco na tenhle způsob ukazoval, ale možná jen v případě jeho algoritmu.
     \item Volba prvního tahu, který by obsahoval vyšší barvy by mohla být lepší, protože algoritmus volí lexikograficky menší kódy. Podobně by bylo možné náhodně promíchat seřazení všech kódů. 
-    \item Čím je strategie optimálnější, tím hůře jde popsat.
-    \item Strategii optimalizující průměrný počet pokusů nalezl v roce 1993 K. Koyama \cite{koyama}. Ukázal, že lze dosáhnout strategie s průměrným počtem pokusů $4.340$.
     \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
     \item odhad s entropií nefunguje tak dobře. Mohlo by to být silně nerovnoměrně rozdělenými kódy. Entropie neodpovídá ohodnocení, není to binární.
 
