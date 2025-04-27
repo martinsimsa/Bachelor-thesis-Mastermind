@@ -112,7 +112,7 @@ maximální počet pokusů
 & 6 & 6 & 6 & 6 & 6 \\
 
 průměrný počet pokusů 
-& 4.911 & 4.496 & 4.428 & \textbf{4.383} & 4.415 \\
+& 4.911 & 4.494 & 4.428 & \textbf{4.383} & 4.415 \\
 \bottomrule
 \multicolumn{6}{l}{\footnotesize \textit{Pozn:}
 Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
@@ -179,7 +179,7 @@ Algoritmus Max entropy dosahuje, možná překvapivě, o dost horšího průměr
 
 % Zároveň fakt, že zbylé algoritmy dosahují lepšího průměrného počtu pokusů také odpovídá tomu, že optimalizují nějakou očekávanou hodnotu následujících stavů. V případě algoritmu Max entropy to je očekávaná hodnota počtu otázek. 
 
-\section{Varianty algoritmů}
+\section{Diskuze}
 \subsubsection{Volba pokusů pouze z kandidátů}
 Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $P$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů stavu. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $8$ měla tvar
 \[U = \{u \in K \mid f_K(u) = F(f_K)\}.\]
@@ -224,7 +224,7 @@ Všechny popisované algoritmy používaly valuace, které zkoumají rozložení
 
 
 
-\section{Diskuze}
+\subsubsection{Diskuze}
 Poznámky:
 
 \begin{itemize}
