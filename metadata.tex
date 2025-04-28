@@ -18,54 +18,44 @@
 \def\ThesisAuthor{Martin Šimša}
 
 % Rok odevzdání
-\def\YearSubmitted{\xxx{2025}}
+\def\YearSubmitted{2025}
 
 % Název katedry nebo ústavu, kde byla práce oficiálně zadána
 % (dle Organizační struktury MFF UK:
 % https://www.mff.cuni.cz/cs/fakulta/organizacni-struktura,
 % případně plný název pracoviště mimo MFF)
 \def\Department{Katedra algebry}
-\def\DepartmentEN{\xxx{Name of the department}}
+\def\DepartmentEN{Department of Algebra}
 
 % Jedná se o katedru (department) nebo o ústav (institute)?
-\def\DeptType{\xxx{Katedra}}
-\def\DeptTypeEN{\xxx{Department}}
+\def\DeptType{Katedra}
+\def\DeptTypeEN{Department}
 
 % Vedoucí práce: Jméno a příjmení s~tituly
 \def\Supervisor{doc. Mgr. Pavel Růžička, Ph.D.}
 
 % Pracoviště vedoucího (opět dle Organizační struktury MFF)
-\def\SupervisorsDepartment{\xxx{katedra}}
-\def\SupervisorsDepartmentEN{\xxx{department}}
+\def\SupervisorsDepartment{Katedra algebry}
+\def\SupervisorsDepartmentEN{Department of Algebra}
 
 % Studijní program (kromě rigorozních prací)
-\def\StudyProgramme{\xxx{studijní program}}
+\def\StudyProgramme{Matematika pro informační technologie}
 
 % Nepovinné poděkování (vedoucímu práce, konzultantovi, tomu, kdo
 % vám nosil pizzu a vařil čaj apod.)
-\def\Dedication{%
-\xxx{Poděkování.}
-}
+\def\Dedication{Děkuji doc. Mgr. Pavlu Růžičkovi, Ph.D. za trpělivost při vedení práce a konstruktivní diskuzi. Za poskytnutí článku od autorů Koyama a Lai \cite{koyama} děkuji dr. B.P. Barteldu Kooi a Pavle Šimšové. Svým blízkým děkuji za podporu v každé fázi práce.}
 
 % Abstrakt (doporučený rozsah cca 80-200 slov; nejedná se o zadání práce)
-\def\Abstract{%
-\xxx{Abstrakt.}
-}
+\def\Abstract{Práce se zabývá popisem algoritmů řešících hru Mastermind pro libovolný počet pozic a barev. Druhá kapitola popisuje reprezentaci stavu hry jako posloupnost pokusů s ohodnocením či jako množina zbývajících možností na tajný kód. Oba způsoby jsou reprezentovány grafem a je zde popsán vztah mezi těmito dvěma grafy. Dále je sestrojen obecný algoritmus sloužící k popisu konkrétních algoritmů řešící hru Mastermind. Ve třetí kapitole jsou popsány tři deterministické algoritmy, které hru Mastermind řeší. Jde o algoritmy Min-max, Max entropy a Most parts. Nakonec jsou tyto metody implementovány a otestovány na hře Mastermind o čtyřech pozicích a šesti barvách.}
 
 % Anglická verze abstraktu
-\def\AbstractEN{%
-\xxx{Abstract.}
-}
+\def\AbstractEN{This thesis describes algorithms solving the game Mastermind for arbitrary number of positions and colours. Second chapter describes the state of the game in two ways, as a sequence of codes with evaluations and as a set of codes which could be the secret code.  Both sets of state representations are described in a graph and we show the relation between these graphs. Next, we construct a general algorithm solving Mastermind which we use for describing particular methods. In the third chapter, three deterministic algorithms are described. They are called Min-max, Max-entropy and Most parts. Finally, we implement these algorithms and show their results in the game Mastermind with four positions and six colours.}
 
 % 3 až 5 klíčových slov (doporučeno) oddělených \sep
 % Hodí se pro nalezení práce podle tématu.
-\def\ThesisKeywords{%
-\xxx{klíčové slovo\sep složitější fráze}
-}
+\def\ThesisKeywords{Logik\sep deterministický algoritmus\sep min-max\sep entropie}
 
-\def\ThesisKeywordsEN{
-\xxx{key\sep words}
-}
+\def\ThesisKeywordsEN{Mastermind\sep deterministic algorithm\sep min-max\sep entropy}
 
 % Pokud některá z položek metadat obsahuje TeXové řídící sekvence, je potřeba
 % dodat i verzi v obyčejném textu, která se objeví v metadatech formátu XMP
