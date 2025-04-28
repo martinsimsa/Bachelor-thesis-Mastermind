@@ -17,7 +17,7 @@ Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pok
 
 Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost pojmenujeme \emph{konzistence}.
 
-V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
+V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění.
 
 % V sekci $4.5$ diskutujeme možný vliv výběru lexikograficky vyššího prvního tahu z důvodu následného výběru lexikograficky minimálních kódů ve všech algoritmech.
 
@@ -220,19 +220,12 @@ Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-ma
 Všechny popisované algoritmy používaly valuace, které zkoumají rozložení kandidátů u potomků daného stavu. Zkoumali tedy stavy o maximálně jednu hranu v grafu [n,k]-Mastermindu dál. Intuice napovídá, že pokud bychom zkoumali stavy o dvě hrany dál, algoritmy by měli lepší výsledky. Časová složitost těchto algoritmů by ale prudce rostla. Čím hlouběji bychom prohledávali strom [n,k]-Mastermindu, tím více bychom se blížili optimální metodě nalezené K. Koyamou a T. Laiem v roce 1993 \cite{koyama}. Jejich metoda dosahuje průměrného počtu pokusů $4.340$ s maximálním počtem pokusů $6$. V případě omezení maximálního počtu pokusů na $5$ dosáhli průměrného počtu pokusů $4.341$. 
 
 
-\subsubsection{Jiná volba prvního tahu, případně popsat lexikografický výběr}
+\subsubsection{Seřazení kódů}
+Zajímavým problémem je jistě výběr následujícího pokusu v případě, kdy má více kódů nejlepší valuaci. My jsme zvolili výběr lexikograficky nejmenšího kódu, protože ho použil Knuth ve svém slavném článku \cite{donald_e__knuth_1977}. Výběr toho lexikograficky nejvyššího například porovnává v diskuzi u svého článku Kooi \cite{kooi}. Změna výsledků je ale minimální. Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. 
 
 
+% \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
 
-\subsubsection{Diskuze}
-Poznámky:
-
-\begin{itemize}
-    \item Volba prvního tahu, který by obsahoval vyšší barvy by mohla být lepší, protože algoritmus volí lexikograficky menší kódy. Podobně by bylo možné náhodně promíchat seřazení všech kódů. 
-    \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
-    \item odhad s entropií nefunguje tak dobře. Mohlo by to být silně nerovnoměrně rozdělenými kódy. Entropie neodpovídá ohodnocení, není to binární.
-
-\end{itemize}
 
 
 
