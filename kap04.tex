@@ -5,13 +5,13 @@
 Při srovnávání algoritmů budeme používat několik kritérií. První hodnotou je maximální počet pokusů, které algoritmus potřebuje k nalezení libovolného tajného kódu $v \in H_{n,k}$. K nalezení maximálního počtu pokusů stačí vyzkoušet chod algoritmu na všech tajných kódech $v \in H_{n,k}$. V sekci se stromem algoritmu jsme ukázali, že tato hodnota je ekvivalentní největší vzdálenosti listu od kořene ve stromě algoritmu ve smyslu počtu hran.
 
 \begin{definice}[Maximální počet pokusů]\label{defmaxpocetpokusu}
-    Nechť $T$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Maximální počet pokusů tohoto algoritmu definujeme jako délku nejdelší cesty od kořene $T$ k nějakému listu $T$. 
+    Nechť $T$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. \emph{Maximální počet pokusů} tohoto algoritmu definujeme jako délku nejdelší cesty (počet jejích hran) od kořene $T$ k nějakému listu $T$. 
 \end{definice}
 
 Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pokusů na hru. Ten lze opět odvodit ze stromu algoritmu.
 
 \begin{definice}[Průměrný počet pokusů]\label{defprumpocetpokusu}
-    Nechť $T = (V,E)$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $A$ označíme $d(A)$ jeho vzdálenost od kořene ve smyslu počtu hran. Průměrný počet pokusů algoritmu definujeme jako 
+    Nechť $T = (V,E)$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $A$ označíme $d(A)$ jeho vzdálenost od kořene ve smyslu počtu hran. \emph{Průměrný počet pokusů} algoritmu definujeme jako hodnotu
     \[\frac{1}{k^n}\sum_{A\in V, A \text{ list}} d(A).\]
 \end{definice}
 
@@ -199,7 +199,7 @@ průměrný počet pokusů
 & 4.497 & 4.465 & 4.399 \\
 \bottomrule
 \multicolumn{4}{l}{\footnotesize \textit{Pozn:}
-Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa}
+Průměrný počet pokusů je zaokrouhlen na $3$ desetinná místa.}
 \end{tabular}
 \caption{Výsledky algoritmů volící pouze kandidáty}\label{tabminmaxvysl}
 \end{table}
@@ -221,7 +221,9 @@ Všechny popisované algoritmy používaly valuace, které zkoumají rozložení
 
 
 \subsubsection{Seřazení kódů}
-Zajímavým problémem je jistě výběr následujícího pokusu v případě, kdy má více kódů nejlepší valuaci. My jsme zvolili výběr lexikograficky nejmenšího kódu, protože ho použil Knuth ve svém slavném článku \cite{donald_e__knuth_1977}. Výběr toho lexikograficky nejvyššího například porovnává v diskuzi u svého článku Kooi \cite{kooi}. Změna výsledků je ale minimální. Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. 
+Zajímavým problémem je jistě výběr následujícího pokusu v případě, kdy má více kódů nejlepší valuaci. My jsme zvolili výběr lexikograficky nejmenšího kódu, protože ho použil Knuth ve svém slavném článku \cite{donald_e__knuth_1977}. Výběr toho lexikograficky nejvyššího například porovnává v diskuzi u svého článku Kooi \cite{kooi}. Změna výsledků je ale minimální. 
+
+Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. 
 
 
 % \item aplikace problému mastermind jsou diskutovány v článku doerr playing mastermind with many colours na straně 4
