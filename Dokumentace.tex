@@ -218,11 +218,7 @@ Příklad použití:
 
 
 
-\section{Kontakt}
-Martin Šimša, MFF CUNI, 3. roč., Matematika pro informační technologie (MITP)
-LS 2024/2025, Bakalářská práce na téma Logik - algoritmy a strategie
-simsa.martin@email.cz, martin.simsa926@student.cuni.cz
-Vedoucí: doc. Mgr. Pavel Růžička, Ph.D.
+
 
 
 
@@ -231,101 +227,89 @@ Vedoucí: doc. Mgr. Pavel Růžička, Ph.D.
 
 
 \section{Technická dokumentace}
-Tohle je technická dokumentace programu Mastermind - testování algoritmů. Byla vytvořena jako příloha k bakalářské práci Logik - algoritmy a strategie. 
-
-## Obsah
-Dokumentace obsahuje popisy jednotlivých funkcí a jejich propojení. 
-- [Process](#installation)
-- [Proměnné](#proměnné)
-- [Funkce](#funkce)
-
-## Proměnné
-len_pegs - označuje počet pozic, v bakalářské práci tuto hodnotu značíme písmenem $n$.
-
-len_colours - určuje počet barev (v práci jako $k$).
-
-all_scores - seznam všech ohodnocení v $H_{n,k}$
-
-all_codes - seznam všech kódů $H_{n,k}$
-
-start_code - volba prvního pokusu, aby algoritmus nemusel procházet všechny kódy
-
-possible_codes - Množina kandidátů aktuálního stavu.
-
-partition - Množina potomků aktuální množiny kandidátů
-
-partition_table - Velikosti množin potomků množiny kandidátů
-
-secret_code - tajný kód
-
-partition_table_function - proměnná uchovávající aktuálně používanou valuaci (find_max, find_entropy, find_number_of_parts)
-
-compare_function - proměnná uchovávající aktuálně používanou strategii (higher_is_better, lower_is_better)
-
-choose_from_candidates - proměnná, která udává, zda algoritmus vybírá kódy pro další pokusy pouze z množiny kandidátů (True), anebo z celého prostoru kódů (False)
-
-partition_table_value - uchovává hodnotu valuace pro danou množinu kandidátů a kód.
+\subsection{Časté typy}
+\begin{itemize}
+    \item Kódy jsou interpretovány jako seznamy přirozených čísel (např. [1,1,2,3]). 
+    \item Množiny kódů jsou seznamy, jejichž prvky jsou kódy. Tedy to jsou vnořené seznamy. 
+    \item Ohodnocení je uchováváno jako seznam o dvou pozicích. 
+\end{itemize}
+\subsection{Proměnné}
+\begin{itemize}
+    \item \texttt{len\_pegs} - označuje počet pozic, v bakalářské práci tuto hodnotu značíme písmenem $n$.
+    \item \texttt{len\_colours} - určuje počet barev (v práci jako $k$).
+    \item \texttt{all\_scores} - seznam všech ohodnocení v $H_{n,k}$
+    \item \texttt{all\_codes} - seznam všech kódů $H_{n,k}$
+    \item \texttt{start\_code} - volba prvního pokusu, aby algoritmus nemusel procházet všechny kódy
+    \item \texttt{possible\_codes} -- Množina kandidátů aktuálního stavu.
+    \item \texttt{partition} - Množina potomků aktuální množiny kandidátů
+    \item \texttt{partition\_table} - Velikosti množin potomků množiny kandidátů
+    \item \texttt{secret\_code} - tajný kód
+    \item \texttt{partition\_table\_function} - proměnná uchovávající aktuálně používanou valuaci (\texttt{find\_max, find\_entropy, find\_number\_of\_parts})
+    \item \texttt{compare\_function} - proměnná uchovávající aktuálně používanou strategii (\texttt{higher\_is\_better, lower\_is\_better})
+    \item \texttt{choose\_from\_candidates} - proměnná, která udává, zda algoritmus vybírá kódy pro další pokusy pouze z množiny kandidátů (True), anebo z celého prostoru kódů (False)
+    \item \texttt{partition\_table\_value} - uchovává hodnotu valuace pro danou množinu kandidátů a kód.
+\end{itemize}
 
 
-## Funkce
 
-#### evaluate_codes
-Funkce evaluate_codes na vstupu dostane dva kódy a počet pozic a barev. Vrátí ohodnocení těchto dvou kódů. Nejprve spočítá počet černých kolíčků a počty výskytů barev v obou kódech. Následně vypočítá počet bílých kolíčků podle definice ohodnocení. 
+\subsection{Funkce}
 
-#### generate_all_codes
-Funkce generate_all_codes vygeneruje seznam všech kódů podle zadaného počtu pozic a počtu barev. Prochází všechna čísla od nuly do $k^n - 1$ a každé číslo konvertuje do kódu, který v lexikografickém pořadí odpovídá danému číslu. 
+\paragraph{\texttt{evaluate\_codes}}
+Funkce \texttt{evaluate\_codes} na vstupu dostane dva kódy a počet pozic a barev. Vrátí ohodnocení těchto dvou kódů. Nejprve spočítá počet černých kolíčků a počty výskytů barev v obou kódech. Následně vypočítá počet bílých kolíčků podle definice ohodnocení. 
 
-#### generate_all_scores
-Tato funkce vygeneruje seznam všech možných ohodnocení pro zadaný počet pozic len_pegs. Nezohledňuje počet barev, a tedy pro dvě barvy generuje i ohodnocení, která mají lichý počet bílých kolíčků. Díky použitým valuacím a strategiím to ale na algoritmech nic nezmění.
+\paragraph{\texttt{generate\_all\_codes}}
+Funkce \texttt{generate\_all\_codes} vygeneruje seznam všech kódů podle zadaného počtu pozic a počtu barev. Prochází všechna čísla od nuly do $k^n - 1$ a každé číslo konvertuje do kódu, který v lexikografickém pořadí odpovídá danému číslu. 
 
-#### find_max
+\paragraph{\texttt{generate\_all\_scores}}
+Tato funkce vygeneruje seznam všech možných ohodnocení pro zadaný počet pozic \texttt{len\_pegs}. Nezohledňuje počet barev, a tedy pro dvě barvy generuje i ohodnocení, která mají lichý počet bílých kolíčků. Díky použitým valuacím a strategiím to ale na algoritmech nic nezmění.
+
+\paragraph{\texttt{find\_max}}
 Funkce pro zadané velikosti $|K_{u,r}|$ vrátí maximální hodnotu. 
 
-#### find_entropy
+\paragraph{\texttt{find\_entropy}}
 Funkce pro zadané velikosti $|K_{u,r}|$ vrátí entropii tohoto rozdělení. Entropie je před vrácením výsledku zaokrouhlena na 7 desetinných míst, protože při různém pořadí výpočtu entropie se tento součet zaokrouhluje jinak a nevracel by rovnosti pro stejné rozdělení potomků.
 
-#### find_number_of_parts
+\paragraph{\texttt{find\_number\_of\_parts}}
 Funkce pro zadané velikosti $|K_{u,r}|$ vrátí počet neprázdných potomků.
 
-#### lower_is_better
+\paragraph{\texttt{lower\_is\_better}}
 Tato funkce slouží na místo strategie. Porovnává hodnoty valuací a vrací pravdivostní hodnoty, zda je první množina menší než druhá. Ve výsledku napomáhá k nalezení minimální hodnoty valuace.
 
-#### higher_is_better
+\paragraph{\texttt{higher\_is\_better}}
 Tato funkce slouží na místo strategie. Porovnává hodnoty valuací a vrací pravdivostní hodnoty, zda je první množina větší než druhá.Ve výsledku napomáhá k nalezení maximální hodnoty valuace.
 
-#### create_next_partition
-Tato funkce bere jako argumenty množinu kandidátů $K$ (possible codes) a další pokus $u$. Vrátí počty prvků v potomcích $K_{u,r}$ pro všechna ohodnocení $r \in S_{n,k}$.
+\paragraph{\texttt{create\_next\_partition}}
+Tato funkce bere jako argumenty množinu kandidátů $K$ (\texttt{possible\_codes}) a další pokus $u$. Vrátí počty prvků v potomcích $K_{u,r}$ pro všechna ohodnocení $r \in S_{n,k}$.
 
-#### find_best_guess
-find_best_guess(possible_codes, len_pegs, len_colours, all_scores, all_codes, partition_table_function, compare_function, start_code=None, choose_from_candidates=False)
+\paragraph{\texttt{find\_best\_guess}}
+\texttt{find\_best\_guess(possible\_codes, len\_pegs, len\_colours, all\_scores, all\_codes, partition\_table\_function, compare\_function, start\_code=None, choose\_from\_candidates=False)}
 
-Tato funkce pro aktuální stav a zvolenou valuaci a strategii vrátí odpovídající další pokus. Vychází z proměnné possible_codes - množiny kandidátů. Projde celý prostor kódů (případně pouze množinu kandidátů) a pro každý kód (code) nalezne potomky množiny kandidátů vzhledem k tomuto kódu (temp_partition) a jejich velikosti (temp_partition_table). O to se stará funkce create_next_partition. Dále nalezne valuaci aktuálního kódu (temp_partition_table_value) a porovná ji s aktuální nejlepší hodnotou z hlediska zvolené strategie (compare_function). Ve chvíli, kdy je aktuální hodnota valuace menší, respektive větší (podle zvolené strategie) než průběžná nejlepší hodnota valuace (best_partition_table_value), program aktualizuje nejlepší hodnoty valuace, potomků a velikostí potomků. Pokud se valuace aktuálního kódu rovná průběžné nejlepší hodnotě valuace, program zkontroluje, jestli byl průběžně nejlepší kód kandidát. Pokud nebyl a aktuální kód je kandidátem, algoritmus aktualizuje nejlepší hodnoty valuace, potomků a velikostí potomků. 
+Tato funkce pro aktuální stav a zvolenou valuaci a strategii vrátí odpovídající další pokus. Vychází z proměnné \texttt{possible\_codes} - množiny kandidátů. Projde celý prostor kódů (případně pouze množinu kandidátů) a pro každý kód (\texttt{code}) nalezne potomky množiny kandidátů vzhledem k tomuto kódu (\texttt{temp\_partition}) a jejich velikosti (\texttt{temp\_partition\_table}). O to se stará funkce \texttt{create\_next\_partition}. Dále nalezne valuaci aktuálního kódu (\texttt{temp\_partition\_table\_value}) a porovná ji s aktuální nejlepší hodnotou z hlediska zvolené strategie (\texttt{compare\_function}). Ve chvíli, kdy je aktuální hodnota valuace menší, respektive větší (podle zvolené strategie) než průběžná nejlepší hodnota valuace (\texttt{best\_partition\_table\_value}), program aktualizuje nejlepší hodnoty valuace, potomků a velikostí potomků. Pokud se valuace aktuálního kódu rovná průběžné nejlepší hodnotě valuace, program zkontroluje, jestli byl průběžně nejlepší kód kandidát. Pokud nebyl a aktuální kód je kandidátem, algoritmus aktualizuje nejlepší hodnoty valuace, potomků a velikostí potomků. 
 
 Díky tomu, že algoritmy vybírají lexikograficky nejmenší kódy z množiny kódů s nejlepší valuací (případně průniku této množiny s množinou kandidátů), tak stačí uchovávat pouze první kód s nejlepší hodnotou valuace. Případně stačí kontrolovat, zda náleží do množiny kandidátů.
 
-Ve chvíli, kdy program projde všechny kódy, ze kterých vybírá, vrátí zvolený nejlepší kód pro tento stav (best_next_guess). Společně s ním vrací i proměnné best_partition_table a best_partition. 
+Ve chvíli, kdy program projde všechny kódy, ze kterých vybírá, vrátí zvolený nejlepší kód pro tento stav (\texttt{best\_next\_guess}). Společně s ním vrací i proměnné \texttt{best\_partition\_table} a \texttt{best\_partition}. 
 
-#### get_results_of_algorithm
-Toto je hlavní funkce, která testuje algoritmy. Prochází stavový prostor a pro každý stav nalezne další pokus. Počty pokusů přičítá v případě, kdy zkoumá potomka vzhledem k ohodnocení $(n ,0)$.
+\paragraph{\texttt{get\_results\_of\_algorithm}}
+Toto je hlavní funkce, která testuje algoritmy. Pracuje pomocí \texttt{deque} z knihovny \texttt{collections} v proměnné ........... Nejprve do této fronty přidá všechny neprázdné následníky počátečního stavu. Dále funkce běží, dokud je fronta neprázdná. Pro každý stav $A$ z fronty nalezne další pokus $u_A$ pomocí funkce \texttt{find\_best\_guess}. Dále do fronty přidá všechny neprázdné následníky stavu $A$ vzhledem k $u_A$, které nebyly následníky vzhledem k ohodnocení $(n,0)$. Tyto stavy jsou totiž koncové a program zapíše aktuální počet pokusů do seznamu s četnostmi počtů pokusů (proměnná ..........). V případě, že je množina kandidátů jednoprvková, program pro urychlení automaticky přičte další pokus a nečeká na jisté ohodnocení v dalším kole.
 
-#### solve_one_game
+% Počty pokusů přičítá v případě, kdy zkoumá potomka vzhledem k ohodnocení $(n ,0)$.
+
+\paragraph{\texttt{solve\_one\_game}}
 Tato funkce je implementací algoritmu $1$ v bakalářské práci. Na vstupu vezme počet pozic a barev, tajný kód, valuaci, strategii, případný pevně stanovený první pokus a True/False hodnotu, jestli se další pokus vybírá pouze z kandidátů. 
 
 Pokud další pokus dostal maximální ohodnocení, shoduje se s tajným kódem a hra končí. 
 
 
-#### get_valuation_of_first_guess
+\paragraph{\texttt{get\_valuation\_of\_first\_guess}}
 Tato funkce vrátí hodnotu valuace pro nějaký první pokus a zadanou valuaci. 
 
-## main_function
 
-
-
-
-
-
-
-
+\section{Kontakt}
+Martin Šimša, MFF CUNI, 3. roč., Matematika pro informační technologie (MITP)
+LS 2024/2025, Bakalářská práce na téma Logik - algoritmy a strategie
+simsa.martin@email.cz, martin.simsa926@student.cuni.cz
+Vedoucí: doc. Mgr. Pavel Růžička, Ph.D.
 
 
 \end{document}

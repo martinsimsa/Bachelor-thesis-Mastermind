@@ -302,33 +302,6 @@ Z lemmatu plyne, že potomci $K$ vzhledem ke kódu $u$ určují množiny kandid�
 Z lemmatu \ref{lemmavztahnaslednikuapotomku} o vztahu následníků a potomků plyne, že vrcholy multigrafu [n,k]-Mastermindu jsou právě ty množiny, které odpovídají množinám kandidátů nějakého stavu. Mezi dvěma vrcholy může vést více hran, jak je vidět z multigrafu [1,2]-Mastermindu (viz obrázek \ref{fig-multigraf-12}).
 % na obrázku \ref{figpotomciH22}, který zobrazuje neprázdné potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. 
 
-% \begin{figure}[h!]
-%     \centering
-%     \begin{tikzpicture}
-%     \node (1) at (0,0) {\{11,12,21,22\}};
-%     \node (4) at (-5,0) {\{11\}};
-%     \draw[->] (1) to[out=165, in=30]  node[midway, below, sloped] {\footnotesize$(11,(2,0))$} (4);
-%     \draw[->] (1) to[out=-165, in=-30] node[pos=0.5, below, sloped] {\footnotesize$(22,(0,0))$} (4);
-%     \node (7) at (-3,4) {\{12\}};
-%     \draw[->] (1) to[out=150, in=-90] node[pos=0.5, above, sloped] {\footnotesize$(12,(2,0))$} (7) ;
-%     \draw[->] (1) to[out=120, in=-30] node[pos=0.5, above, sloped] {\footnotesize$(12,(2,0))$} (7);
-%     \node (5) at (3,4) {\{21\}};
-%     \draw[->] (1) to[out=90, in=-150] node[pos=0.5, above, sloped] {\footnotesize$(12,(0,2))$} (5);
-%     \draw[->] (1) to[out=60, in=-90] node[pos=0.5, above, sloped] {\footnotesize$(21,(2,0))$} (5);
-%     \node (2) at (5,0) {\{22\}};
-%     \draw[->] (1) to[out=15, in=150] node[midway, above, sloped] {\footnotesize$(11,(0,0))$} (2);
-%     \draw[->] (1) to[out=-15, in=-150] node[midway, above, sloped] {\footnotesize$(22,(2,0))$} (2);
-%     \node (6) at (3,-4) {\{11, 22\}};
-%     \draw[->] (1) to[out=-30, in=90] node[pos=0.5, above, sloped] {\footnotesize$(12,(1,0))$} (6);
-%     \draw[->] (1) to[out=-60, in=150] node[pos=0.5, above, sloped] {\footnotesize$(21,(1,0))$} (6);
-%     \node (3) at (-3,-4) {\{12, 21\}};
-%     \draw[->] (1) to[out=-120, in=90] node[midway, below, sloped] {\footnotesize$(11,(1,0))$} (3);
-%     \draw[->] (1) to[out=-90, in=30] node[midway, below, sloped] {\footnotesize$(22,(1,0))$} (3);
-%     \end{tikzpicture}
-%     \caption{Multigraf všech neprázdných potomků $H_{2,2}$}
-%     \label{figpotomciH22}
-% \end{figure}
-
 
 \begin{figure}[h!]
     \centering
@@ -395,7 +368,34 @@ Z lemmat plyne fakt, že multigraf [n,k]-Mastermindu má kořen, kterým je cel�
     
     Pro množinu hran $E$ platí, že z vrcholu $A \in V$ do vrcholu $B \in V$ vede hrana právě tehdy, když cesta $B$ vznikne z cesty $A$ prodloužením o jednu hranu. Tato hrana je obarvená poslední hranou cesty $B$. 
 \end{definice}
-V případě multigrafu [n,k]-Mastermindu je obarvením vrcholu $A$ v rozvinutí množina kandidátů stavu $A$. Graf na obrázku \ref{fignaslednicipocatecnihostavu22} je rozvinutím multigrafu potomků $H_{2,2}$ na obrázku \ref{figpotomciH22} (oboje výše).
+V případě multigrafu [n,k]-Mastermindu je obarvením vrcholu $A$ v rozvinutí množina kandidátů stavu $A$. Graf na obrázku \ref{fignaslednicipocatecnihostavu22} (výše) je rozvinutím multigrafu potomků $H_{2,2}$ na obrázku \ref{figpotomciH22}.
+
+\begin{figure}[h!]
+    \centering
+    \begin{tikzpicture}
+    \node (1) at (0,0) {\{11,12,21,22\}};
+    \node (4) at (-5,0) {\{11\}};
+    \draw[->] (1) to[out=165, in=30]  node[midway, below, sloped] {\footnotesize$(11,(2,0))$} (4);
+    \draw[->] (1) to[out=-165, in=-30] node[pos=0.5, below, sloped] {\footnotesize$(22,(0,0))$} (4);
+    \node (7) at (-3,4) {\{12\}};
+    \draw[->] (1) to[out=150, in=-90] node[pos=0.5, above, sloped] {\footnotesize$(12,(2,0))$} (7) ;
+    \draw[->] (1) to[out=120, in=-30] node[pos=0.5, above, sloped] {\footnotesize$(12,(2,0))$} (7);
+    \node (5) at (3,4) {\{21\}};
+    \draw[->] (1) to[out=90, in=-150] node[pos=0.5, above, sloped] {\footnotesize$(12,(0,2))$} (5);
+    \draw[->] (1) to[out=60, in=-90] node[pos=0.5, above, sloped] {\footnotesize$(21,(2,0))$} (5);
+    \node (2) at (5,0) {\{22\}};
+    \draw[->] (1) to[out=15, in=150] node[midway, above, sloped] {\footnotesize$(11,(0,0))$} (2);
+    \draw[->] (1) to[out=-15, in=-150] node[midway, above, sloped] {\footnotesize$(22,(2,0))$} (2);
+    \node (6) at (3,-4) {\{11, 22\}};
+    \draw[->] (1) to[out=-30, in=90] node[pos=0.5, above, sloped] {\footnotesize$(12,(1,0))$} (6);
+    \draw[->] (1) to[out=-60, in=150] node[pos=0.5, above, sloped] {\footnotesize$(21,(1,0))$} (6);
+    \node (3) at (-3,-4) {\{12, 21\}};
+    \draw[->] (1) to[out=-120, in=90] node[midway, below, sloped] {\footnotesize$(11,(1,0))$} (3);
+    \draw[->] (1) to[out=-90, in=30] node[midway, below, sloped] {\footnotesize$(22,(1,0))$} (3);
+    \end{tikzpicture}
+    \caption{Multigraf všech neprázdných potomků $H_{2,2}$}
+    \label{figpotomciH22}
+\end{figure}
 
 
 \begin{veta}
@@ -519,9 +519,11 @@ Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chví
 
 % Prázdné stavy jsou vynechány, protože jsou v průběhu hry nedosažitelné. Potomky koncových stavů neuvažujeme, protože by to byly pokusy po konci hry. 
 \begin{pozn}
-    Uvažujme algoritmus $\mathcal{Z}$ který pro stav $A$ zahraje kód $u_A$ určený pro tento stav. Potom strom tohoto algoritmu lze sestavit rekurzivně, kdy napřed obsahuje pouze počáteční stav. Pro každý nekoncový stav $A$ ve stromu algoritmu přidáme do stromu všechny neprázdné následníky $A$ vzhledem k zahranému kódu $u_A$ a hrany, které je spojují se stavem $A$. Tento orientovaný graf nazýváme strom algoritmu $\mathcal{Z}$. Zřejmě splňuje podmínky z definice. 
+    Uvažujme algoritmus $\mathcal{Z}$ který pro stav $A$ zahraje kód $u_A$ určený pro tento stav. Potom strom tohoto algoritmu lze sestavit rekurzivně, kdy napřed obsahuje pouze počáteční stav. Pro každý nekoncový stav $A$ ve stromu algoritmu přidáme do stromu všechny neprázdné následníky $A$ vzhledem k zahranému kódu $u_A$ a hrany, které je spojují se stavem $A$. 
+    % Tento orientovaný graf nazýváme strom algoritmu $\mathcal{Z}$. 
+    Pokud je algoritmus zvolen vhodně, tento orientovaný graf splňuje podmínky z definice. 
 \end{pozn}
- Strom algoritmu popisuje průběh hry pro všechny tajné kódy. Jednotlivá kola [n,k]-Mastermindu s tajným kódem $v\in H_{n,k}$ odpovídají hranám cesty z počátečního stavu do koncového stavu s posledním prvkem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{figprikladstromualgoritmu}. Ze stromu algoritmu tedy lze vyčíst počty pokusů, které algoritmus potřebuje k nalezení tajných kódů
+ Strom algoritmu popisuje průběh hry pro všechny tajné kódy. Jednotlivá kola [n,k]-Mastermindu s tajným kódem $v\in H_{n,k}$ odpovídají hranám cesty z počátečního stavu do koncového stavu s posledním kolem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{figprikladstromualgoritmu}. Stejný strom vytvoříme postupně v příkladu v další sekci a ukážeme, že to doopravdy je strom algoritmu. Ze stromu algoritmu lze vyčíst počty pokusů, které algoritmus potřebuje k nalezení tajných kódů. Jsou to délky cest od kořene k listům.
 
     %Platí, že pro nějaký kód $u$ jsou množiny kandidátů potomků $A$ vzhledem ke kódu $u$ disjunktní a sjednocením dávají množinu kandidátů stavu $A$. Všechny stavy, do kterých se dostaneme cestou z nějakého stavu $A$ za dodržení podmínky $1$ tedy mají kandidáty z množiny kandidátů stavu $A$. 
 
