@@ -64,7 +64,7 @@ V této práci budeme zkoumat deterministické algoritmy.
 
 
 \begin{definice}[Souvislý graf]
-    Řekneme, že orientovaný graf $G=(V,E)$ je \emph{souvislý}, pokud mezi libovolnými vrcholy $A, B \in V$ existuje neorientovaná cesta.
+    Řekneme, že orientovaný graf $G=(V,E)$ je \emph{souvislý}, pokud mezi libovolnou dvojicí vrcholů $A, B \in V$ existuje neorientovaná cesta.
 \end{definice}
 
 \begin{definice}[Kořen a list]
@@ -341,7 +341,7 @@ Z lemmatu \ref{lemmavztahnaslednikuapotomku} o vztahu následníků a potomků p
     \label{fig-multigraf-12}
 \end{figure}
 
-Nyní ukážeme nějaké vlastnosti multigrafu [n,k]-Mastermindu, které pomohou ukázat jeho vztah se stromem [n,k]-Mastermindu. Název následující vlastnosti grafu byl převzat z různých publikací.
+Nyní ukážeme nějaké vlastnosti multigrafu [n,k]-Mastermindu, které pomohou ukázat jeho vztah se stromem [n,k]-Mastermindu. Následující vlastnost grafu byla inspirovaná na webu \cite{DAG}.
 % zdroj - wikipedie, https://en.wikipedia.org/wiki/Directed_acyclic_graph
 \begin{definice}[Orientovaně acyklický graf]
     Řekneme, že orientovaný graf je orientovaně acyklický, pokud neobsahuje žádný nekonstantní orientovaný cyklus.
@@ -631,7 +631,7 @@ Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako da
     % jednokrokov8 funkce je taková, která kódu $u$ přiřadí hodnotu, která lze vyjádřit pomocí potomků $K$ vzhledem ke kódu $u$.
     \begin{align*}
         f_K \colon H_{n,k} &\to \mathbb{R} \\
-        u &\mapsto \max_{r\in S} |K_{u,r}|
+        u &\mapsto \max_{r\in S_{n,k}} |K_{u,r}|
     \end{align*}
     % Pro $K = H_{2,2}$ z obrázku \ref{fig22prvnitah} má $f_{K}$ konstantní hodnotu $\frac{3}{2}$.
 \end{prikl}

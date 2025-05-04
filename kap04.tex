@@ -17,7 +17,7 @@ Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pok
 
 Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost pojmenujeme \emph{konzistence}.
 
-V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. To plyne z toho, že každý kód vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění.
+V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. Tato myšlenka byla převzatá od Neuwirtha \cite{neuwirth}. Každý kód totiž vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
 
 % V sekci $4.5$ diskutujeme možný vliv výběru lexikograficky vyššího prvního tahu z důvodu následného výběru lexikograficky minimálních kódů ve všech algoritmech.
 
@@ -72,7 +72,7 @@ Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojov
 
 \subsubsection{Min-max}
 
-Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Min-max algoritmus jako první tah volí kód $1122$ díky nejlepší valuaci (tabulka \ref{tabvaluaceprvnichtahu}). Maximální počet pokusů Min-max algoritmu je $5$ a tedy je v tomto směru optimální. Průměrně pak potřebuje $4.476$ pokusů. Při volbě jiného prvního tahu jsou ve všech případech oba výsledky horší. Min-max algoritmus je tedy konzistentní.
+Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Min-max algoritmus jako první tah volí kód $1122$ díky nejlepší valuaci (viz tabulka \ref{tabvaluaceprvnichtahu}). Maximální počet pokusů Min-max algoritmu je $5$, a tedy je v tomto směru optimální. Průměrně pak potřebuje $4.476$ pokusů. Při volbě jiného prvního tahu jsou ve všech případech oba výsledky horší. Min-max algoritmus je tedy konzistentní.
 
 % Maximální počet pokusů, který min-max algoritmus (začínající kódem 1122) potřebuje na prolomení tajného kódu je $5$. Průměrně pak potřebuje $4.476$ pokusů. K porovnání jsou uvedeny maximální a průměrné počty pokusů pro jiné počáteční kódy. Mohli bychom totiž očekávat, že by průměrný nebo maximální počet pokusů byl menší pro jiný počáteční kód, jak bylo znázorněno v příkladu \ref{malyprikladminmax}. Nejlepších výsledků ale algoritmus dosahuje v při volbě prvního tahu $1122$, který odpovídá přirozenému výběru prvního tahu podle definice Knuthova algoritmu. 
 
@@ -80,13 +80,13 @@ Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti n
 \centering
 \begin{tabular}{l l l l l l}
 \toprule
-první pokus & 1111 & 1112 & \textbf{1122} & 1123 & 1234 \\
+První pokus & 1111 & 1112 & \textbf{1122} & 1123 & 1234 \\
 \midrule
 
-maximální počet pokusů 
+Maximální počet pokusů 
 & 6 & 6 & \textbf{5} & 6 & 6 \\
 
-průměrný počet pokusů 
+Průměrný počet pokusů 
 & 5.065 & 4.556 & \textbf{4.476} & 4.4776 & 4.4776\\
 \bottomrule
 \multicolumn{6}{l}{\footnotesize \textit{Pozn:}
@@ -96,7 +96,7 @@ Průměrný počet pokusů je zaokrouhlen na tři desetinná místa}
 \end{table}
 
 \subsubsection{Max entropy}
-Algoritmus Max entropy vybírá jako první pokus kód $1234$, protože tento kód dosahuje největší valuace entropie (tabulka \ref{tabvaluaceprvnichtahu}). Tabulka \ref{tabentropievysl} zobrazuje výsledky algoritmu Max entropy. Dosahuje průměrného počtu pokusů $4.415$, což je lepší výsledek než v případě Min-max algoritmu. Tento algoritmus ale nedokáže zaručit vítězství na pět pokusů. Navíc, pokud by tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus Max entropy tedy není konzistentní. 
+Algoritmus Max entropy vybírá jako první pokus kód $1234$, protože tento kód dosahuje největší valuace entropie (viz tabulka \ref{tabvaluaceprvnichtahu}). Tabulka \ref{tabentropievysl} zobrazuje výsledky algoritmu Max entropy. Dosahuje průměrného počtu pokusů $4.415$, což je lepší výsledek než v případě Min-max algoritmu. Tento algoritmus ale nedokáže zaručit vítězství na pět pokusů. Navíc, pokud by tento algoritmus volil počáteční kód $1123$, dosáhl by lepšího průměrného počtu pokusů, konkrétně $4.383$. Algoritmus Max entropy tedy není konzistentní. 
 
 % Entropie odhaduje očekávaný počet otázek při daného kódu jako dalšího pokusu za předpokladu, že by následně algoritmus dokázal nalézt tajný kód na $\log_{S_{n,k}} K$
 
@@ -106,13 +106,13 @@ Algoritmus Max entropy vybírá jako první pokus kód $1234$, protože tento k�
 \centering
 \begin{tabular}{l l l l l l}
 \toprule
-první pokus & 1111 & 1112 & 1122 & 1123 & \textbf{1234} \\
+První pokus & 1111 & 1112 & 1122 & 1123 & \textbf{1234} \\
 \midrule
 
-maximální počet pokusů 
+Maximální počet pokusů 
 & 6 & 6 & 6 & 6 & 6 \\
 
-průměrný počet pokusů 
+Průměrný počet pokusů 
 & 4.911 & 4.494 & 4.428 & \textbf{4.383} & 4.415 \\
 \bottomrule
 \multicolumn{6}{l}{\footnotesize \textit{Pozn:}
@@ -124,20 +124,20 @@ Průměrný počet pokusů je zaokrouhlen na tři desetinná místa}
 
 
 \subsubsection{Most parts}
-Algoritmus Most parts volí jako první tah kód $1123$ (tabulka \ref{tabvaluaceprvnichtahu}) a dosahuje průměrného počtu pokusů $4.373$. Tento výsledek, zobrazený v tabulce \ref{tabcastivysl}, je ze~všech porovnávaných algoritmů nejlepší. Maximální počet pokusů je ale opět horší než u algoritmu Min-max, a to 6. Most parts algoritmus je konzistentní, protože průměrné počty pokusů při odlišném prvním tahu jsou vyšší.
+Algoritmus Most parts volí jako první tah kód $1123$ (viz tabulka \ref{tabvaluaceprvnichtahu}) a dosahuje průměrného počtu pokusů $4.373$. Tento výsledek, zobrazený v tabulce \ref{tabcastivysl}, je ze~všech porovnávaných algoritmů nejlepší. Maximální počet pokusů je ale opět horší než u algoritmu Min-max, a to 6. Most parts algoritmus je konzistentní, protože průměrné počty pokusů při odlišném prvním tahu jsou vyšší.
 
 
 \begin{table}[h]
 \centering
 \begin{tabular}{l l l l l l}
 \toprule
-první pokus & 1111 & 1112 & 1122 & \textbf{1123} & 1234 \\
+První pokus & 1111 & 1112 & 1122 & \textbf{1123} & 1234 \\
 \midrule
 
-maximální počet pokusů 
+Maximální počet pokusů 
 & 7 & 6 & 6 & 6 & 6 \\
 
-průměrný počet pokusů 
+Průměrný počet pokusů 
 & 4.911 & 4.503 & 4.420 & \textbf{4.373} & 4.444\\
 \bottomrule
 \multicolumn{6}{l}{\footnotesize \textit{Pozn:}
@@ -182,9 +182,9 @@ Algoritmus Max entropy dosahuje, možná překvapivě, o dost horšího průměr
 
 \section{Diskuze}
 \subsubsection{Volba pokusů pouze z kandidátů}
-Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $P$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů stavu. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $8$ měla tvar
+Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $P$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $7$ měla tvar
 \[U = \{u \in K \mid f_K(u) = F(f_K)\}.\]
-Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind. Výsledky byly dosaženy stejným postupem jako u algoritmů výše, tedy postupným sestrojením stromu algoritmů. 
+Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind (viz tabulka \ref{tabpouzekandidati}). Výsledky byly dosaženy stejným postupem jako u algoritmů výše, tedy postupným sestrojením stromu algoritmu. 
 
 \begin{table}[h]
 \centering
@@ -192,11 +192,13 @@ Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [
 \toprule
  & Min-max & Max entropy & Počet potomků  \\
 \midrule
+První pokus 
+& 1122 & 1234 & 1123  \\
 
-maximální počet pokusů 
+Maximální počet pokusů 
 & 6 & 6 & 7  \\
 
-průměrný počet pokusů 
+Průměrný počet pokusů 
 & 4.497 & 4.465 & 4.399 \\
 \bottomrule
 \multicolumn{4}{l}{\footnotesize \textit{Pozn:}
@@ -228,7 +230,7 @@ Neberou tedy v potaz rozdělení následníků o dvě hrany dál, které by mohl
 \subsubsection{Seřazení kódů}
 Zajímavým problémem je jistě výběr následujícího pokusu v případě, kdy má více kódů nejlepší valuaci. My jsme zvolili výběr lexikograficky nejmenšího kódu, protože ho použil Knuth ve svém článku \cite{donald_e__knuth_1977}. Výběr lexikograficky nejvyššího kódu například porovnává v diskuzi u svého článku Kooi \cite{kooi}. Změna výsledků je ale minimální. 
 
-Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. Ukazuje se, že pouze velikost prvního kódu nerozhoduje. Při zvolení lexikograficky největších prvních kódů nedostaneme lepší výsledek (tabulka \ref{tabvysokyprvnipokus}).
+Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. Ukazuje se, že pouze velikost prvního kódu nerozhoduje. Při zvolení lexikograficky největších prvních kódů nedostaneme lepší výsledek (viz tabulka \ref{tabvysokyprvnipokus}).
 
 
 \begin{table}[h]
@@ -242,10 +244,10 @@ První pokus
 & 6655 & 6543 & 6654  \\
 
 
-maximální počet pokusů 
+Maximální počet pokusů 
 & 6 & 6 & 6  \\
 
-průměrný počet pokusů 
+Průměrný počet pokusů 
 & 4.478 & 4.416 & 4.392 \\
 \bottomrule
 \multicolumn{4}{l}{\footnotesize \textit{Pozn:}

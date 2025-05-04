@@ -16,16 +16,16 @@ Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}
 % Odpovídá algoritmu \ref{alg-default} se vstupním prostorem valuací $\mathcal{M}$ a strategií $L$. 
 %Tedy minimalizuje maximální počet kódů v nějakém stavu, do kterého se hra může dostat po zahrání dalšího kódu.
 \begin{definice}[Maximum potomka]
-    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subset H_{n,k}$ definujeme valuaci \emph{maximum potomka} jako
+    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subseteq H_{n,k}$ definujeme valuaci \emph{maximum potomka} jako
     \begin{align*}
         m_K \colon H_{n,k} &\to \mathbb{R} \\
-        u &\mapsto \max_{r\in S} |K_{u,r}|.
+        u &\mapsto \max_{r\in S_{n,k}} |K_{u,r}|.
     \end{align*}
-    Prostor všech valuací $m_K$ označíme $\mathcal{M}$. 
+    Prostor všech valuací $m_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{M}$. 
 \end{definice}
 
 \begin{definice}[Strategie minimum]
-    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii minimum $L$} jako
+    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii minimum $L$} jako
     \begin{align*}
         L \colon \mathcal{F} &\to \mathbb{R} \\
         f &\mapsto \min_{u\in H_{n,k}} f(u)
@@ -47,25 +47,25 @@ Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}
 % \end{definice}
 
 Algoritmus Min-max pro libovolný stav $A$ s množinou kandidátů $K$ vybírá další pokus z množiny
-\[U = \{u \in H_{n,k} \mid \max_{r\in S} |K_{u,r}| = \min_{w \in H_{n,k}} \max_{r\in S} |K_{w,r}| \}.\]
+\[U = \{u \in H_{n,k} \mid \max_{r\in S_{n,k}} |K_{u,r}| = \min_{w \in H_{n,k}} \max_{r\in S_{n,k}} |K_{w,r}| \}.\]
 
 \begin{tvrz}[Správnost Min-max algoritmu]
     Min-max algoritmus skončí, má jednoznačné řešení a nalezne tajný kód. 
 \end{tvrz}
 \begin{dukaz}
     Jednoznačnost řešení plyne z předpisu valuace, strategie a ohodnocení. Stačí tedy ukázat, že algoritmus skončí. Dokážeme, že v každém kroku algoritmu se zmenší velikost množiny kandidátů aktuálního stavu. Nechť $K$ je množina kandidátů obsahující alespoň dva kódy. Nechť $u \in K$. Potom $|K_{u,(n,0)}| = 1$, a tedy 
-    \[|\bigsqcup_{r\in S, r \neq (n,0)} K_{u,r} | = |K| - 1.\]
+    \[|\bigsqcup_{r\in S_{n,k}, r \neq (n,0)} K_{u,r} | = |K| - 1.\]
     Díky tomu platí následující nerovnost
-    \[\min_{w \in H_{n,k}} \max_{r\in S} |K_{w,r}| \leq |K|-1.\]
-    V každém kroku se tedy velikost množiny kandidátů aktuálního stavu snižuje. Pokud $|K| = 1$, algoritmus zvolí jako další pokus jediný zbývající kód z množiny kandidátů, protože pro všechny kódy platí, že
-    $\max_{r\in S} |K_{w,r}| = 1$.
+    \[\min_{w \in H_{n,k}} \max_{r\in S_{n,k}} |K_{w,r}| \leq |K|-1.\]
+    V každém kroku se tedy velikost množiny kandidátů aktuálního stavu zmenšuje. Pokud $|K| = 1$, algoritmus zvolí jako další pokus jediný zbývající kód z množiny kandidátů, protože pro všechny kódy platí, že
+    $\max_{r\in S_{n,k}} |K_{w,r}| = 1$.
     Zároveň tajný kód náleží do množiny kandidátů v každém kroku, a tedy jej algoritmus nalezne. 
 \end{dukaz}
 
 Pro [2,2]-Mastermind sestrojíme strom Min-max algoritmu a nastíníme na~něm chod Knuthova algoritmu.
 
 \subsubsection{[2,2]-Mastermind}
-Prostor kódů [2,2]-Mastermindu je množina $H_{2,2} = \{11,12,21,22\}$. Množina všech ohodnocení je podle tvrzení \ref{tvrzohodnoceni2} rovna $S = \{(0,0), (0,2), (1,0), (2,0)\}$. Obrázek \ref{fig22prvnitahmnoziny} zobrazuje potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Pro přehlednost jsou vrcholy uspořádány podle zahraných kódů. Maximální počty prvků ve vrcholech potomků $H_{2,2}$ (hodnoty $m_{H_{2,2}}$) jsou následující. 
+Prostor kódů [2,2]-Mastermindu je množina $H_{2,2} = \{11,12,21,22\}$. Množina všech ohodnocení je podle tvrzení \ref{tvrzohodnoceni2} rovna $S_{2,2} = \{(0,0), (0,2), (1,0), (2,0)\}$. Obrázek \ref{fig22prvnitahmnoziny} zobrazuje potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Pro přehlednost jsou vrcholy uspořádány podle zahraných kódů. Maximální počty prvků ve vrcholech potomků $H_{2,2}$ (hodnoty $m_{H_{2,2}}$) jsou následující. 
 \[m_{H_{2,2}} (11) = m_{H_{2,2}} (12) = m_{H_{2,2}} (21) = m_{H_{2,2}} (22) = 2\]
 Knuthův algoritmus tedy volí jako první pokus kód $11$. 
 
@@ -135,7 +135,7 @@ Hodnoty valuací jednotlivých kódů jsou následující:
 \[m_{\{12,21\}} (11) = m_{\{12,21\}} (22) = 2, \hspace{10px} m_{\{12,21\}} (12) = m_{\{12,21\}} (21) = 1.\]
 Algoritmus Min-max tedy v tomto stavu vybírá jako druhý pokus kód $12$. 
 
-Na obrázku \ref{fig22minmax} je zobrazen strom Min-max algoritmu. Protože vrchol ve stromu algoritmu je roven obarvení cesty z počátku do tohoto vrcholu, pro znázornění postupu algoritmu vrcholy obarvujeme množinou kandidátů příslušného stavu. Algoritmus Min-max vyhraje [2,2]-Mastermind vždy na maximálně tři tahy. 
+Na obrázku \ref{fig22minmax} je zobrazen strom Min-max algoritmu (stejný jako obrázek \ref{figprikladstromualgoritmu} výše) Protože vrchol ve stromu algoritmu je roven obarvení cesty z počátku do tohoto vrcholu, pro znázornění postupu algoritmu vrcholy obarvujeme množinou kandidátů příslušného stavu. Algoritmus Min-max vyhraje [2,2]-Mastermind vždy na maximálně tři tahy. 
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -168,19 +168,19 @@ Na obrázku \ref{fig22minmax} je zobrazen strom Min-max algoritmu. Protože vrch
 % použít svůj kód a ocitovat
 
 \section{Maximální entropie}
-Erich Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximalizují entropii velikostí množin potomků vzhledem ke kódu. Nejprve definujeme valuaci a strategii použité v tomto algoritmu. Následně vysvětlíme myšlenku této strategie.
+Erich Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximalizují entropii velikostí množin potomků vzhledem ke kódu. Nejprve definujeme valuaci a strategii použité v tomto algoritmu. Následně vysvětlíme myšlenku této metody.
 
 \begin{definice}[Entropie potomků]\label{defentropierozdeleni}
-    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subset H_{n,k}$ definujeme valuaci \emph{entropie potomků} jako funkci
+    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subseteq H_{n,k}$ definujeme valuaci \emph{entropie potomků} jako funkci
     \begin{align*}
         h_K \colon H_{n,k} &\to \mathbb{R} \\
-        u &\mapsto \sum_{r\in S, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right).
+        u &\mapsto \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right).
     \end{align*}
-    Prostor všech valuací $h_K$ označíme $\mathcal{H}$. 
+    Prostor všech valuací $h_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{H}$. 
 \end{definice}
 
 \begin{definice}[Strategie maximum]\label{defstrategiemaximum}
-    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subset H_{n,k}\}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii maximum} $M$ následujícím předpisem.
+    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii maximum} $M$ následujícím předpisem.
     \begin{align*}
         M \colon \mathcal{F} &\to \mathbb{R} \\
         f &\mapsto \max_{u\in H_{n,k}} f(u)
@@ -211,7 +211,7 @@ Erich Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximal
     
     Pro libovolný kód $u$ platí, že $\log_2\left( \frac{|K|}{|K_{u,r}|} \right)  > 0 $ pro všechna $r\in S_{n,k}$ taková, že $|K_{u,r}| > 0, K_{u,r} \neq K$. Tedy $h_K(u) = 0$ právě tehdy, když $K_{u,r} = K$ pro~nějaké $r\in S_{n,k}$. Pokud pro každou alespoň dvouprvkovou množinu existuje kód, pro který $h_K(u) > 0$, v každém kroku algoritmu Max entropy se počet prvků množina kandidátů ostře zmenší. Pro $u \in K$ platí
     \begin{align*}
-        h_K(u) &= \sum_{r\in S, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right) 
+        h_K(u) &= \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right) 
     \geq 
     \frac{|K_{u,(n,0)}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,(n,0)}|} \right)
     = \\
@@ -222,7 +222,7 @@ Erich Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximal
     % Díky tomu, že tajný kód náleží v každém kroku do množiny kandidátů aktuálního stavu, algoritmus jej nalezne na konečný počet pokusů a algoritmus skončí. 
 \end{dukaz}
 
-Níže popíšeme, co si pod pojmem entropie můžeme představit a jaký má význam v [n,k]-Mastermindu.
+Níže popíšeme, co si pod pojmem entropie můžeme představit a jaký má význam v [n,k]-Mastermindu. Následující definice je inspirována skripty od Štěpána Holuba a Michala Kupsy \cite{Holub-informace}.
 
 \begin{definice}[Entropie]\label{defentropie}
   Nechť $A$ je konečná množina, $P \colon A \to [0,1]$ je zobrazení takové, že $\sum_{a \in A} P(a) = 1$. Nechť $supp(P) = \{ a \in A \mid P(a) > 0\}$. Potom \emph{entropii zobrazení $P$} definujeme jako 
@@ -231,7 +231,7 @@ Níže popíšeme, co si pod pojmem entropie můžeme představit a jaký má v�
 \end{definice}
 
 \begin{pozn}
-    Definice \ref{defentropierozdeleni} pro pevný kód $u\in H_{n,k}$ koresponduje s definicí entropie pro množinu všech ohodnocení $S_{n,k}$ a  zobrazení $P_u\colon S_{n,k} \to [0,1], P_u(r) = \frac{|K_{u,r}|}{|K|}$.
+    Definice \ref{defentropierozdeleni} pro pevný kód $u\in H_{n,k}$ a množinu $K \subseteq H_{n,k}$ koresponduje s definicí entropie pro množinu všech ohodnocení $S_{n,k}$ a zobrazení $P_u\colon S_{n,k} \to [0,1], P_u(r) = \frac{|K_{u,r}|}{|K|}$.
 \end{pozn}
 
 Intuici za definicí entropie nastíníme v příkladu \ref{prbinarysearch}, který dává určitý smysl pro výraz $\log_2\left(\frac{1}{P(a)}\right)$ a příkladu \ref{prentropierozdeleni}, který ukazuje příklad entropie na konkrétním rozdělení.
@@ -256,7 +256,7 @@ Obdobně jako v příkladu \ref{prbinarysearch} lze pro jakoukoliv osmiprvkovou 
 \end{pozn}
 
 \begin{prikl}[m odpovědí]\label{prmodpovedi}
-    Ve chvíli, kdybychom nebyli omezeni na ano/ne otázky, ale mohli bychom pokládat otázky na které bychom dostali $m$ odpovědí, mohli bychom aplikovat obdobný postup jako v příkladu \ref{prbinarysearch} s binárním vyhledáváním. Tentokrát bychom ale mohli po každé otázce snížil prostor zbývajících možností $m$-krát. Dobrali bychom se k výsledku, že očekávaný počet otázek k určení prvku z množiny $A$ by byl $\log_m |A|$.
+    Ve chvíli, kdybychom nebyli omezeni na ano/ne otázky, ale mohli bychom pokládat otázky na které bychom dostali $m$ odpovědí, mohli bychom aplikovat obdobný postup jako v příkladu \ref{prbinarysearch} s binárním vyhledáváním. Tentokrát bychom ale mohli po každé otázce zmenšit prostor zbývajících možností $m$-krát. Dobrali bychom se k výsledku, že očekávaný počet otázek k určení prvku z množiny $A$ by byl $\log_m |A|$.
 \end{prikl}
 
 \begin{prikl}\label{prentropierozdeleni}
@@ -297,7 +297,7 @@ Nyní vysvětlíme, jakým způsobem aplikujeme výpočet entropie na strategii 
 
 Nechť $u \in H_{n,k}$ je kód. 
 % Potom $\{K_{u,r} \mid r\in S_{n,k}\}$ je množina potomků $K$ vzhledem ke kódu $u$ a 
-Potom $\log_{|S|}(|K_{u,r}|)$ je očekávaný počet pokusů potřebný k určení libovolného prvku $v \in K_{u,r}$. Pomocí těchto hodnot lze vytvořit odhad na~počet pokusů potřebný k určení jakéhokoliv kódu $v \in K$ po zahrání kódu $u$ jako jejich vážený průměr:
+Potom $\log_{|S_{n,k}|}(|K_{u,r}|)$ je očekávaný počet pokusů potřebný k určení libovolného prvku $v \in K_{u,r}$. Pomocí těchto hodnot lze vytvořit odhad na~počet pokusů potřebný k určení jakéhokoliv kódu $v \in K$ po zahrání kódu $u$ jako jejich vážený průměr:
 \begin{align}\label{rceocekavanypocetpokusu}
     G = \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_{|S_{n,k}|}|K_{u,r}|.
 \end{align}
@@ -312,7 +312,7 @@ Protože cílem [n,k]-Mastermindu je najít tajný kód v co nejmenším počtu 
 %\[ u = \arg\min_{w \in H_{4,6}} \sum_{i =1}^n \frac{|K_i|}{|K|}\log_2|K_i|\]
 
 \begin{veta}[Ekvivalence maximalizace entropie] \label{vetaekvivalencemaxentropy}
-    Nechť $K \subset H_{n,k}$ je množina kódů a $u \in H_{n,k}$ je kód. Potom
+    Nechť $K \subseteq H_{n,k}$ je množina kódů a $u \in H_{n,k}$ je kód. Potom
     \begin{align}\label{rceproentropii}
         \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_{|S_{n,k}|}|K_{u,r}| = \min_{w \in H_{n,k}} \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{w,r}|}{|K|}\log_{|S_{n,k}|}|K_{w,r}|
     \end{align}
@@ -324,9 +324,9 @@ Protože cílem [n,k]-Mastermindu je najít tajný kód v co nejmenším počtu 
 \[z \cdot \min\{a \mid a \in A\} = \min\{z\cdot a \mid a \in A\} \textrm{ pro } z \geq 0\]
 a 
 \[z \cdot \min \{a \mid a \in A\} = \max\{z\cdot a \mid a \in A\}\textrm{ pro } z < 0.\]
-Navíc platí $\log_{|S_{n,k}|} |K_{u,r}| = \frac{\log |K_{u,r}|}{\log |S_{n,k}|}$, a tedy
-    \[\log_{2} |K_{u,r}| = \log_{|S_{n,k}|} |K_{u,r}|  \frac{\log |S_{n,k}|}{\log 2}\]
-Po přenásobení rovnosti \ref{rceproentropii} konstantou $\frac{\log|S_{n,k}|}{\log2}$ dostáváme
+Navíc platí $\log_{|S_{n,k}|} |K_{u,r}| = \frac{\log_2 |K_{u,r}|}{\log_2 |S_{n,k}|}$, a tedy
+    \[\log_{2} |K_{u,r}| = \log_{|S_{n,k}|} |K_{u,r}| \cdot \log_2 |S_{n,k}|\]
+Po přenásobení rovnosti \ref{rceproentropii} konstantou $\log_2|S_{n,k}|$ dostáváme
 \[\sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_{2}|K_{u,r}| = \min_{w \in H_{n,k}} \sum_{r\in S_{n,k}, |K_{w,r}| > 0} \frac{|K_{w,r}|}{|K|}\log_{2}|K_{w,r}|\]
 Tuto rovnici přenásobíme konstantou $(-1)$ a převrátíme argument logaritmu.
 \[\sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_{2}\frac{1}{|K_{u,r}|} = \max_{w \in H_{n,k}} \sum_{r\in S_{n,k}, |K_{w,r}| > 0} \frac{|K_{w,r}|}{|K|}\log_{2}\frac{1}{|K_{w,r}|}\]
@@ -363,12 +363,12 @@ Algoritmus Max entropy vybírá jako další pokus ten kód, který maximalizuje
 \section{Počet potomků}
 Další strategie, kterou navrhl Barteld Kooi \cite{kooi} je volba kódu, který maximalizuje počet ohodnocení, které jako další pokus může dostat. Formálně tento počet definujeme jako počet neprázdných potomků.
 \begin{definice}[Počet potomků]
-    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subset H_{n,k}$ definujeme valuaci \emph{počet potomků} jako
+    Nechť $H_{n,k}$ je prostor kódů. Pro $K \subseteq H_{n,k}$ definujeme valuaci \emph{počet potomků} jako
     \begin{align*}
         c_K \colon H_{n,k} &\to \mathbb{R} \\
         u &\mapsto |\{r \mid K_{u,r} \neq \emptyset\}|
     \end{align*}
-    Prostor všech valuací $c_K, \hspace{3px} K \subset H_{n,k}$ označíme $\mathcal{C}$. 
+    Prostor všech valuací $c_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{C}$. 
 \end{definice}
 
 \begin{definice}[Algoritmus Most parts]
@@ -391,13 +391,13 @@ Další strategie, kterou navrhl Barteld Kooi \cite{kooi} je volba kódu, který
     Most parts algoritmus skončí, má jednoznačné řešení a nalezne tajný kód.
 \end{tvrz}
 \begin{dukaz}
-    Jednoznačnost řešení plyne z předpisu valuace, strategie a ohodnocení. Stačí tedy ukázat, že algoritmus skončí. Obdobně jako v předchozích případech dokážeme, že v každém kroku algoritmu se zmenší velikost množiny kandidátů aktuálního stavu. Platí, že $c_K(u) = 1$ právě tehdy, když $K = K_{u,r}$ pro nějaké $r \in S$. Nechť $K$ množina kandidátů obsahující alespoň dva kódy. Nechť $u \in K$. Potom 
+    Jednoznačnost řešení plyne z předpisu valuace, strategie a ohodnocení. Stačí tedy ukázat, že algoritmus skončí. Obdobně jako v předchozích případech dokážeme, že v každém kroku algoritmu se zmenší velikost množiny kandidátů aktuálního stavu. Platí, že $c_K(u) = 1$ právě tehdy, když $K = K_{u,r}$ pro nějaké $r \in S_{n,k}$. Nechť $K$ je množina kandidátů obsahující alespoň dva kódy. Nechť $u \in K$. Potom 
     \[c_K(u) = |\{r \mid K_{u,r} \neq \emptyset\}| \geq 2\]
-    protože $|K_{u,(n,0)}| = 1$, a tedy existuje nějaké další $r \in S$, pro které $K_{u,r}$ je neprázdná. V každém kroku se tedy velikost množiny kandidátů aktuálního stavu snižuje. Pokud $|K| = 1$, $c_K(u) = 1$ pro všechny kódy $u \in H_{n,k}$. Algoritmus tedy zvolí jako další pokus jediný zbývající kód z množiny kandidátů. Protože tajný kód v každém stavu náleží do množiny kandidátů, tak algoritmus tento kód nalezne a~hra skončí.
+    protože $|K_{u,(n,0)}| = 1$, a tedy existuje nějaké další $r \in S_{n,k}$, pro které $K_{u,r}$ je neprázdná. V každém kroku se tedy velikost množiny kandidátů aktuálního stavu snižuje. Pokud $|K| = 1$, $c_K(u) = 1$ pro všechny kódy $u \in H_{n,k}$. Algoritmus tedy zvolí jako další pokus jediný zbývající kód z množiny kandidátů. Protože tajný kód v každém stavu náleží do množiny kandidátů, tak algoritmus tento kód nalezne a~hra skončí.
 \end{dukaz}
 
 
-Tato strategie je motivována následujícími příklady, které Kooi \cite{kooi} popisuje ve svém článku. 
+Tato strategie je motivována následujícími příklady, které Kooi popisuje ve svém článku \cite{kooi}. 
 
 \begin{prikl}\label{prdvecasti}
     Uvažujme klasický balíček $52$ karet. Naším úkolem je uhodnout tajnou kartu s tím, že každá karta může být tou tajnou se stejnou pravděpodobností. Předtím se ale můžeme zeptat na jednu ano/ne otázku, kterou snížíme počet zbývajících možností. Jak máme tuto otázku zvolit? 
