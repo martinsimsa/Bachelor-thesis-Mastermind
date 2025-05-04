@@ -6,7 +6,7 @@ V práci budeme používat následující značení:
     \item Nechť $S$ je konečná množina. Potom $|S|$ značíme její mohutnost, tedy počet prvků.
     \item Nechť $K$ je množina. Symbolem $\mathcal{P}(K)$ značíme množinu všech podmnožin $K$.
     \item Znakem $\bigsqcup$ budeme značit sjednocení disjunktních množin. Značení $\bigsqcup_{i\in \mathbb{N}} S_i$ implikuje, že $S_i$ jsou disjunktní. 
-    \item Nechť $K_1$ a $K_2$ jsou množiny. Značením $K_2 \subset K_1$ zakazujeme rovnost množin. Značení $K_2 \subseteq K_1$ rovnost množin povoluje.
+    \item Nechť $K_1$ a $K_2$ jsou množiny a $K_2$ je podmnožinou $K_1$. Značení $K_2 \subseteq K_1$ povoluje rovnost množin. Značení $K_2 \subset K_1$ rovnost množin zakazuje.
 \end{itemize}
 
 Zavedeme definice potřebné pro vysvětlení průběhu hry Mastermind. Nejprve vymezíme prostor, se kterým pak dále budeme pracovat. 
@@ -18,18 +18,18 @@ Zavedeme definice potřebné pro vysvětlení průběhu hry Mastermind. Nejprve 
 %Číslo $n \in \N $ budeme nazývat počet pozic a $k \in \N $ počet barev. Číslu $u_i \in \{1, 2, 3, \dots, k\}$ budeme říkat barva. 
 
 
-Pro nějaké dva kódy z $H_{n,k}$ zavedeme definici ohodnocení bílými a černými kolíčky inspirovanou D. Knuthem \cite{donald_e__knuth_1977}. Ohodnocení dává určitou informaci o tom, jak se dva kódy podobají.
+Pro nějaké dva kódy z $H_{n,k}$ zavedeme ohodnocení bílými a černými kolíčky inspirovanou D. Knuthem \cite{donald_e__knuth_1977}. Ohodnocení dává určitou informaci o tom, jak se dva kódy podobají.
 
 
 % Označíme-li dále $N = \sum_{j = 1}^k  \min(n_j, m_j)$.
 % Množinu všech ohodnocení v $H_{n,k}$ značíme $S$.
 \begin{definice}[Ohodnocení]\label{ohodnoceni}
-  Nechť $u,v \in H_{n,k}$ jsou kódy, potom \emph{ohodnocení kódů $u$ a $v$} je uspořádaná dvojice $(b,w) \in \N_0 \times \N_0$, kde $b$ a $w$ jsou počty černých a bílých kolíčků definované následovně. Počet černých kolíčků je počet prvků množiny $\{i \in \{1,\dots, n\}\mid  u_i = v_i \}$. Označme $n_j$ počet výskytů barvy $j$ v kódu $u$, $m_j$ počet výskytů barvy $j$ v kódu $v$. Počet bílých kolíčků je hodnota $w = \sum_{j = 1}^k \min(n_j, m_j)-b$.
+  Nechť $u,v \in H_{n,k}$ jsou kódy, potom \emph{ohodnocení kódů $u$ a $v$} je uspořádaná dvojice $(b,w) \in \N_0 \times \N_0$, kde $b$ a $w$ jsou počty černých a bílých kolíčků definované následovně. \emph{Počet černých kolíčků} je počet prvků množiny $\{i \in \{1,\dots, n\}\mid  u_i = v_i \}$. Označme $n_j$ počet výskytů barvy $j$ v kódu $u$, $m_j$ počet výskytů barvy $j$ v kódu $v$. \emph{Počet bílých kolíčků} je hodnota $w = \sum_{j = 1}^k \min(n_j, m_j)-b$.
 
-  Dále definujeme funkci $s \colon H_{n,k} \times H_{n,k} \to \mathbb{N}_0\times \mathbb{N}_0$, která dvojici kódů přiřadí jejich ohodnocení.
+  Dále definujeme funkci $s \colon H_{n,k} \times H_{n,k} \to \mathbb{N}_0\times \mathbb{N}_0$, která dvojici kódů přiřadí jejich ohodnocení. Množinu všech možných ohodnocení kódů v $H_{n,k}$ značíme $S_{n,k}$.
 \end{definice}
 \begin{pozn}
-    Funkci $s$ lze interpretovat také jako funkci, která jednomu kódu přiřadí ohodnocení vzhledem k druhému kódu. Ohodnocení $u$ vzhledem ke kódu $v$ značíme $s(u,v)$. Množinu všech možných ohodnocení kódů v $H_{n,k}$ značíme $S_{n,k}$.
+    Funkci $s$ lze interpretovat také jako funkci, která jednomu kódu přiřadí ohodnocení vzhledem k druhému kódu. Ohodnocení $u$ vzhledem ke kódu $v$ značíme $s(u,v)$. 
 \end{pozn}
 
 Počet černých kolíčků pro nějaké dva kódy značí počet pozic, na kterých mají tyto kódy shodnou barvu. Bílé kolíčky značí počet zbývajících pozic v prvním kódu, které se shodují s nějakou jinou pozicí v druhém kódu v barvě. Nejprve se vyhodnotí počet černých kolíčků a potom až počet bílých tak, aby každá pozice v obou kódech přispívala maximálně k jednomu kolíčku. 
@@ -46,9 +46,9 @@ Počet černých kolíčků pro nějaké dva kódy značí počet pozic, na kter
 % \end{definice}
 
 
-Triviálním pozorováním je fakt, že pro libovolné dva kódy je součet černých a bílých kolíčků v jejich ohodnocení maximálně $n$. To plyne z toho, že hodnota $\sum_{j = 1}^k  \min(n_j, m_j)$ je menší nebo rovna $n$. Zároveň v prostoru $H_{n,k}$ neexistuje ohodnocení $(n-1,1)$. Pokud se totiž kódy schodují právě na $n-1$ pozicích, musí se na zbývající pozici lišit. 
+Triviálním pozorováním je fakt, že pro libovolné dva kódy je součet černých a bílých kolíčků v jejich ohodnocení maximálně $n$. To plyne z toho, že hodnota $\sum_{j = 1}^k  \min(n_j, m_j)$ je menší nebo rovna $n$. Zároveň v prostoru $H_{n,k}$ neexistuje ohodnocení $(n-1,1)$. Pokud se totiž kódy shodují právě na $n-1$ pozicích, musí se na zbývající pozici lišit. 
 \begin{tvrz}\label{tvrzohodnoceni}
-    Nechť $n \in \N$, $k \in \N, k>2$. Potom pro všechna $(b,w)\in \mathbb{N}_0 \times \mathbb{N}_0,\hspace{5px} b + w \leq n$ existuje dvojice kódů $u,v \in H_{n,k}$ taková, že jejich ohodnocení je $(b,w)$.
+    Nechť $n \in \N$, $k \in \N, k>2$. Potom pro všechna $(b,w)\in \mathbb{N}_0 \times \mathbb{N}_0$ taková, že $b + w \leq n$ existuje dvojice kódů $u,v \in H_{n,k}$ s ohodnocením $(b,w)$.
 \end{tvrz}
 \begin{dukaz}
 
@@ -110,7 +110,7 @@ Silnější tvrzení platí pro případ se dvěma barvami.
     Nechť $n \in \N, k=2$. Nechť dále $u, v \in H_{n,k}$ jsou kódy s ohodnocením $(b,w)$. Potom $b + w \leq n, \hspace{5px} (b,w) \neq (n-1,1)$ a $w$ je sudé.
 \end{tvrz}
 \begin{dukaz}
-Omezení $b + w \leq n, \hspace{3px} (b,w) \neq (n-1,1)$ platí obdobně jako v důkazu tvrzení \ref{tvrzohodnoceni}. Kódy $u$ a $v$ lze permutací pozic dostat do následujících tvarů:
+Omezení $b + w \leq n, \hspace{3px} (b,w) \neq (n-1,1)$ platí obdobně jako v důkazu tvrzení~\ref{tvrzohodnoceni}. Kódy $u$ a $v$ lze permutací pozic dostat do následujících tvarů:
     \[
   u = 
     \underbrace{11\dots1}_{c}
