@@ -170,9 +170,10 @@ V této dokumentaci používám značení z bakalářské práce.
 
 Po otevření zdrojového kódu zvolte, jakou funkci chcete spustit. Nějaké funkce byly v souboru předpřipraveny a stačí odstranit znak komentáře \#. 
 \paragraph{Funkce \texttt{get\_results\_of\_algorithm()}}
-Tato funkce slouží k analýze algoritmu složeného z valuace a strategie. Tvar volání funkce je následující:
+Tato funkce slouží k analýze algoritmu složeného z valuace a strategie. Může běžet několik minut. Tvar volání funkce je následující:
 
-\texttt{get\_results\_of\_algorithm(n, k, první tah, valuace, strategie, výběr z kandidátů)}
+\texttt{get\_results\_of\_algorithm(n, k, první tah, valuace, strategie,}\\
+\texttt{výběr z kandidátů)}
 \begin{itemize}
     \item n - počet pozic
     \item k - počet barev
@@ -190,13 +191,14 @@ Přípustné kombinace valuace a strategie jsou:
     \item find\_entropy, higher\_is\_better - algoritmus Max entropy
     \item find\_number\_of\_parts, higher\_is\_better - algoritmus Most parts.
 \end{itemize}
-Příklad použití:
+Příklad volání:
 \texttt{get\_results\_of\_algorithm(4, 6, [1,1,2,2], find\_entropy, higher\_is\_better, False)}
 
 \paragraph{Funkce \texttt{solve\_one\_game()}}
 Funkce \texttt{solve\_one\_game} slouží ke spuštění daného algoritmu pro jeden pevně určený tajný kód. Tvar volání funkce je následující:
 
-\texttt{solve\_one\_game(n, k, tajný kód, valuace, strategie, první tah, výběr z kandidátů)}
+\texttt{solve\_one\_game(n, k, tajný kód, valuace, strategie, první tah,}\\
+\texttt{výběr z kandidátů)}
 \begin{itemize}
     \item n - počet pozic
     \item k - počet barev
@@ -214,14 +216,7 @@ Přípustné kombinace valuace a strategie jsou stejné jako výše.
 % - find_number_of_parts, higher_is_better - algoritmus Most parts
 Příklad použití:
 
-\texttt{solve\_one\_game(4, 6, [5,1,6,3], find\_max, lower\_is\_better, [1,1,2,2], False)}
-
-
-
-
-
-
-
+\texttt{solve\_one\_game(4, 6, [5,1,6,3], find\_max, lower\_is\_better,}\\ \texttt{[1,1,2,2], False)}
 
 
 
@@ -282,7 +277,9 @@ Tato funkce slouží na místo strategie. Porovnává hodnoty valuací a vrací 
 Tato funkce bere jako argumenty množinu kandidátů $K$ (\texttt{possible\_codes}) a další pokus $u$. Vrátí počty prvků v potomcích $K_{u,r}$ pro všechna ohodnocení $r \in S_{n,k}$.
 
 \paragraph{\texttt{find\_best\_guess}}
-\texttt{find\_best\_guess(possible\_codes, len\_pegs, len\_colours, all\_scores, all\_codes, partition\_table\_function, compare\_function, start\_code=None, choose\_from\_candidates=False)}
+\texttt{find\_best\_guess(possible\_codes, len\_pegs,}\\
+\texttt{len\_colours, all\_scores, all\_codes, partition\_table\_function,}\\
+\texttt{compare\_function, start\_code=None, choose\_from\_candidates=False)}
 
 Tato funkce pro aktuální stav a zvolenou valuaci a strategii vrátí odpovídající další pokus. Vychází z proměnné \texttt{possible\_codes} - množiny kandidátů. Projde celý prostor kódů (případně pouze množinu kandidátů) a pro každý kód (\texttt{code}) nalezne potomky množiny kandidátů vzhledem k tomuto kódu (\texttt{temp\_partition}) a jejich velikosti (\texttt{temp\_partition\_table}). O to se stará funkce \texttt{create\_next\_partition}. Dále nalezne valuaci aktuálního kódu (\texttt{temp\_partition\_table\_value}) a porovná ji s aktuální nejlepší hodnotou z hlediska zvolené strategie (\texttt{compare\_function}). Ve chvíli, kdy je aktuální hodnota valuace menší, respektive větší (podle zvolené strategie) než průběžná nejlepší hodnota valuace (\texttt{best\_partition\_table\_value}), program aktualizuje nejlepší hodnoty valuace, potomků a velikostí potomků. Pokud se valuace aktuálního kódu rovná průběžné nejlepší hodnotě valuace, program zkontroluje, jestli byl průběžně nejlepší kód kandidát. Pokud nebyl a aktuální kód je kandidátem, algoritmus aktualizuje nejlepší hodnoty valuace, potomků a velikostí potomků. 
 
@@ -291,25 +288,20 @@ Díky tomu, že algoritmy vybírají lexikograficky nejmenší kódy z množiny 
 Ve chvíli, kdy program projde všechny kódy, ze kterých vybírá, vrátí zvolený nejlepší kód pro tento stav (\texttt{best\_next\_guess}). Společně s ním vrací i proměnné \texttt{best\_partition\_table} a \texttt{best\_partition}. 
 
 \paragraph{\texttt{get\_results\_of\_algorithm}}
-Toto je hlavní funkce, která testuje algoritmy. Pracuje pomocí \texttt{deque} z knihovny \texttt{collections} v proměnné ........... Nejprve do této fronty přidá všechny neprázdné následníky počátečního stavu. Dále funkce běží, dokud je fronta neprázdná. Pro každý stav $A$ z fronty nalezne další pokus $u_A$ pomocí funkce \texttt{find\_best\_guess}. Dále do fronty přidá všechny neprázdné následníky stavu $A$ vzhledem k $u_A$, které nebyly následníky vzhledem k ohodnocení $(n,0)$. Tyto stavy jsou totiž koncové a program zapíše aktuální počet pokusů do seznamu s četnostmi počtů pokusů (proměnná ..........). V případě, že je množina kandidátů jednoprvková, program pro urychlení automaticky přičte další pokus a nečeká na jisté ohodnocení v dalším kole.
+Toto je hlavní funkce, která testuje algoritmy. Funkce postupně prochází strom algoritmu. Aktuální proces uchovává ve frontě \texttt{partition\_queue} vytvořené pomocí funkce \texttt{deque} z knihovny \texttt{collections}. Jednotlivé prvky fronty jsou množiny kandidátů aktuálních stavů, podle kterých algoritmus vybírá následující tah. Nejprve do této fronty přidá všechny neprázdné potomky $H_{n,k}$ vzhledem ke zvolenému prvnímu tahu. Dále funkce běží, dokud je fronta neprázdná. Pro každý stav $A$ reprezentovaný ve frontě množinou kandidátů $K$ nalezne další pokus $u_A$ pomocí funkce \texttt{find\_best\_guess}. Dále do fronty přidá všechny neprázdné potomky množiny $K$ vzhledem k $u_A$, které nebyly potomky vzhledem k ohodnocení $(n,0)$. Potomci $A$ vzhledem k ohodnocení $(n,0)$ totiž odpovídají koncovým stavům. Program pro ně zapíše aktuální počet pokusů do seznamu s četnostmi počtů pokusů (\texttt{all\_len\_guesses}). V případě, že nějaká množina kandidátů $K$ ve frontě je jednoprvková, program pro urychlení automaticky přičte k aktuálnímu počtu pokusů jeden a zapíše tento počet do seznamu s četnostmi počtů pokusů (\texttt{all\_len\_guesses}). Program končí ve chvíli, kdy je fronta prázdná, a tedy program prošel celý strom algoritmu. Stačí pouze zobrazit výsledky algoritmu. 
+
+
 
 % Počty pokusů přičítá v případě, kdy zkoumá potomka vzhledem k ohodnocení $(n ,0)$.
 
 \paragraph{\texttt{solve\_one\_game}}
-Tato funkce je implementací algoritmu $1$ v bakalářské práci. Na vstupu vezme počet pozic a barev, tajný kód, valuaci, strategii, případný pevně stanovený první pokus a True/False hodnotu, jestli se další pokus vybírá pouze z kandidátů. 
-
-Pokud další pokus dostal maximální ohodnocení, shoduje se s tajným kódem a hra končí. 
+Tato funkce je implementací algoritmu $1$ v bakalářské práci. Na vstupu vezme počet pozic a barev, tajný kód, valuaci, strategii, případný pevně stanovený první pokus a True/False hodnotu, jestli se další pokus vybírá pouze z kandidátů. Dále běží podle předpisu algoritmu $1$. Jediná změna je ale ve výběru nejlepšího dalšího tahu. Zde program vybírá další tah pomocí funkce \texttt{find\_best\_guess}. Pokud vybraný kód dostane ohodnocení $(n,0)$, tak se shoduje s tajným kódem a hra končí. 
 
 
 \paragraph{\texttt{get\_valuation\_of\_first\_guess}}
-Tato funkce vrátí hodnotu valuace pro nějaký první pokus a zadanou valuaci. 
+Tato funkce vrátí hodnotu valuace pro nějaký první pokus a zadanou valuaci. Slouží k hledání prvního pokusu, který daný algoritmus zahraje.
 
 
 \section{Kontakt}
-Martin Šimša, MFF CUNI, 3. roč., Matematika pro informační technologie (MITP)
-LS 2024/2025, Bakalářská práce na téma Logik - algoritmy a strategie
-simsa.martin@email.cz, martin.simsa926@student.cuni.cz
-Vedoucí: doc. Mgr. Pavel Růžička, Ph.D.
-
-
+Martin Šimša, MFF CUNI, 3. roč., 2025, Matematika pro informační technologie, simsa.martin@email.cz, martin.simsa926@student.cuni.cz
 \end{document}

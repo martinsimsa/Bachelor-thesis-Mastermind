@@ -15,9 +15,7 @@ Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pok
     \[\frac{1}{k^n}\sum_{A\in V, A \text{ list}} d(A).\]
 \end{definice}
 
-Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost pojmenujeme \emph{konzistence}.
-
-V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. Tato myšlenka byla převzatá od Neuwirtha \cite{neuwirth}. Každý kód totiž vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
+Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost pojmenujeme \emph{konzistence}. V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. Tato myšlenka byla převzatá od Neuwirtha \cite{neuwirth}. Každý kód totiž vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
 
 % V sekci $4.5$ diskutujeme možný vliv výběru lexikograficky vyššího prvního tahu z důvodu následného výběru lexikograficky minimálních kódů ve všech algoritmech.
 
@@ -233,7 +231,7 @@ Zajímavým problémem je jistě výběr následujícího pokusu v případě, k
 Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. Ukazuje se, že pouze velikost prvního kódu nerozhoduje. Při zvolení lexikograficky největších prvních kódů nedostaneme lepší výsledek (viz tabulka \ref{tabvysokyprvnipokus}).
 
 
-\begin{table}[h]
+\begin{table}[H]
 \centering
 \begin{tabular}{l l l l}
 \toprule
