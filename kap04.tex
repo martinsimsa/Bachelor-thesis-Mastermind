@@ -8,7 +8,7 @@ Při srovnávání algoritmů budeme používat několik kritérií. První hodn
     Nechť $T$ je strom algoritmu pro nějaký algoritmus řešící hru [n,k]-Mastermind. \emph{Maximální počet pokusů} tohoto algoritmu definujeme jako délku nejdelší cesty (počet jejích hran) od kořene $T$ k nějakému listu $T$. 
 \end{definice}
 
-Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pokusů na hru. Ten lze opět odvodit ze stromu algoritmu.
+Druhý ukazatel, který u algoritmů budeme srovnávat, je průměrný počet pokusů na hru. Ten lze opět odvodit ze stromu algoritmu.
 
 \begin{definice}[Průměrný počet pokusů]\label{defprumpocetpokusu}
     Nechť $T = (V,E)$ je strom algoritmu pro~nějaký algoritmus řešící hru [n,k]-Mastermind. Pro list $A$ označíme $d(A)$ jeho vzdálenost od kořene ve smyslu počtu hran. \emph{Průměrný počet pokusů} algoritmu definujeme jako hodnotu
@@ -85,7 +85,7 @@ Maximální počet pokusů
 & 6 & 6 & \textbf{5} & 6 & 6 \\
 
 Průměrný počet pokusů 
-& 5.065 & 4.556 & \textbf{4.476} & 4.4776 & 4.4776\\
+& 5.065 & 4.556 & \textbf{4.476} & 4.478 & 4.478\\
 \bottomrule
 \multicolumn{6}{l}{\footnotesize \textit{Pozn:}
 Průměrný počet pokusů je zaokrouhlen na tři desetinná místa}
@@ -180,7 +180,7 @@ Algoritmus Max entropy dosahuje, možná překvapivě, o dost horšího průměr
 
 \section{Diskuze}
 \subsubsection{Volba pokusů pouze z kandidátů}
-Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $P$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $7$ měla tvar
+Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $A$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $7$ měla tvar
 \[U = \{u \in K \mid f_K(u) = F(f_K)\}.\]
 Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind (viz tabulka \ref{tabpouzekandidati}). Výsledky byly dosaženy stejným postupem jako u~algoritmů výše, tedy postupným sestrojením stromu algoritmu. 
 
@@ -188,7 +188,7 @@ Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [
 \centering
 \begin{tabular}{l l l l}
 \toprule
- & Min-max & Max entropy & Počet potomků  \\
+ & Min-max & Max entropy & Most parts  \\
 \midrule
 První pokus 
 & 1122 & 1234 & 1123  \\
@@ -205,7 +205,7 @@ Průměrný počet pokusů je zaokrouhlen na tři desetinná místa.}
 \caption{Výsledky algoritmů volící pouze kandidáty}\label{tabpouzekandidati}
 \end{table}
 
-Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu Min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale~zmenší časovou složitost algoritmů. To plyne z toho, že algoritmus v každém stavu algoritmus neporovnává všechny kódy ale pouze kandidáty. 
+Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu Min-max a Most parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale~zmenší časovou složitost algoritmů. To plyne z toho, že algoritmus v každém stavu neporovnává všechny kódy, ale pouze kandidáty. 
 
 % \begin{tvrz}
 %     Uvažujme algoritmus \ref{alg-default} s výběrem množiny $U$ na řádku $7$ podle následujícího předpisu.
