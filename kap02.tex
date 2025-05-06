@@ -3,7 +3,7 @@
 % přidat definici algoritmu, který řeší mastermind - vytvoří posloupnost kódů, která končí tajným kódem s nejlepším ohodnocením. 
 Algoritmy řešící hru Mastermind lze rozdělit do dvou kategorií, \emph{deterministické} a \emph{nedeterministické}. Deterministický algoritmus pro dva shodné stavy volí další krok vždy jednoznačně. 
 %Nemůže se tedy stát, že by deterministický algoritmus pro dva stejné vstupy vrátil odlišné výsledky. 
-Nedeterministické algoritmy naproti tomu mohou mít v každém stavu na výběr z více následujících kroků. Volit mohou například podle nějakého pravděpodobnostního rozdělení. Není tedy zaručeno, že pro stejný vstup vrátí vždy identický výsledek.
+Nedeterministické algoritmy naproti tomu mohou mít v~každém stavu na výběr z více následujících kroků. Volit mohou například podle nějakého pravděpodobnostního rozdělení. Není tedy zaručeno, že pro stejný vstup vrátí vždy identický výsledek.
 
 Deterministické algoritmy řešící hru Mastermind mohou mít velikou časovou složitost. To se snaží řešit nedeterministické algoritmy, které hledají rovnováhu mezi časovou složitostí a dobrými výsledky. 
 % Hlavní předností deterministických algoritmů je záruka výsledku. Na druhou stranu ale tyto typy algoritmů mohou mít velikou časovou složitost, protože jsou často založeny na procházení všech možností pokračování. To se snaží řešit nedeterministické algoritmy, které hledají rovnováhu mezi časovou složitostí a dobrými výsledky. 
@@ -20,40 +20,47 @@ V této práci budeme zkoumat deterministické algoritmy.
 
 % definice inspirovaná matoušek nešetřil
 \begin{definice}[Orientovaný graf]
-    \emph{Orientovaný graf} definujeme jako dvojici $G = (V,E)$, kde $V$ je množina vrcholů a $E \subseteq V\times V \times Q$ je množina hran s obarveními z množiny $Q$. 
+    \emph{Orientovaný graf} je dvojice $G = (V,E)$, kde $V$ je množina vrcholů a $E \subseteq V\times V \times Q$ je množina hran s obarveními z množiny $Q$. 
     % Prvky $V$ nazýváme vrcholy a prvky $E$ hrany. 
     Řekneme, že z vrcholu $A \in V$ do vrcholu $B \in V$ vede hrana obarvená $q \in Q$, pokud $(A,B,q) \in E$. Navíc $E$ je taková, že z libovolného vrcholu nevedou dvě různé hrany se stejným obarvením.
 \end{definice}
 \begin{pozn}
-    Orientovaný graf povoluje více hran mezi stejnými vrcholy, které se ale liší v obarvení. Hrana je navíc jednoznačně určena počátečním vrcholem a obarvením.
+    Orientovaný graf povoluje více hran mezi stejnými vrcholy, které se ale liší v obarvení. Hrana je navíc jednoznačně určena počátečním vrcholem a~obarvením.
 \end{pozn}
-
+% z vrcholů $E_m$ a druhá a předposlední hrana navazují na první a poslední hranu ve odlišném vrcholu než $A$ respektive $B$.
+    % hran $P = (E_1, \dots, E_m) , \hspace{3px} E_i\in E$ taková, že $E_i, E_{i+1}$ mají společný vrchol pro $i = 1,\dots,m-1$. Řekneme, že neorientovaná hrana $P$ vede mezi vrcholy $A$ a $B$, pokud $A$ je jeden z vrcholů $E_1$ a $B$ je jeden z vrcholů $E_m$.
+    % Řekneme, že orientovaný graf $G=(V,E)$ je souvislý, pokud mezi libovolnými vrcholy $A, B \in V$ existuje posloupnost navazujících prvků $(C,D) \in V \times V$, taková, že pro každý prvek posloupnosti platí, že $(C,D) \in E$ nebo $(D,C) \in E$.  
+    % Konstantní posloupnost vede do počátečního vrcholu. 
+    % Řekneme, že do vrcholu $K_2$ vede cesta z vrcholu $K_1$, pokud se z vrcholu $K_1$ dostaneme do vrcholu
 \begin{definice}[Cesty v grafu]
     Nechť $G = (V, E)$ je orientovaný graf s množinou obarvení hran $Q$.
-    \emph{Orientovaná cesta} je konečná (i prázdná) posloupnost navazujících hran (ve vrcholech).
+    \emph{Orientovaná cesta} je konečná posloupnost navazujících hran (ve vrcholech).
     % z vrcholu $A \in V$} definujeme jako konečnou posloupnost navazujících hran začínající ve vrcholu $A$. 
     % Řekneme, že do vrcholu $B$ vede z vrcholu $A$ orientovaná cesta $P = (E_1, \dots, E_m)$, pokud $A$ je první vrchol $E_1$ a $B$ je druhý vrchol $E_m$. 
     % Značíme ji posloupností obarvení hran.
     % $P = ((u_1,r_1), \dots, (u_j, r_j))$. 
-    \emph{Neorientovaná cesta} je konečná posloupnost navazujících prvků $(C,D,q) \in V \times V \times Q$ taková, že pro každý prvek posloupnosti platí, že $(C,D,q) \in E$ nebo $(D,C,q) \in E$. 
-    % z vrcholů $E_m$ a druhá a předposlední hrana navazují na první a poslední hranu ve odlišném vrcholu než $A$ respektive $B$.
-    % hran $P = (E_1, \dots, E_m) , \hspace{3px} E_i\in E$ taková, že $E_i, E_{i+1}$ mají společný vrchol pro $i = 1,\dots,m-1$. Řekneme, že neorientovaná hrana $P$ vede mezi vrcholy $A$ a $B$, pokud $A$ je jeden z vrcholů $E_1$ a $B$ je jeden z vrcholů $E_m$.
-    % Řekneme, že orientovaný graf $G=(V,E)$ je souvislý, pokud mezi libovolnými vrcholy $A, B \in V$ existuje posloupnost navazujících prvků $(C,D) \in V \times V$, taková, že pro každý prvek posloupnosti platí, že $(C,D) \in E$ nebo $(D,C) \in E$.  
-    Řekneme, že cesta $P = (E_1, \dots, E_m)$
-    % , \hspace{3px} E_i\in E$
-    je \emph{konstantní}, pokud existuje vrchol $A \in V$ takový, že pro $i = 1,\dots,m $ platí, že $E_i = (A,A,q)$ pro nějaké $q \in Q$. 
-    \emph{Redukovaná cesta} je cesta, ve které se každý prvek vyskytuje nejvýše jednou. V případě redukované neorientované cesty nepovolujeme dva prvky, které se liší pouze obrácením vrcholů.
-    % Konstantní posloupnost vede do počátečního vrcholu. 
-    % Řekneme, že do vrcholu $K_2$ vede cesta z vrcholu $K_1$, pokud se z vrcholu $K_1$ dostaneme do vrcholu
-
-    Řekneme, že cesta $P = (E_1, \dots, E_m)$ vede mezi vrcholy $A$ a $B$, pokud $A$ je první vrchol $E_1$ a $B$ je druhý vrchol $E_m$. 
+    \emph{Neorientovaná cesta} je konečná posloupnost navazujících prvků $(C,D,q) \in V \times V \times Q$ taková, že pro každý prvek posloupnosti platí, že $(C,D,q) \in E$ nebo $(D,C,q) \in E$. Řekneme, že cesta $P = (E_1, \dots, E_m)$ vede mezi vrcholy $A$ a $B$, pokud $A$ je první vrchol $E_1$ a $B$ je druhý vrchol $E_m$. 
 \end{definice}
 \begin{pozn}
-    Cesta je jednoznačně určena počátečním vrcholem a obarvením hran, protože z libovolného vrcholu vede s nějakým obarvením maximálně jedna hrana. Prázdná posloupnost je také cesta a je konstantní. 
+    Cesta je jednoznačně určena počátečním vrcholem a obarvením hran, protože z libovolného vrcholu vede s nějakým obarvením maximálně jedna hrana.
+    Prázdná posloupnost je také cesta a je konstantní podle následující definice. 
     % Neorientovaná cesta je to, co si člověk pod ní automaticky představí. 
 \end{pozn}
+
+\begin{definice}[Konstantní a redukovaná cesta]
+    Nechť $G = (V, E)$ je orientovaný graf s množinou obarvení hran $Q$. Řekneme, že cesta $P = (E_1, \dots, E_m)$
+    % , \hspace{3px} E_i\in E$
+    je \emph{konstantní}, pokud existuje vrchol $A \in V$ takový, že pro $i = 1,\dots,m $ platí, že $E_i = (A,A,q)$ pro nějaké $q \in Q$. 
+    \emph{Redukovaná cesta} je cesta, ve které se pro každou hranu $e = (A_1, A_2, q) \in E$ vyskytuje maximálně jeden prvek, $e$ nebo $e^* = (A_2, A_1, q)$.
+    % která prochází každým vrcholem maximálně jednou s výjimkou, že může začínat i končit ve stejném vrcholu.
+    % se každý prvek vyskytuje nejvýše jednou. V případě redukované neorientované cesty nepovolujeme dva prvky, které se liší pouze obrácením vrcholů.
+\end{definice}
 \begin{pozn}\label{pozn-redukce-cesty}
-    Z libovolné uzavřené cesty $P$ z vrcholu $A$ vytvoříme redukovanou tak, že vezmeme první vrchol $C$ v cestě $P$ (kromě $A$), který se v této cestě vyskytuje dvakrát. Odstraněním všech hran mezi hranami s prvním a posledním výskytem vrcholu $C$ dostaneme uzavřenou redukovanou cestu z vrcholu $A$.
+    Z libovolné cesty $P$ z vrcholu $A$ vytvoříme redukovanou tak, že postupně volíme hranu $e$, která má v cestě dva \uv{neorientované} výskyty a vymažeme všechny hrany mezi nimi. Zároveň odstraníme jeden nebo oba \uv{neorientované} výskyty $e$, aby cesta navazovala. Jeden v případě, že prvky mají v cestě stejný směr, oba v případě, že prvky mají opačný směr.
+    % vrchol, přes který cesta vede opakovaně a odstraníme všechny hrany mezi těmito opakováními. 
+    % mezi hranami s prvním a posledním výskytem vrcholu $C$ dostaneme uzavřenou redukovanou cestu z vrcholu $A$.
+    % vezmeme první vrchol $ (,A,q)$ v cestě $P$ (kromě vrcholu $A$ v první hraně v případě cyklu), který se v této cestě vyskytuje dvakrát. 
+    
 \end{pozn}
 % \begin{lemma}
 %     Nechť existuje cesta z vrcholu 
@@ -87,12 +94,12 @@ V této práci budeme zkoumat deterministické algoritmy.
     Nechť $G=(V,E)$ je souvislý orientovaný graf s jedním kořenem takový, že do každého vrcholu $A \in V$ vede orientovaná cesta z kořene. Potom $G$ je kořenový strom právě tehdy, když do každého vrcholu $A \in V$ vede maximálně jedna hrana. 
 \end{lemma}
 \begin{dukaz}
-    Nechť napřed $G$ je kořenový strom a nechť existuje vrchol $A$ v kořenovém stromu, do kterého vedou dvě hrany, $E_1$ a $E_2$. Potom tyto hrany vedou z odlišných vrcholů, protože jinak bychom dostali neorientovaný cyklus mezi dvěma vrcholy. Označíme je $B_1$ a $B_2$. Do obou vrcholů vede z definice orientovaná cesta z kořene. Tyto cesty označíme $P_1$ a $P_2$. Potom existuje neorientovaná uzavřená cesta z vrcholu $A$ ve tvaru $P = E_1^*, P_1^*, P_2, E_2$. Operace $^*$ obrátí pořadí vrcholů v cestě a prohodí oba vrcholy ve všech hranách. Z této cesty vytvoříme redukovanou podle poznámky \ref{pozn-redukce-cesty}. 
+    Nechť napřed $G$ je kořenový strom a nechť existuje vrchol $A$ v kořenovém stromu, do kterého vedou dvě různé hrany, $E_1$ a $E_2$. Potom tyto hrany vedou z~odlišných vrcholů, protože jinak bychom dostali neorientovaný cyklus mezi dvěma vrcholy. Označíme je $B_1$ a $B_2$. Do obou vrcholů vede z definice orientovaná cesta z~kořene. Tyto cesty označíme $P_1$ a $P_2$. Potom existuje neorientovaná uzavřená cesta z~vrcholu $A$ ve tvaru $P = E_1^*, P_1^*, P_2, E_2$. Operace $^*$ obrátí pořadí vrcholů v~cestě a~prohodí oba vrcholy ve všech hranách. Z této cesty vytvoříme redukovanou podle poznámky \ref{pozn-redukce-cesty}. 
     % tak, že vezmeme první vrchol $C$ v cestě $P$ (kromě $A$), který se v této cestě vyskytuje dvakrát. Odstraněním všech hran mezi hranami s prvním a posledním výskytem vrcholu $A$ dostaneme neorientovaný cyklus z vrcholu $A$. 
-    Tak dostaneme neorientovaný cyklus, což je ve sporu s neexistencí neorientovaných cyklů ve stromu.
+    Tak dostaneme neorientovaný cyklus, což je ve~sporu s neexistencí neorientovaných cyklů ve stromu.
     % a tedy z každého vrcholu kořenového stromu vede nejvýše jedna hrana.
 
-    Druhou implikaci dokážeme sporem. Nechť $G$ není strom. Potom existuje nějaký neorientovaný cyklus $P = E_1, \dots , E_m$ z vrcholu $A \in V$. Nad hrany nadepíšeme šipky. Pokud $E_i \in E$, nakreslíme nad $E_i$ šipku doprava. Pokud $E_i \notin E$, nakreslíme nad hranu šipku doleva. Tyto šipky ukazují směr hran v grafu $G$ mezi vrcholy ve kterých se v průběhu cesty \uv{nacházíme}. Pokud $\overrightarrow{E_1}, \dots , \overleftarrow{E_m}$, tak v cestě existuje vrchol, do kterého vedou dvě hrany. Pokud $\overleftarrow{E_1}, \dots , \overrightarrow{E_m}$, tak do vrcholu $A$ vstupují dvě hrany. Nechť $\overrightarrow{E_1}, \dots , \overrightarrow{E_m}$ (obdobně opačný směr). Předpokládejme, že se směr šipek uvnitř cesty nezmění (jinak by existoval vrchol, do kterého vedou dvě hrany). Víme, že existuje cesta z kořene do vrcholu $A$. Cyklus $P$ nevede přes kořen, protože do kořene nevede žádná hrana. Tedy existuje nějaký vrchol $B \in V$, přes který vede cyklus $P$, a do kterého navíc vede hrana na cestě z kořene do vrcholu $A$. Tedy existuje vrchol, do kterého vedou dvě hrany, což je spor. 
+    Druhou implikaci dokážeme sporem. Nechť $G$ není strom. Potom existuje nějaký neorientovaný cyklus $P = E_1, \dots , E_m$ z vrcholu $A \in V$. Nad hrany nadepíšeme šipky. Pokud $E_i \in E$, nakreslíme nad $E_i$ šipku doprava. Pokud $E_i \notin E$, nakreslíme nad hranu šipku doleva. Tyto šipky ukazují směr hran v grafu $G$ mezi vrcholy ve~kterých se v průběhu cesty \uv{nacházíme}. Pokud $\overrightarrow{E_1}, \dots , \overleftarrow{E_m}$, tak v cestě existuje vrchol, do kterého vedou dvě hrany. Pokud $\overleftarrow{E_1}, \dots , \overrightarrow{E_m}$, tak do vrcholu $A$ vstupují dvě hrany. Nechť $\overrightarrow{E_1}, \dots , \overrightarrow{E_m}$ (obdobně opačný směr). Předpokládejme, že se směr šipek uvnitř cesty nezmění (jinak by existoval vrchol, do kterého vedou dvě hrany). Víme, že existuje cesta z kořene do vrcholu $A$. Cyklus $P$ nevede přes kořen, protože do kořene nevede žádná hrana. Tedy existuje nějaký vrchol $B \in V$, přes který vede cyklus $P$, a do kterého navíc vede hrana na cestě z kořene do vrcholu $A$. Tedy existuje vrchol, do kterého vedou dvě hrany, což je spor. 
 \end{dukaz}
 
 Definujeme podgraf inspirovaný definicí z (Matoušek, Nešetřil, \cite{matouvsek2009kapitoly}, str. 101).
@@ -107,24 +114,26 @@ Definujeme podgraf inspirovaný definicí z (Matoušek, Nešetřil, \cite{matouv
 % \begin{dukaz}
 %     Nechť existuje vrchol $A$ v kořenovém stromu, do kterého vedou dvě hrany, $E_1, E_2$. Potom tyto hrany vedou z odlišných vrcholů, protože jinak bychom dostali neorientovaný cyklus mezi dvěma vrcholy. Označíme je $B_1$ a $B_2$. Do obou vrcholů vede z definice orientovaná cesta z kořene. Tyto cesty označíme $P_1$ a $P_2$. Potom existuje neorientovaná uzavřená cesta z vrcholu $A$ ve tvaru $P = E_1, P_1^*, P_2, E_2$, kde $P_1^*$ je cesta $P_1$ s obráceným pořadím hran. Z této cesty vytvoříme redukovanou tak, že vezmeme první vrchol $C$ v cestě $P$ (kromě $A$), který se v této cestě vyskytuje dvakrát. Odstraněním všech hran mezi hranami s prvním a posledním výskytem vrcholu $A$ dostaneme neorientovaný cyklus z vrcholu $A$. To je spor s neexistencí neorientovaných cyklů ve stromu, a tedy z každého vrcholu kořenového stromu vede nejvýše jedna hrana.
 % \end{dukaz}
-
 \begin{tvrz}\label{tvrzeni-podgraf-korenoveho-stromu}
     Neprázdný souvislý podgraf kořenového stromu je kořenový strom.
 \end{tvrz}
 \begin{dukaz}
-    Označíme $G$ kořenový strom a $T = (V,E)$ jeho neprázdný souvislý podgraf. Potom $T$ je jistě strom, protože pokud by obsahoval uzavřenou redukovanou neorientovanou cestu kladné délky, tato cesta by byla i v původním grafu $G$. 
+    Označíme $G$ kořenový strom a $T = (V,E)$ jeho neprázdný souvislý podgraf. Potom $T$ je jistě strom, protože pokud by obsahoval uzavřenou redukovanou neorientovanou cestu kladné délky, tato cesta by byla i v původním grafu $G$. Pokud by podgraf $T$ neobsahoval kořen, existovala by nekonečná posloupnost vrcholů v $T$, $A_1, A_2, \dots$ propojená hranami z $A_i$ do $A_{i-1}$. Do všech vrcholů $A_i$ v~grafu $G$ ale~vede nějaká orientovaná cesta z kořene. Navíc do každého vrcholu v~kořenovém stromu vede maximálně jedna hrana díky lemmatu \ref{lemma-char-korenoveho-stromu}. Tedy platí, že cesta z kořene původního stromu do $A_1$ vede přes $A_i$ pro všechna $i \in \mathbb{N}$. To je ale~spor s~konečností cesty. 
 
-    Pokud by podgraf $T$ neobsahoval kořen, existovala by nekonečná posloupnost vrcholů v $T$, $A_1, A_2, \dots$ propojená hranami z $A_i$ do $A_{i-1}$. Do všech vrcholů $A_i$ ale v grafu $G$ vede nějaká orientovaná cesta z kořene. Navíc do každého vrcholu v kořenovém stromu vede maximálně jedna hrana díky lemmatu \ref{lemma-char-korenoveho-stromu}. Tedy platí, že cesta z kořene původního stromu do $A_1$ vede přes $A_i$ pro všechna $i \in \mathbb{N}$. To je ale spor s konečností cesty. 
-
-    Podgraf $T$ tedy obsahuje nějaký kořen. Pokud by obsahoval dva kořeny, pak mezi nimi díky souvislosti vede neorientovaná cesta. Tuto cestu lze redukovat obdobně jako v poznámce \ref{pozn-redukce-cesty}. Protože do kořene nevede hrana, první a poslední hrana této cesty vede z kořene ven. Když se z obou stran cesty budeme blížit do středu, všechny hrany vedou směrem od kořenů díky redukovanosti cesty a lemmatu \ref{lemma-char-korenoveho-stromu}. Na této cestě tedy musí existovat nějaký vrchol, do kterého vedou dvě různé hrany, což je spor. Toto pozorování je obdobné konstrukcím šipek nad hranami v důkazu lemmatu \ref{lemma-char-korenoveho-stromu}. Podgraf $T$ tedy obsahuje jediný kořen.
+    Podgraf $T$ tedy obsahuje nějaký kořen. Pokud by obsahoval dva kořeny, potom mezi nimi díky souvislosti vede neorientovaná cesta. Tuto cestu lze redukovat obdobně jako v poznámce \ref{pozn-redukce-cesty}. Protože do kořene nevede hrana, první a poslední hrana této cesty vede z kořene ven. Když se z obou stran cesty budeme blížit do středu, všechny hrany vedou směrem od kořenů díky redukovanosti cesty a~lemmatu \ref{lemma-char-korenoveho-stromu} pro kořenový strom $G$. Na této cestě tedy musí existovat nějaký vrchol, do kterého vedou dvě různé hrany, což je spor. Toto pozorování je obdobné konstrukcím šipek nad hranami v důkazu lemmatu \ref{lemma-char-korenoveho-stromu}. Podgraf $T$ tedy obsahuje jediný kořen.
     
-    Díky souvislosti do každého vrcholu z $T$ vede neorientovaná cesta. Zároveň redukovaná verze této cesty bude orientovaná, protože ve chvíli, kdy se do nějakého vrcholu dostaneme po správném směru hrany, tak všechny dosud \uv{neprozkoumané} hrany vedou z vrcholu ven. Navíc z kořene vedou všechny hrany ven. Tedy $T$ je kořenový strom a pro každý vrchol existuje právě jedna orientovaná cesta z kořene vedoucí do tohoto vrcholu po jediné \uv{vcházející} hraně.
+    Do každého vrcholu $A \in T$ vede z kořene neorientovaná cesta (souvislost). Do~vrcholu $A$ tedy vede i redukovaná verze této cesty podle poznámky \ref{pozn-redukce-cesty}. Navíc z~kořene vedou všechny hrany směrem ven. Tedy konstrukcí libovolné cesty indukcí tak, aby se \uv{neorientované} hrany neopakovali lze pokračovat z nějakého vrcholu $B$ vždy jen po orientované cestě vycházející z vrcholu $B$. To platí díky lemmatu \ref{lemma-char-korenoveho-stromu} pro původní strom $G$. 
+    
+    % do vrcholů se vzdáleností jedna od kořene vede orientovaná cesta. 
+    
+    % Tedy redukovaná verze této cesty podle poznámky \ref{pozn-redukce-cesty} bude orientovaná cesta, protože ve chvíli, kdy~se~do~nějakého vrcholu dostaneme po správném směru hrany, tak všechny dosud \uv{neprozkoumané} hrany vedou z vrcholu ven. Tedy $T$ je kořenový strom a pro každý vrchol existuje právě jedna orientovaná cesta z kořene vedoucí do tohoto vrcholu po jediné \uv{vcházející} hraně.
 \end{dukaz}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 \subsubsection{Stav hry}
-V každém kroku algoritmů vycházíme z určitého stavu hry, pro který daná metoda vybírá další pokus. Stav je posloupnost pokusů s ohodnocením a jsou to přesně ty informace, které má hráč [n,k]-Mastermindu k dispozici, a na základě kterých volí následující tah.
+V každém kroku algoritmů vycházíme z určitého stavu hry, pro který daná metoda vybírá další pokus. Stav je posloupnost pokusů s ohodnocením a reprezentuje přesně ty informace, které má hráč [n,k]-Mastermindu k dispozici.
+% , a na základě kterých volí následující tah.
 
 \begin{definice}[Kolo a stav]\label{stav}
    \emph{Kolo} definujeme jako dvojici $(u,r)$, kde $u \in H_{n,k}$ je kód a $r \in S_{n,k}$ je ohodnocení. 
@@ -135,17 +144,18 @@ V každém kroku algoritmů vycházíme z určitého stavu hry, pro který daná
 
 Stavy hry a vazby mezi nimi popíšeme orientovaným grafem. Hrany znázorňují pokusy s ohodnocením, které hru [n,k]-Mastermind posouvají do dalších stavů. 
 \begin{definice}[Strom \text{[n,k]-Mastermindu}]
-  \emph{Strom [n,k]-Mastermindu} definujeme jako orientovaný graf na množině všech stavů. Ze stavu $A = \left((u_1, r_1),\dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a pro všechna $ i \in \{1,2,\dots, j\}$ platí $ (u_i, r_i) = (w_i, s_i)$. Tato hrana je obarvená kolem $(w_l, s_l)$, tedy kódem $w_l$ a ohodnocením $s_l$.
+  \emph{Strom [n,k]-Mastermindu} definujeme jako orientovaný graf na množině všech stavů. Ze stavu $A = \left((u_1, r_1),\dots, (u_j,r_j)\right)$ do stavu $B = \left((w_1, s_1), \dots, (w_l,s_l)\right)$ vede hrana právě tehdy, když $l = j+1$ a~pro~všechna $ i \in \{1,2,\dots, j\}$ platí $ (u_i, r_i) = (w_i, s_i)$. Tato hrana je obarvená kolem $(w_l, s_l)$, tedy kódem $w_l$ a ohodnocením $s_l$.
   % Z počátečního stavu vede hrana do všech stavů $(u,r)$ pro $u \in H_{n,k}$ a $r\in S_{n,k}$.
 \end{definice}
-\begin{pozn}
-    Strom [n,k]-Mastermindu má nekonečnou množinu vrcholů. Každý vrchol je ale konečným stavem.
-\end{pozn}
+Strom [n,k]-Mastermindu má nekonečnou množinu vrcholů. Každý vrchol je ale konečným stavem. Zároveň z definice hran plyne, že Strom [n,k]-Mastermindu je kořenový strom, což ukážeme v následujícím pozorování.
+    % Do každého vrcholu (kromě počátečního) navíc vede právě jedna hrana ze stavu, který vznikne vynecháním posledního kola. Díky tomu můžeme říct, že strom [n,k]-Mastermindu je kořenový.
+
+% \newpage
 \begin{pozorovani}
     Strom [n,k]-Mastermindu je kořenový strom.
 \end{pozorovani}
 \begin{dukaz}
-    Do všech stavů kromě počátečního vede právě jedna hrana z vrcholu, který vznikne vynecháním posledního kola stavu. Tedy počáteční stav je jediným kořenem. Navíc do všech stavů $A$ vede orientovaná cesta z počátečního stavu daná koly ve stavu $A$, kde kolo slouží jako obarvení hrany. Pozorování plyne z lemmatu \ref{lemma-char-korenoveho-stromu}.
+    Do všech stavů kromě počátečního vede právě jedna hrana z vrcholu, který vznikne vynecháním posledního kola stavu. Tedy počáteční stav je jediným kořenem. Navíc do všech stavů $A$ vede orientovaná cesta z počátečního stavu daná koly ve stavu $A$, kde kolo slouží jako obarvení hrany. Pozorování plyne z~lemmatu~\ref{lemma-char-korenoveho-stromu}.
 
     % Stačí tedy dokázat neexistenci neorientovaného cyklu.
     %  Uvažujme stav $A$, ze kterého vede neorientovaný cyklus. Uvažujeme první a poslední hranu. Nechť jsou tyto hrany mezi stavem $A$ a jeho následníky, například $A_{u,r}, A_{v,t}$, $(u,r) \neq (v,t)$. Potom díky redukovanosti cyklu jsou všechny vrcholy cesty prodloužením buď $A_{u,r}$ nebo $A_{v,t}$. Hrana mezi těmito prodlouženími nemůže existovat, protože se stavy liší hned u následníka stavu $A$.
@@ -170,7 +180,7 @@ Stavy, do kterých ze stavu $A$ vede nějaká hrana nazýváme následníky stav
 \begin{pozn}
     \emph{Následník $A$, vzhledem ke kódu $u$} je $A_{u,r}$ pro nějaké $r \in S_{n,k}$. \emph{Následník $A$} je $A_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S_{n,k}$. 
 \end{pozn}
-Obrázek \ref{fignaslednicipocatecnihostavu22} zobrazuje počáteční stav [2,2]-Mastermindu a všechny jeho následníky. 
+Obrázek \ref{fignaslednicipocatecnihostavu22} zobrazuje počáteční stav [2,2]-Mastermindu a všechny jeho následníky. Množina ohodnocení plyne z lemmatu \ref{tvrzohodnoceni2}.
 
 \begin{figure}[h!]
     \centering
@@ -220,7 +230,7 @@ Obrázek \ref{fignaslednicipocatecnihostavu22} zobrazuje počáteční stav [2,2
     \label{fignaslednicipocatecnihostavu22}
 \end{figure}
 
-Průběh [n,k]-Mastermindu s nějakým tajným kódem $v$ lze sledovat ve stromu [n,k]-Mastermindu. Nechť $A$ je stav a hráč zvolí další pokus $u$. Touto volbou hráč vybral část následníků, do kterých se stav hry může dostat. Jsou to právě následníci stavu $A$ vzhledem ke kódu $u$. Zadavatel ohodnotí kód $u$ vzhledem ke kódu $v$ ohodnocením $r$. Ohodnocením určí, který stav z následníků $A$ vzhledem ke kódu $u$ bude následovat. Hráč tedy může vybrat jako následující pokus ten, který bude mít nejvhodnější vrstvu následníků stavu $A$ (například podle množin kandidátů definovaných níže). Z těchto následníků ale neví, do kterého se hra dostane, protože nezná ohodnocení s tajným kódem. 
+Průběh [n,k]-Mastermindu s nějakým tajným kódem $v$ lze sledovat ve stromu [n,k]-Mastermindu. Nechť $A$ je stav a hráč zvolí další pokus $u$. Touto volbou hráč vybral část následníků, do kterých se stav hry může dostat. Jsou to právě následníci stavu $A$ vzhledem ke kódu $u$. Zadavatel ohodnotí kód $u$ vzhledem ke~kódu~$v$ ohodnocením $r$. Ohodnocením určí, který stav z následníků $A$ vzhledem ke kódu $u$ bude následovat. Hráč tedy může vybrat jako následující pokus ten, který bude mít nejvhodnější vrstvu následníků stavu $A$ (například podle množin kandidátů definovaných níže). Z těchto následníků ale neví, do kterého se hra dostane, protože nezná ohodnocení s tajným kódem. 
 
 
 \subsubsection{Kandidát}
@@ -244,18 +254,18 @@ Velikost a struktura množiny kandidátů určuje, jak blízko jsme uhodnutí ta
 % Množina kandidátů dává intuici za tím, jak blízko jsme uhádnutí tajného kódu. V případě, že množina kandidátů je jednoprvková, tak nám je znám tajný kód. Pokud je množina kandidátů veliká, nejspíš ještě budeme k rozlišení tajného kódu potřebovat více pokusů.
 \begin{definice}[Potomek množiny]\label{defpotomekmnoziny}
   % Uvažujme [n,k]-Mastermind s nějakým tajným kódem $v\in H_{n,k}$. Nechť $S$ je množina všech ohodnocení v $H_{n,k}$. 
-  Nechť $K \subseteq H_{n,k}$ je množina kódů, $u \in H_{n,k}$ je kód a $r \in S_{n,k}$ je ohodnocení. \emph{Potomka množiny $K$, vzhledem ke kódu $u$ a ohodnocení $r$} definujeme jako množinu 
+  Nechť $K \subseteq H_{n,k}$ je množina kódů, $u \in H_{n,k}$ je kód a $r \in S_{n,k}$ je ohodnocení. \emph{Potomka množiny $K$, vzhledem ke kódu~$u$ a~ohodnocení~$r$} definujeme jako množinu 
   \[K_{u,r} = \{w \in K \mid s(w,u) = r\}.\] 
 \end{definice}
 \begin{pozn}
-    \emph{Potomkem $K$, vzhledem ke kódu $u$} nazýváme množinu $K_{u,r}$ pro nějaké $r \in S_{n,k}$. \emph{Potomkem $K$} nazýváme množinu $K_{u,r}$ pro nějaké $u\in H_{n,k}$ a $r \in S_{n,k}$. 
+    \emph{Potomkem $K$, vzhledem ke kódu $u$} nazýváme množinu $K_{u,r}$ pro~nějaké $r \in S_{n,k}$. \emph{Potomkem $K$} nazýváme množinu $K_{u,r}$ pro~nějaké $u\in H_{n,k}$ a~$r \in S_{n,k}$. 
 \end{pozn}
 Z definice plyne
-\[\bigcup_{r\in S_{n,k}} K_{u,r} \subseteq K.\] Zároveň žádný kód $w \in K$ nemůže mít s kódem $u$ dvě různá ohodnocení, a tedy sjednocení je disjunktní. Navíc pro každý kód $w \in K$ platí, že $w \in K_{u, s(w,u)}$, a tedy platí následující lemma.
+\[\bigcup_{r\in S_{n,k}} K_{u,r} \subseteq K.\] Zároveň žádný kód $w \in K$ nemůže mít s kódem $u$ dvě různá ohodnocení, a~tedy sjednocení je disjunktní. Navíc pro každý kód $w \in K$ platí, že $w \in K_{u, s(w,u)}$, a~tedy platí následující lemma.
 
 \begin{lemma}[Vztah množiny s jejími potomky]\label{lemmadisjunktnipotomci}
     % Nechť $S_{n,k}$ je množina všech ohodnocení kódů v $H_{n,k}$. 
-    Pro každou množinu $K \subseteq H_{n,k}$ a kód $u \in H_{n,k}$ platí
+    Pro každou množinu $K \subseteq H_{n,k}$ a~kód $u \in H_{n,k}$ platí
     \[K = \bigsqcup_{r\in S_{n,k}} K_{u,r},\]
     tedy množina kódů je disjunktním sjednocením potomků vzhledem k určitému kódu.
 \end{lemma}
@@ -293,7 +303,7 @@ Z lemmatu plyne, že potomci $K$ vzhledem ke kódu $u$ určují množiny kandid�
 %     Orientovaný multigraf povoluje více hran mezi stejnými vrcholy, které se ale liší v obarvení. Hrana je navíc jednoznačně určená počátečním vrcholem a obarvením. Kořen je stejně jako v orientovaném grafu vrchol, do kterého nevede žádná hrana. 
 % \end{pozn}
 \begin{definice}[Multigraf prostoru kódů]
-  Nechť $n, k\in \mathbb{N}$, $u\in H_{n,k}$ je kód a $r\in S_{n,k}$ je ohodnocení. \emph{Multigraf prostoru kódů} definujeme jako orientovaný graf $G_{n,k} = (\mathcal{V}, \mathcal{E})$. $\mathcal{V} = \mathcal{P}(H_{n,k})$ je množina vrcholů. $\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V} \times (H_{n,k}\times S_{n,k})$ je množina hran s obarveními, pro kterou platí, že z vrcholu $K_1$ do vrcholu $K_2$ vede hrana obarvená $(u,r)$ právě tehdy, když $K_2$ je potomek $K_1$ vzhledem ke kódu $u$ a ohodnocení $r$. 
+  Nechť $n, k\in \mathbb{N}$, $u\in H_{n,k}$ je kód a~nechť $r\in S_{n,k}$ je ohodnocení. \emph{Multigraf prostoru kódů} definujeme jako orientovaný graf $G_{n,k} = (\mathcal{V}, \mathcal{E})$. $\mathcal{V} = \mathcal{P}(H_{n,k})$ je množina vrcholů. $\mathcal{E} \subseteq \mathcal{V} \times \mathcal{V} \times (H_{n,k}\times S_{n,k})$ je množina hran s obarveními, pro kterou platí, že z vrcholu $K_1$ do vrcholu $K_2$ vede hrana obarvená $(u,r)$ právě tehdy, když $K_2$ je potomek $K_1$ vzhledem ke kódu~$u$ a~ohodnocení $r$. 
   % Každá hrana je jednoznačně určená počátečním vrcholem a obarvením $(u,r)$. 
   % kde každá hraná má přiřazené obarvení $r\in S_{n,k}$. 
 \end{definice}
@@ -347,7 +357,8 @@ Nyní ukážeme nějaké vlastnosti multigrafu [n,k]-Mastermindu, které pomohou
     Řekneme, že orientovaný graf je orientovaně acyklický, pokud neobsahuje žádný nekonstantní orientovaný cyklus.
 \end{definice}
 \begin{pozn}
-    Tato vlastnost tedy povoluje hrany z vrcholu do sebe samotného. Ve chvíli, kdy ale hrana opustí vrchol, už se do něj po orientovaných hranách nelze vrátit. To připomíná vlastnost kořenového stromu až na existenci neorientovaných cyklů.
+    Tato vlastnost tedy povoluje hrany z vrcholu do sebe samotného. Ve~chvíli, kdy ale hrana opustí vrchol, už se do něj po orientovaných hranách nelze vrátit. Tuto vlastnost dokážeme pro multigraf [n,k]-Mastermindu.
+    % To připomíná vlastnost kořenového stromu až na existenci neorientovaných cyklů.
 \end{pozn}
 
 \begin{lemma}
@@ -370,12 +381,10 @@ Touto vlastností chceme poukázat na vývoj stavu hry v případě hry Mastermi
 Z lemmat plyne fakt, že multigraf [n,k]-Mastermindu má kořen, kterým je celý prostor kódů. Ve spojení s neexistencí nekonstantních orientovaných cyklů dostáváme podobnost multigrafu [n,k]-Mastermindu s kořenovým stromem [n,k]-Mastermindu. Tento vztah popíšeme formálně pomocí takzvaného rozvinutí.
 % multigraf je "directed acyclic graph"
 \begin{definice}[Rozvinutí grafu]
-    \emph{Rozvinutí orientovaně acyklického grafu $G = (\mathcal{V}, \mathcal{E})$ s jedním kořenem} definujeme jako orientovaný graf $T = (V, E)$.
+    \emph{Rozvinutí orientovaně acyklického grafu s~jedním kořenem $G = (\mathcal{V}, \mathcal{E})$} definujeme jako orientovaný graf $T = (V, E)$.
     % , kde $V$ je množina vrcholů a $E$ množina hran definované následovně.
-    
     Množina vrcholů $V$ je množina cest z kořene grafu $G$, které jsou reprezentovány obarvením hran. Vrchol $A \in V$ je obarven vrcholem $K \in \mathcal{V}$, do kterého z kořene vede cesta $A$. 
-    
-    Pro množinu hran $E$ platí, že z vrcholu $A \in V$ do vrcholu $B \in V$ vede hrana právě tehdy, když cesta $B$ vznikne z cesty $A$ prodloužením o jednu hranu. Tato hrana je obarvená poslední hranou cesty $B$. 
+    Pro~množinu hran $E$ platí, že z vrcholu $A \in V$ do vrcholu $B \in V$ vede hrana právě tehdy, když cesta $B$ vznikne z cesty $A$ prodloužením o jednu hranu. Tato hrana je obarvená poslední hranou cesty $B$. 
 \end{definice}
 % Graf na obrázku \ref{fignaslednicipocatecnihostavu22} (výše) je rozvinutím multigrafu potomků $H_{2,2}$ na obrázku \ref{figpotomciH22}.
 
@@ -412,7 +421,7 @@ Z lemmat plyne fakt, že multigraf [n,k]-Mastermindu má kořen, kterým je cel�
     Strom [n,k]-Mastermindu je rozvinutím multigrafu [n,k]-Mastermindu.
 \end{veta}
 \begin{dukaz}
-    Obarvení hran v multigrafu [n,k]-Mastermindu odpovídá kolům. Cesta z kořene reprezentovaná obarvením hran tedy přesně odpovídá nějakému stavu. Hrany mezi vrcholy rozvinutí a vrcholy stromu [n,k]-Mastermindu mají opět obdobný předpis. Z každého stavu ve stromě [n,k]-Mastermindu vedou hrany obarvené všemi kombinacemi kódů a ohodnocení. Obdobně každá cesta v multigrafu [n,k]-Mastermindu lze prodloužit hranou obarvenou libovolným kódem s ohodnocením. Prázdná cesta také odpovídá prázdnému stavu. Grafy jsou tedy identické. 
+    Obarvení hran v multigrafu [n,k]-Mastermindu odpovídá kolům. Cesta z kořene reprezentovaná obarvením hran tedy přesně odpovídá nějakému stavu. Hrany mezi vrcholy rozvinutí a vrcholy stromu [n,k]-Mastermindu mají opět obdobný předpis. Z každého stavu ve stromě [n,k]-Mastermindu vedou hrany obarvené všemi kombinacemi kódů a ohodnocení. Obdobně každá cesta v multigrafu [n,k]-Mastermindu lze prodloužit hranou obarvenou libovolným kódem s~ohodnocením. Prázdná cesta také odpovídá prázdnému stavu. Grafy jsou tedy identické. 
     
     % vrcholu, do kterého vede cesta $A$ v multigrafu [n,k]-Mastermindu začínající ve vrcholu $H_{n,k}$. 
 
@@ -423,7 +432,7 @@ Z lemmat plyne fakt, že multigraf [n,k]-Mastermindu má kořen, kterým je cel�
      % Z každého stavu vedou hrany obarvené všemi kódy s ohodnoceními. To samé platí pro vrcholy na multigrafu. 
 \end{dukaz}
 % Multigraf [n,k]-Mastermindu s umožňuje interpretovat hru bez znalosti 
-Pro každý stav $A$ navíc díky lemmatu \ref{lemmavztahnaslednikuapotomku} platí, že jeho množina kandidátů je rovna obarvení ekvivalentního vrcholu v rozvinutí multigrafu [n,k]-Mastermindu. Pomocí multigrafu [n,k]-Mastermindu tedy lze určit množiny kandidátů všech stavů. Zadaný multigraf tedy umožňuje popsat množiny kandidátů bez znalosti ohodnocení. Možnost popisu hry pouze pomocí multigrafu krátce rozvedeme po následující sekci. 
+Pro každý stav $A$ navíc díky lemmatu \ref{lemmavztahnaslednikuapotomku} platí, že jeho množina kandidátů je rovna obarvení ekvivalentního vrcholu v rozvinutí multigrafu [n,k]-Mastermindu. Pomocí multigrafu [n,k]-Mastermindu tedy lze určit množiny kandidátů všech stavů. Zadaný multigraf tedy umožňuje popsat množiny kandidátů bez znalosti ohodnocení. Možnost popisu hry pouze pomocí multigrafu krátce rozvedeme po~následující sekci. 
 
 % Bonus:
 % \begin{definice}[Částečné uspořádání stavů??]
@@ -490,11 +499,11 @@ Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chví
     % Strom algoritmu neobsahuje žádné orientované cykly (cesty se začátkem i koncem ve stejném vrcholu) díky definici hran.
     % ve stromě [n,k]-Mastermindu. 
     % Zároveň do každého stavu (kromě počátečního) vede právě jedna hrana a díky souvislosti tedy strom algoritmu obsahuje nějaký kořen. Označíme $K$ množinu jeho kandidátů.
-    Využijeme lemmatu \ref{lemmavztahnaslednikuapotomku} a lemmatu \ref{lemmadisjunktnipotomci} o disjunktním sjednocení potomků množin kandidátů. Díky podmínce $2$ z definice stromu algoritmu jsou množiny kandidátů všech stavů ve stromu algoritmu podmnožinami $K$. Pokud $K \neq H_{n,k}$, existoval by kód $u \in H_{n,k} \setminus K$. Pokud by potom strom algoritmu obsahoval stav s kolem $(u, (n,0))$, tento stav by byl prázdný. Nemohl by tedy pro tento kód existovat koncový stav. Množina kandidátů kořene je tedy rovna $H_{n,k}$. Z lemmatu \ref{lemmakandidatipocstavu} plyne, že kořenem je právě počáteční stav. 
+    Využijeme lemmatu~\ref{lemmavztahnaslednikuapotomku} a lemmatu~\ref{lemmadisjunktnipotomci} o disjunktním sjednocení potomků množin kandidátů. Díky podmínce~$2$ z definice stromu algoritmu jsou množiny kandidátů všech stavů ve stromu algoritmu podmnožinami $K$. Pokud $K \neq H_{n,k}$, existoval by kód $u \in H_{n,k} \setminus K$. Pokud by potom strom algoritmu obsahoval stav s kolem $(u, (n,0))$, tento stav by byl prázdný. Nemohl by tedy pro tento kód existovat koncový stav. Množina kandidátů kořene je tedy rovna $H_{n,k}$. Z lemmatu \ref{lemmakandidatipocstavu} plyne, že kořenem je právě počáteční stav. 
 \end{dukaz}
 
 \begin{definice}
-    Řekneme, že stav $B$ je \emph{prodloužením stavu} $A$, značíme $A \leq B$, pokud existuje orientovaná cesta ve stromu [n,k]-Mastermindu ze stavu $A$ do stavu $B$. 
+    Řekneme, že stav $B$ je \emph{prodloužením stavu} $A$, značíme $A \leq B$, pokud existuje orientovaná cesta ve stromu [n,k]-Mastermindu ze stavu~$A$ do~stavu~$B$. 
 \end{definice}
 
 
@@ -505,20 +514,20 @@ Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chví
 \begin{dukaz}
     Dokážeme obě implikace. Nechť napřed jedna cesta je prodloužením druhé, například $A_1 \leq A_2$. Potom z opakovaného použití lemmat \ref{lemmavztahnaslednikuapotomku} a \ref{lemmadisjunktnipotomci} plyne, že $K_2 \subseteq K_1$. Obě množiny jsou neprázdné, a tedy jejich průnik je neprázdný. 
 
-    Druhou implikaci dokážeme indukcí podle součtu délek cest z počátku do stavů $A_1$ a $A_2$. Délky označíme $d_1$ a $d_2$. Nechť $d_1 + d_2 = 1$ a průnik $K_1$ a $K_2$ je neprázdný. Potom jeden stav je počáteční a druhý je jeho následník, a tedy jedna cesta je prodloužením druhé.
+    Druhou implikaci dokážeme indukcí podle součtu délek cest z počátku do~stavů $A_1$ a $A_2$. Délky označíme $d_1$ a $d_2$. Nechť $d_1 + d_2 = 1$ a průnik $K_1$ a $K_2$ je neprázdný. Potom jeden stav je počáteční a druhý je jeho následník, a tedy jedna cesta je prodloužením druhé.
     % Tedy z lemmatu \ref{lemmadisjunktnipotomci} platí, že jedna množina je podmnožinou druhé, jejich průnik je tedy neprázdný. .
 
     % Nechť $d = 2$. Potom buď délka obou cest je stejná, a tedy jsou oba stavy následníky počátečního. Tedy z lemmatu \ref{lemmadisjunktnipotomci} je jedna cesta prodloužením druhé (v tomto případě shodná cesta) právě tehdy, když je průnik množin kandidátů neprázdný.
 
-    Nechť tvrzení platí pro $m \in \mathbb{N}$ a $d_1 + d_2 = m+1$ a například $d_2 \geq d_1$. Označíme $B \in V$ stav, ze kterého vede do stavu $A_2$ hrana, $K$ množinu jeho kandidátů a $d = d_2-1$ délku cesty z počátku do $B$. Nechť průnik $K_1$ a $K_2$ je neprázdný. Z lemmatu \ref{lemmadisjunktnipotomci} plyne $K_2 \subseteq K$, a tedy průnik $K$ a $K_1$ je neprázdný. Pokud $d_2 > d_1$, tak z indukčního předpokladu a délek cest plyne, že $A_1 \leq B$. Navíc $B\leq A_2$, a tedy $A_1 \leq A_2$. Pokud $d_2 = d_1$, tak z indukčního předpokladu a délek cest plyne $B \leq A_1$. Navíc $d_1 = d+1$, a tedy $A_1$ je stejně jako $A_2$ následník $B$. Z podmínky $2$ v definici stromu algoritmu a lemmatu \ref{lemmadisjunktnipotomci} plyne, že $A_1 = A_2$, a tedy $A_1 \leq A_2$. 
+    Nechť tvrzení platí pro $m \in \mathbb{N}$ a $d_1 + d_2 = m+1$ a například $d_2 \geq d_1$. Označíme $B \in V$ stav, ze kterého vede do stavu $A_2$ hrana, $K$ množinu jeho kandidátů a~$d = d_2-1$ délku cesty z počátku do $B$. Nechť průnik $K_1$ a $K_2$ je neprázdný. Z lemmatu~\ref{lemmadisjunktnipotomci} plyne $K_2 \subseteq K$, a tedy průnik $K$ a $K_1$ je neprázdný. Pokud $d_2 > d_1$, tak z indukčního předpokladu a~délek cest plyne, že $A_1 \leq B$. Navíc $B\leq A_2$, a tedy $A_1 \leq A_2$. Pokud $d_2 = d_1$, tak z indukčního předpokladu a~délek cest plyne $B \leq A_1$. Navíc $d_1 = d+1$, a tedy $A_1$ je stejně jako $A_2$ následník $B$. Z podmínky~$2$ v definici stromu algoritmu a lemmatu~\ref{lemmadisjunktnipotomci} plyne, že $A_1 = A_2$, a~tedy $A_1 \leq A_2$. 
 \end{dukaz}
 
 
 \begin{tvrz}\label{tvrzvsichninaslednici}
-    Z každého nekoncového vrcholu $A$ stromu algoritmu vedou hrany do všech neprázdných následníků vzhledem k $u_A$.
+    Z každého nekoncového vrcholu $A$ stromu algoritmu vedou hrany do~všech neprázdných následníků vzhledem k $u_A$.
 \end{tvrz}
 \begin{dukaz}
-    Nechť existuje nekoncový stav $A$ ve stromu algoritmu $T = (V,E)$ s množinou kandidátů $K$, ze kterého nevede hrana do nějakého neprázdného následníka vzhledem k $u_A$. Tedy z lemmatu \ref{lemmadisjunktnipotomci} existuje nějaký kód $w \in K$, který nenáleží do žádné množiny kandidátů následníků $A$ v $T$. 
+    Nechť existuje nekoncový stav $A$ ve stromu algoritmu $T = (V,E)$ s množinou kandidátů $K$, ze kterého nevede hrana do nějakého neprázdného následníka vzhledem k $u_A$. Tedy z lemmatu~\ref{lemmadisjunktnipotomci} existuje nějaký kód $w \in K$, který nenáleží do~žádné množiny kandidátů následníků $A$ v $T$. 
 
     Z definice stromu algoritmu ale existuje nějaký koncový stav $B$ s posledním členem $(w,(n,0))$, který má množinu kandidátu jednoprvkovou množinu $\{w\}$. Platí, že $K\cap \{w\} \neq \emptyset$, a tedy díky lemmatu \ref{lemmaprunikacestastromalg} $A \leq B$ nebo $B \leq A$. Protože koncový stav je listem, tak musí platit $A \leq B$. Tedy existuje posloupnost stavů, které leží na cestě z $A$ do $B$. Znovu díky lemmatu \ref{lemmaprunikacestastromalg} musí každá množina kandidátů těchto stavů obsahovat kód $w$. Konkrétně tedy nějaká množina kandidátů následníka $A$ v $T$ musí obsahovat $w$. Což je ale spor s předpokladem, že $w$ nenáleží do žádné množiny kandidátů následníků $A$ v $T$. Tedy z každého vrcholu $A$ stromu algoritmu vedou hrany do všech neprázdných následníků $A$ vzhledem k $u_A$. 
 \end{dukaz}
@@ -527,11 +536,11 @@ Prázdný stav nemůže odpovídat průběhu hry Mastermind, protože v tu chví
 
 % Prázdné stavy jsou vynechány, protože jsou v průběhu hry nedosažitelné. Potomky koncových stavů neuvažujeme, protože by to byly pokusy po konci hry. 
 \begin{pozn}
-    Uvažujme algoritmus $\mathcal{Z}$ který pro stav $A$ zahraje kód $u_A$ určený pro tento stav. Potom strom tohoto algoritmu lze sestavit rekurzivně, kdy napřed obsahuje pouze počáteční stav. Pro každý nekoncový stav $A$ ve stromu algoritmu přidáme do stromu všechny neprázdné následníky $A$ vzhledem k zahranému kódu $u_A$ a hrany, které je spojují se stavem $A$. 
+    Uvažujme algoritmus $\mathcal{Z}$ který pro stav $A$ zahraje kód $u_A$ určený pro tento stav. Potom strom tohoto algoritmu lze sestavit rekurzivně, kdy napřed obsahuje pouze počáteční stav. Pro každý nekoncový stav $A$ ve stromu algoritmu přidáme do stromu všechny neprázdné následníky $A$ vzhledem k zahranému kódu~$u_A$ a hrany, které je spojují se stavem $A$. 
     % Tento orientovaný graf nazýváme strom algoritmu $\mathcal{Z}$. 
-    Pokud je algoritmus zvolen vhodně, tento orientovaný graf splňuje podmínky z definice, protože proces skončí až u koncových stavů a v každém kroku jsou všechny kódy z množiny kandidátů stavu $A$ obsaženy v množině kandidátů nějakého následníka.
+    Pokud je algoritmus zvolen vhodně, tento orientovaný graf splňuje podmínky z definice, protože proces skončí až u~koncových stavů a v každém kroku jsou všechny kódy z množiny kandidátů stavu $A$ obsaženy v množině kandidátů nějakého následníka.
 \end{pozn}
- Strom algoritmu popisuje průběh hry pro všechny tajné kódy. Jednotlivá kola [n,k]-Mastermindu s tajným kódem $v\in H_{n,k}$ odpovídají hranám cesty z počátečního stavu do koncového stavu s posledním kolem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{figprikladstromualgoritmu}. Stejný strom vytvoříme postupně v příkladu v další sekci a ukážeme, že to doopravdy je strom algoritmu. Ze stromu algoritmu lze vyčíst počty pokusů, které algoritmus potřebuje k nalezení tajných kódů. Jsou to délky cest od kořene k listům.
+ Strom algoritmu popisuje průběh hry pro všechny tajné kódy. Jednotlivá kola [n,k]-Mastermindu s tajným kódem $v\in H_{n,k}$ odpovídají hranám cesty z~počátečního stavu do koncového stavu s posledním kolem $(v,(n,0))$. Příklad stromu algoritmu pro [2,2]-Mastermind ukazuje obrázek \ref{figprikladstromualgoritmu}. Stejný strom vytvoříme postupně v příkladu v další sekci a ukážeme, že to doopravdy je strom algoritmu. Ze stromu algoritmu lze vyčíst počty pokusů, které algoritmus potřebuje k nalezení tajných kódů. Jsou to délky cest od kořene k listům.
 
     %Platí, že pro nějaký kód $u$ jsou množiny kandidátů potomků $A$ vzhledem ke kódu $u$ disjunktní a sjednocením dávají množinu kandidátů stavu $A$. Všechny stavy, do kterých se dostaneme cestou z nějakého stavu $A$ za dodržení podmínky $1$ tedy mají kandidáty z množiny kandidátů stavu $A$. 
 
@@ -591,8 +600,8 @@ Problém lze dále zobecnit na situaci, kdy o původním problému nic nevíme, 
 
 \section{Obecný algoritmus}
 Nyní přistoupíme k popisu skupiny deterministických algoritmů řešící hru [n,k]-Mastermind. V této práci popisujeme algoritmy, které pro libovolný stav $A$ vybírají další pokus podle množiny kandidátů stavu $A$. 
-Pro dva různé stavy, které ale mají shodnou množinu kandidátů je problém nalezení dalšího kódu ekvivalentní. Předpokládáme totiž, že všechny kódy mohou být tajným kódem se stejnou pravděpodobností. 
-Tento výběr popíšeme pomocí dvou funkcí, valuace a strategie. 
+Pro dva různé stavy, které ale mají shodnou množinu kandidátů je problém nalezení dalšího kódu ekvivalentní. Předpokládáme totiž, že všechny kódy mohou být tajným kódem se~stejnou pravděpodobností. 
+Tento výběr popíšeme pomocí dvou funkcí, valuace a~strategie. 
 
 
 % Algoritmy popisujeme podle funkcí, které pro jakýkoliv stav naleznou další pokus. Nazýváme je, valuace a strategie. 
@@ -618,7 +627,7 @@ Tento výběr popíšeme pomocí dvou funkcí, valuace a strategie.
 
 % U této definice si nejsem jistý, jak to smyslupně definovat. Vazba "která lz e vyjádřit pomocí potomků" se mi moc nelíbí - definovat valuaci a až potom jednokrokové valuace
 \begin{definice}[Valuace]
-    Nechť $K \subseteq H_{n,k}$ je množina kódů. Potom \emph{valuaci vzhledem k množině $K$} definujeme jako funkci $f_K(u) \colon H_{n,k} \to \mathbb{R}$.
+    Nechť $K \subseteq H_{n,k}$ je množina kódů. Potom \emph{valuaci vzhledem k množině $K$} definujeme jako funkci $f_K(u) \colon H_{n,k} \to \mathbb{R}$. \emph{Prostor valuací} je množina $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$.
 \end{definice}
 
 
@@ -639,11 +648,11 @@ Valuace bude v algoritmech sloužit pro vyčíslení vhodnosti kódu $u$ jako da
 
 
 \begin{definice}[Strategie]
-    Nechť $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$ je prostor valuací. Potom řekneme, že zobrazení $F \colon \mathcal{F} \to \mathbb{R}$ je \emph{strategie}, pokud pro každou $f_K \in \mathcal{F}$ existuje $u\in H_{n,k}$ takové, že $F(f_K) = f_K(u)$.
+    Nechť $\mathcal{F}$ je prostor valuací. Potom řekneme, že zobrazení $F \colon \mathcal{F} \to \mathbb{R}$ je \emph{strategie}, pokud pro každou valuaci $f_K \in \mathcal{F}$ existuje $u\in H_{n,k}$ takové, že $F(f_K) = f_K(u)$.
 \end{definice}
 % Strategie určitým způsobem slouží k výběru následujícího kódu. 
 %Zjednodušeně řečeno slouží k určení, 
-Strategie určuje kritérium, podle kterého se vybírá další pokus. Algoritmy budou vybírat právě ty kódy, které mají valuaci rovnou hodnotě strategie pro aktuální množinu kandidátů. 
+Strategie určuje kritérium, podle kterého se vybírá další pokus. Algoritmy budou vybírat právě ty kódy, které mají valuaci rovnou hodnotě strategie pro~aktuální množinu kandidátů. 
 
 % v této práci bude určovat, zda chceme vybírat kódy s vyšší nebo nižší hodnotou valuace.
 %Použití bude popsáno níže v popisu algoritmu \ref{alg-default}. 
@@ -653,6 +662,8 @@ Strategie určuje kritérium, podle kterého se vybírá další pokus. Algoritm
     \[F(f_K) =  \max_{u\in H_{n,k}} f_K(u)\]
     Funkce $F$ je dobře definovaná, protože maximum na konečné množině reálných čísel má vždy jednoznačně určenou hodnotu. Navíc existuje $u\in H_{n,k}$, pro který platí $f_K(u) = \max_{u\in H_{n,k}} f_K(u)$, a tedy $F$ je strategie.
 \end{prikl}
+
+
 
 \begin{definice}[Deterministický algoritmus]\label{defobecnyalg}
     \emph{Deterministický algoritmus řešící [n,k]-Mastermind s prostorem valuací $\mathcal{F}$ a strategií $F$} je funkce, která tajnému kódu $v$ přiřadí posloupnost zahraných kódů s ohodnoceními $\textsc{Solve}[n, k, \mathcal{F}, F](v)$, podle předpisu algoritmu \ref{alg-default}.
@@ -667,21 +678,6 @@ Strategie určuje kritérium, podle kterého se vybírá další pokus. Algoritm
     % které pro následující pokus vybírají kód podle zvolené valuace a strategie. Postup je znázorněn v algoritmu \ref{alg-default}.
     
 \end{definice}
-\begin{pozn}
-    Důkaz správnosti algoritmu bude sestrojen pro konkrétní volby valuace a strategie v následující kapitole. 
-\end{pozn}
-
-
-% \subsection{Varianty algoritmů}
-
-
-
-
-
-%Nechť \[P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0\] jsou tahy s ohodnocením a $K$ je konec cesty $P$ z vrcholu $H_{n,k}$. 
-
-%Potom jednokrokové strategie volí další kód ten, který minimalizuje respektive maximalizuje funkci $f_K$. Pokud je těchto kódů více, zvolí kód, který je zároveň kandidát cesty $P$. Pokud výběr stále není jednoznačný, algoritmus zvolí lexikograficky nejnižší kód. 
-
 \begin{algorithm}[h!]
 \begin{algorithmic}[1]  % [1] způsobí, že číslujeme kroky algoritmu
 \Function{Solve$[n, k, \mathcal{F}, F]$}{$v$}
@@ -705,6 +701,23 @@ Strategie určuje kritérium, podle kterého se vybírá další pokus. Algoritm
 \caption{Deterministický algoritmus řešící [n,k]-Mastermind}
 \label{alg-default}
 \end{algorithm}
+
+\begin{pozn}
+    Důkaz správnosti algoritmu bude sestrojen pro konkrétní volby valuace a strategie v následující kapitole. 
+\end{pozn}
+
+
+% \subsection{Varianty algoritmů}
+
+
+
+
+
+%Nechť \[P = \left((u_1, r_1), (u_2,r_2), \dots, (u_j,r_j)\right), u_i \in H_{n,k}, r_i \in \N _0 \times \N _0\] jsou tahy s ohodnocením a $K$ je konec cesty $P$ z vrcholu $H_{n,k}$. 
+
+%Potom jednokrokové strategie volí další kód ten, který minimalizuje respektive maximalizuje funkci $f_K$. Pokud je těchto kódů více, zvolí kód, který je zároveň kandidát cesty $P$. Pokud výběr stále není jednoznačný, algoritmus zvolí lexikograficky nejnižší kód. 
+
+
 
 Písmenem $K$ značíme množinu kandidátů na tajný kód pro aktuální stav hry. Ta vždy odpovídá aktuálnímu stavu díky lemmatu \ref{lemmavztahnaslednikuapotomku} o vztahu mezi následníky stavů a potomky množin kandidátů. Tajný kód $v$ náleží do množiny kandidátů $K$ v každé iteraci, protože 
 \[v \in K_{u_j, s(u_j,v)} = K_{u_j, r_j}.\]

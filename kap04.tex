@@ -15,7 +15,7 @@ Druhý ukazatel, který u algoritmů budeme srovnávat je průměrný počet pok
     \[\frac{1}{k^n}\sum_{A\in V, A \text{ list}} d(A).\]
 \end{definice}
 
-Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy zda neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost pojmenujeme \emph{konzistence}. V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. Tato myšlenka byla převzatá od Neuwirtha \cite{neuwirth}. Každý kód totiž vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
+Posledním kritériem, kterého si budeme u algoritmů všímat je výběr prvního tahu. Zajímá nás, jestli první tah, který algoritmus zvolí, je optimální. Tedy jestli neexistuje jiný první pokus, který by s následným použitím algoritmu vracel lepší výsledky. Tuto vlastnost pojmenujeme \emph{konzistence}. V případě [4,6]-Mastermindu budeme konzistenci zkoumat pro pět počátečních kódů $1111$, $1112$, $1122$, $1123$, $1234$. Obhajujeme to tím, že neexistuje kód, který by vytvořil nějakou jinou valuaci v prvním tahu než tyto kódy. Tato myšlenka byla převzatá od Neuwirtha \cite{neuwirth}. Každý kód totiž vznikne nějakou substitucí barev a permutací pozic těchto pěti kódů. Tyto operace nezmění velikosti potomků ${H_{4,6}}_{u,r}$, protože jednotlivé pozice a barvy jsou rovnoměrně rozloženy v celém prostoru kódů. A protože tři použité valuace vycházejí právě z velikostí potomků, jejich hodnoty se nezmění. 
 
 % V sekci $4.5$ diskutujeme možný vliv výběru lexikograficky vyššího prvního tahu z důvodu následného výběru lexikograficky minimálních kódů ve všech algoritmech.
 
@@ -54,11 +54,11 @@ Entropie je zaokrouhlena na dvě desetinná místa.
 
 
 \section{Způsob testování}
-Výsledky algoritmů byly nalezeny vytvořením stromu algoritmu pro každou metodu. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus podle zvolené valuace a strategie. Ve chvíli, kdy program dojde do listu hranou $(n,0)$, je uložena aktuální vzdálenost listu od~kořene (počet pokusů potřebný k nalezení daného tajného kódu) do seznamu s~počty pokusů. 
+Výsledky algoritmů byly nalezeny vytvořením stromu algoritmu pro každou metodu. Strom byl sestavován postupně, kdy pro každý stav (vrchol na grafu) byl nalezen nejlepší další pokus podle zvolené valuace a strategie. Ve chvíli, kdy~program dojde do listu hranou $(n,0)$, je uložena aktuální vzdálenost listu od~kořene (počet pokusů potřebný k nalezení daného tajného kódu) do seznamu s~počty pokusů. 
 %V průběhu vytváření stromu byly zjišťovány vzdálenosti konečných stavů (listů) od kořene odpovídající počtu pokusů potřebných k uhádnutí daného kódu. 
 Následně z těchto hodnot byly vypočten maximální a průměrný počet pokusů. Konzistence algoritmů byla nalezena sestrojením stromu algoritmu s~pevně zvoleným prvním tahem.
 
-Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojový kód s dokumentací je k této práci přiložen (Příloha A.1). Dále je dostupný na~GitHub \cite{Simsa_Strategies_for_Mastermind_2025}. 
+Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojový kód je k práci přiložen v elektronické podobě (viz Příloha \ref{priloha-program}). Zároveň je přiložena i jeho dokumentace (viz Příloha \ref{priloha-dokumentace}). Dále je program dostupný na~GitHub \cite{Simsa_Strategies_for_Mastermind_2025}. 
 
 
 
@@ -70,7 +70,7 @@ Tento postup byl implementován v jazyce Python pro účel této práce. Zdrojov
 
 \subsubsection{Min-max}
 
-Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Min-max algoritmus jako první tah volí kód $1122$ díky nejlepší valuaci (viz tabulka \ref{tabvaluaceprvnichtahu}). Maximální počet pokusů Min-max algoritmu je $5$, a tedy je v tomto směru optimální. Průměrně pak potřebuje $4.476$ pokusů. Při volbě jiného prvního tahu jsou ve všech případech oba výsledky horší. Min-max algoritmus je tedy konzistentní.
+Tabulka \ref{tabminmaxvysl} ukazuje výsledky Knuthova algoritmu v závislosti na volbě prvního pokusu. Min-max algoritmus jako první tah volí kód $1122$ díky nejlepší valuaci (viz tabulka \ref{tabvaluaceprvnichtahu}). Maximální počet pokusů Min-max algoritmu je $5$, a tedy je v~tomto směru optimální. Průměrně pak potřebuje $4.476$ pokusů. Při volbě jiného prvního tahu jsou ve všech případech oba výsledky horší. Min-max algoritmus je tedy konzistentní.
 
 % Maximální počet pokusů, který min-max algoritmus (začínající kódem 1122) potřebuje na prolomení tajného kódu je $5$. Průměrně pak potřebuje $4.476$ pokusů. K porovnání jsou uvedeny maximální a průměrné počty pokusů pro jiné počáteční kódy. Mohli bychom totiž očekávat, že by průměrný nebo maximální počet pokusů byl menší pro jiný počáteční kód, jak bylo znázorněno v příkladu \ref{malyprikladminmax}. Nejlepších výsledků ale algoritmus dosahuje v při volbě prvního tahu $1122$, který odpovídá přirozenému výběru prvního tahu podle definice Knuthova algoritmu. 
 
@@ -122,7 +122,7 @@ Průměrný počet pokusů je zaokrouhlen na tři desetinná místa}
 
 
 \subsubsection{Most parts}
-Algoritmus Most parts volí jako první tah kód $1123$ (viz tabulka \ref{tabvaluaceprvnichtahu}) a dosahuje průměrného počtu pokusů $4.373$. Tento výsledek, zobrazený v tabulce \ref{tabcastivysl}, je ze~všech porovnávaných algoritmů nejlepší. Maximální počet pokusů je ale opět horší než u algoritmu Min-max, a to 6. Most parts algoritmus je konzistentní, protože průměrné počty pokusů při odlišném prvním tahu jsou vyšší.
+Algoritmus Most parts volí jako první tah kód $1123$ (viz tabulka \ref{tabvaluaceprvnichtahu}) a~dosahuje průměrného počtu pokusů $4.373$. Tento výsledek, zobrazený v tabulce \ref{tabcastivysl}, je ze~všech porovnávaných algoritmů nejlepší. Maximální počet pokusů je ale~opět horší než u algoritmu Min-max, a to 6. Most parts algoritmus je konzistentní, protože průměrné počty pokusů při odlišném prvním tahu jsou vyšší.
 
 
 \begin{table}[h]
@@ -182,7 +182,7 @@ Algoritmus Max entropy dosahuje, možná překvapivě, o dost horšího průměr
 \subsubsection{Volba pokusů pouze z kandidátů}
 Všechny algoritmy uvedené do této chvíle vybíraly následující pokus ze všech kódů $u\in H_{n,k}$. Předpokládejme, že se nacházíme ve stavu $P$ s množinou kandidátů na tajný kód $K$. Pokud zahrajeme kód, který nenáleží do množiny $K$, nemáme šanci tajný kód v tomto kole prolomit. Logickou variantou algoritmů je způsob, který povoluje výběr dalšího pokusu pouze z množiny kandidátů. V základním algoritmu \ref{alg-default} by množina $U$ na řádce $7$ měla tvar
 \[U = \{u \in K \mid f_K(u) = F(f_K)\}.\]
-Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind (viz tabulka \ref{tabpouzekandidati}). Výsledky byly dosaženy stejným postupem jako u algoritmů výše, tedy postupným sestrojením stromu algoritmu. 
+Níže uvádíme výsledky algoritmů volící pouze kandidáty aplikované na [4,6]-Mastermind (viz tabulka \ref{tabpouzekandidati}). Výsledky byly dosaženy stejným postupem jako u~algoritmů výše, tedy postupným sestrojením stromu algoritmu. 
 
 \begin{table}[h]
 \centering
@@ -205,7 +205,7 @@ Průměrný počet pokusů je zaokrouhlen na tři desetinná místa.}
 \caption{Výsledky algoritmů volící pouze kandidáty}\label{tabpouzekandidati}
 \end{table}
 
-Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale zmenší časovou složitost algoritmů. To plyne z toho, že algoritmus v každém stavu algoritmus neporovnává všechny kódy ale pouze kandidáty. 
+Průměrný počet pokusů se zhoršil ve všech algoritmech, v algoritmu Min-max a Max parts ze zhoršil i maximální počet pokusů. Tato volba algoritmů ale~zmenší časovou složitost algoritmů. To plyne z toho, že algoritmus v každém stavu algoritmus neporovnává všechny kódy ale pouze kandidáty. 
 
 % \begin{tvrz}
 %     Uvažujme algoritmus \ref{alg-default} s výběrem množiny $U$ na řádku $7$ podle následujícího předpisu.
@@ -226,7 +226,7 @@ Neberou tedy v potaz rozdělení následníků o dvě hrany dál, které by mohl
 
 
 \subsubsection{Seřazení kódů}
-Zajímavým problémem je jistě výběr následujícího pokusu v případě, kdy má více kódů nejlepší valuaci. My jsme zvolili výběr lexikograficky nejmenšího kódu, protože ho použil Knuth ve svém článku \cite{donald_e__knuth_1977}. Výběr lexikograficky nejvyššího kódu například porovnává v diskuzi u svého článku Kooi \cite{kooi}. Změna výsledků je ale minimální. 
+Zajímavým problémem je jistě výběr následujícího pokusu v případě, kdy má více kódů nejlepší valuaci. My jsme zvolili výběr lexikograficky nejmenšího kódu, protože ho použil Knuth ve svém článku \cite{donald_e__knuth_1977}. Výběr lexikograficky nejvyššího kódu například porovnává v diskuzi u svého článku Kooi \cite{kooi}. Změna výsledků je~ale~minimální. 
 
 Také lze diskutovat, zda volba prvního kódu, který by byl lexikograficky větší, by následně s výběrem lexikograficky menších kódů byl přínosný. Ukazuje se, že pouze velikost prvního kódu nerozhoduje. Při zvolení lexikograficky největších prvních kódů nedostaneme lepší výsledek (viz tabulka \ref{tabvysokyprvnipokus}).
 

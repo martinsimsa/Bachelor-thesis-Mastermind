@@ -21,11 +21,11 @@ Prvním algoritmem je metoda, kterou navrhl D. Knuth \cite{donald_e__knuth_1977}
         m_K \colon H_{n,k} &\to \mathbb{R} \\
         u &\mapsto \max_{r\in S_{n,k}} |K_{u,r}|.
     \end{align*}
-    Prostor všech valuací $m_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{M}$. 
+    Prostor valuací $m_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{M}$. 
 \end{definice}
 
 \begin{definice}[Strategie minimum]
-    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii minimum $L$} jako
+    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii minimum $L$} jako
     \begin{align*}
         L \colon \mathcal{F} &\to \mathbb{R} \\
         f &\mapsto \min_{u\in H_{n,k}} f(u)
@@ -65,7 +65,7 @@ Algoritmus Min-max pro libovolný stav $A$ s množinou kandidátů $K$ vybírá 
 Pro [2,2]-Mastermind sestrojíme strom Min-max algoritmu a nastíníme na~něm chod Knuthova algoritmu.
 
 \subsubsection{[2,2]-Mastermind}
-Prostor kódů [2,2]-Mastermindu je množina $H_{2,2} = \{11,12,21,22\}$. Množina všech ohodnocení je podle tvrzení \ref{tvrzohodnoceni2} rovna $S_{2,2} = \{(0,0), (0,2), (1,0), (2,0)\}$. Obrázek \ref{fig22prvnitahmnoziny} zobrazuje potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Pro přehlednost jsou vrcholy uspořádány podle zahraných kódů. Maximální počty prvků ve vrcholech potomků $H_{2,2}$ (hodnoty $m_{H_{2,2}}$) jsou následující. 
+Prostor kódů [2,2]-Mastermindu je množina $H_{2,2} = \{11,12,21,22\}$. Množina všech ohodnocení je podle tvrzení \ref{tvrzohodnoceni2} rovna $S_{2,2} = \{(0,0), (0,2), (1,0), (2,0)\}$. Obrázek \ref{fig22prvnitahmnoziny} zobrazuje potomky $H_{2,2}$ vzhledem ke všem kódům a ohodnocením. Pro~přehlednost jsou vrcholy uspořádány podle zahraných kódů. Maximální počty prvků ve vrcholech potomků $H_{2,2}$ (hodnoty $m_{H_{2,2}}$) jsou následující. 
 \[m_{H_{2,2}} (11) = m_{H_{2,2}} (12) = m_{H_{2,2}} (21) = m_{H_{2,2}} (22) = 2\]
 Knuthův algoritmus tedy volí jako první pokus kód $11$. 
 
@@ -135,7 +135,7 @@ Hodnoty valuací jednotlivých kódů jsou následující:
 \[m_{\{12,21\}} (11) = m_{\{12,21\}} (22) = 2, \hspace{10px} m_{\{12,21\}} (12) = m_{\{12,21\}} (21) = 1.\]
 Algoritmus Min-max tedy v tomto stavu vybírá jako druhý pokus kód $12$. 
 
-Na obrázku \ref{fig22minmax} je zobrazen strom Min-max algoritmu (stejný jako obrázek \ref{figprikladstromualgoritmu} výše) Protože vrchol ve stromu algoritmu je roven obarvení cesty z počátku do tohoto vrcholu, pro znázornění postupu algoritmu vrcholy obarvujeme množinou kandidátů příslušného stavu. Algoritmus Min-max vyhraje [2,2]-Mastermind vždy na maximálně tři tahy. 
+Na obrázku \ref{fig22minmax} je zobrazen strom Min-max algoritmu (stejný jako obrázek~\ref{figprikladstromualgoritmu} výše) Protože vrchol ve stromu algoritmu je roven obarvení cesty z počátku do~tohoto vrcholu, pro znázornění postupu algoritmu vrcholy obarvujeme množinou kandidátů příslušného stavu. Algoritmus Min-max vyhraje [2,2]-Mastermind vždy na maximálně tři tahy. 
 \begin{figure}[h!]
     \centering
     \begin{tikzpicture}
@@ -176,11 +176,11 @@ Erich Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximal
         h_K \colon H_{n,k} &\to \mathbb{R} \\
         u &\mapsto \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right).
     \end{align*}
-    Prostor všech valuací $h_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{H}$. 
+    Prostor valuací $h_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{H}$. 
 \end{definice}
 
 \begin{definice}[Strategie maximum]\label{defstrategiemaximum}
-    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F} = \{f_K\colon H_{n,k} \to \mathbb{R} \mid K \subseteq H_{n,k}\}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii maximum} $M$ následujícím předpisem.
+    Nechť $H_{n,k}$ je prostor kódů a $\mathcal{F}$ je prostor valuací. Potom na $\mathcal{F}$ definujeme \emph{strategii maximum} $M$ následujícím předpisem.
     \begin{align*}
         M \colon \mathcal{F} &\to \mathbb{R} \\
         f &\mapsto \max_{u\in H_{n,k}} f(u)
@@ -209,7 +209,7 @@ Erich Neuwirth \cite{neuwirth} navrhl algoritmus hrající kódy, které maximal
     Nechť $u\in H_{n,k}$ je kód, pro který platí, že $K_{u,r} = K$ pro nějaké $r\in S_{n,k}$. Potom 
     \[h_K(u) = \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right) = 0.\]
     
-    Pro libovolný kód $u$ platí, že $\log_2\left( \frac{|K|}{|K_{u,r}|} \right)  > 0 $ pro všechna $r\in S_{n,k}$ taková, že $|K_{u,r}| > 0, K_{u,r} \neq K$. Tedy $h_K(u) = 0$ právě tehdy, když $K_{u,r} = K$ pro~nějaké $r\in S_{n,k}$. Pokud pro každou alespoň dvouprvkovou množinu existuje kód, pro který $h_K(u) > 0$, v každém kroku algoritmu Max entropy se počet prvků množina kandidátů ostře zmenší. Pro $u \in K$ platí
+    Pro libovolný kód $u$ platí, že $\log_2\left( \frac{|K|}{|K_{u,r}|} \right)  > 0 $ pro všechna $r\in S_{n,k}$ taková, že $|K_{u,r}| > 0, K_{u,r} \neq K$. Tedy $h_K(u) = 0$ právě tehdy, když $K_{u,r} = K$ pro~nějaké $r\in S_{n,k}$. Pokud pro každou alespoň dvouprvkovou množinu existuje kód, pro~který $h_K(u) > 0$, v každém kroku algoritmu Max entropy se počet prvků množina kandidátů ostře zmenší. Pro $u \in K$ platí
     \begin{align*}
         h_K(u) &= \sum_{r\in S_{n,k}, |K_{u,r}| > 0} \frac{|K_{u,r}|}{|K|}\log_2\left( \frac{|K|}{|K_{u,r}|} \right) 
     \geq 
@@ -252,7 +252,7 @@ Výsledné číslo je $4$. Počet otázek nutných k určení tajného čísla j
 \end{prikl}
 
 \begin{pozn}\label{poznotazkynamnozinu}
-Obdobně jako v příkladu \ref{prbinarysearch} lze pro jakoukoliv osmiprvkovou množinu $A$ s rovnoměrnou pravděpodobností vytvořit sadu otázek ano/ne a o každém prvku této množiny určit, zda odpovídá odpovědi ano nebo odpovědi ne. Následně bychom mohli pro určení jakéhokoliv prvku této množiny aplikovat obdobný postup jako v příkladu \ref{prbinarysearch}. Pro vhodnou sadu otázek existuje postup, který každou otázkou sníží prostor zbývajících možností na polovinu. Tím pádem pro určení jakéhokoliv prvku množiny $A$ potřebujeme $\log_2(|A|)$ otázek. V případě, kdy velikost množiny není mocnina $2$ bychom mluvili o $\lceil \log_2 |A| \rceil$, kde $\lceil \cdot \rceil$ značí horní celou část. 
+Obdobně jako v příkladu \ref{prbinarysearch} lze pro jakoukoliv osmiprvkovou množinu~$A$ s rovnoměrnou pravděpodobností vytvořit sadu otázek ano/ne a o každém prvku této množiny určit, zda odpovídá odpovědi ano nebo odpovědi ne. Následně bychom mohli pro určení jakéhokoliv prvku této množiny aplikovat obdobný postup jako v příkladu \ref{prbinarysearch}. Pro vhodnou sadu otázek existuje postup, který každou otázkou sníží prostor zbývajících možností na polovinu. Tím pádem pro určení jakéhokoliv prvku množiny $A$ potřebujeme $\log_2(|A|)$ otázek. V případě, kdy velikost množiny není mocnina $2$ bychom mluvili o $\lceil \log_2 |A| \rceil$, kde $\lceil \cdot \rceil$ značí horní celou část. 
 \end{pozn}
 
 \begin{prikl}[m odpovědí]\label{prmodpovedi}
@@ -368,7 +368,7 @@ Další strategie, kterou navrhl Barteld Kooi \cite{kooi} je volba kódu, který
         c_K \colon H_{n,k} &\to \mathbb{R} \\
         u &\mapsto |\{r \mid K_{u,r} \neq \emptyset\}|
     \end{align*}
-    Prostor všech valuací $c_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{C}$. 
+    Prostor valuací $c_K, \hspace{2px} K \subseteq H_{n,k}$ označíme $\mathcal{C}$. 
 \end{definice}
 
 \begin{definice}[Algoritmus Most parts]
@@ -401,7 +401,7 @@ Tato strategie je motivována následujícími příklady, které Kooi popisuje 
 
 \begin{prikl}\label{prdvecasti}
     Uvažujme klasický balíček $52$ karet. Naším úkolem je uhodnout tajnou kartu s tím, že každá karta může být tou tajnou se stejnou pravděpodobností. Předtím se ale můžeme zeptat na jednu ano/ne otázku, kterou snížíme počet zbývajících možností. Jak máme tuto otázku zvolit? 
-    Pokud bychom se zeptali, zda je karta srdcová, pravděpodobnost, že kartu po této otázce uhodneme je 
+    Pokud bychom se zeptali, jestli je karta srdcová, pravděpodobnost, že kartu po této otázce uhodneme je 
     \[\frac{13}{52} \cdot \frac{1}{13} + \frac{39}{52} \cdot \frac{1}{39} = \frac{2}{52}.\]
     Pokud se zeptáme, zda tajnou kartou je piková sedmička, pravděpodobnost, že kartu po této otázce uhodneme je 
      \[\frac{1}{52} \cdot 1 + \frac{51}{52} \cdot \frac{1}{52} = \frac{2}{52}.\] 
